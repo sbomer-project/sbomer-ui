@@ -164,16 +164,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
             <HeaderPanel aria-label="Application Switcher" expanded={menuPanelExpanded}>
               <Layer>
                 <CarbonSwitcher aria-label="Switcher Container">
-                  <ContainedList label="Navigation" kind="on-page">
-                    <ContainedListItem
-                      onClick={() => {
-                        window.location.href = '/';
-                        setMenuPanelExpanded(false);
-                      }}
-                    >
-                      Switch to SBOMer Classic
-                    </ContainedListItem>
-                  </ContainedList>
 
                   <ContainedList label="Appearance" kind="on-page">
                     <ContainedListItem>
