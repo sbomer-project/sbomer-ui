@@ -2,7 +2,7 @@
 
 To run the application locally, you can use Docker Compose. Make sure you have Docker and Docker Compose installed on your machine.
 
-1. Open a terminal and navigate to the local-dev directory (if not already there).
+1. Open a terminal and navigate to the `hack/local-dev`directory (if not already there).
 
 2. Start the services:
 
