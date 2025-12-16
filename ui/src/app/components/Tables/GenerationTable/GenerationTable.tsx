@@ -1,4 +1,4 @@
-import { statusToColor } from '@app/utils/Utils';
+import { resultToColor, statusToColor } from '@app/utils/Utils';
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import { SbomerGeneration } from '@app/types';
 const columnNames = {
   id: 'ID',
   status: 'Status',
+  result: 'Result',
   creationTime: 'Created',
   updatedTime: 'Updated',
   finishedTime: 'Finished',
@@ -23,6 +24,7 @@ const columnNames = {
 const headers = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
+  { key: 'result', header: 'Result' },
   { key: 'creationTime', header: 'Created' },
   { key: 'updatedTime', header: 'Updated' },
   { key: 'finishedTime', header: 'Finished' },
@@ -82,6 +84,7 @@ export const GenerationTable = () => {
   const rows = (value ?? []).map((g: SbomerGeneration) => ({
     id: String(g.id),
     status: g.status ?? 'unknown',
+    result: g.result ?? 'unknown',
     creationTime: g.created ? new Date(g.created) : undefined,
     updatedTime: g.updated ? new Date(g.updated) : undefined,
     finishedTime: g.finished ? new Date(g.finished) : undefined,
@@ -126,6 +129,14 @@ export const GenerationTable = () => {
                         return (
                           <TableCell {...getCellProps({ cell })}>
                             <Tag size="md" type={statusToColor(cell.value as string)}>
+                              {cell.value || 'unknown'}
+                            </Tag>
+                          </TableCell>
+                        );
+                      case 'result':
+                        return (
+                          <TableCell {...getCellProps({ cell })}>
+                            <Tag size="md" type={resultToColor(cell.value as string)}>
                               {cell.value || 'unknown'}
                             </Tag>
                           </TableCell>

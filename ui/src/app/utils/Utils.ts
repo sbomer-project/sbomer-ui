@@ -131,9 +131,9 @@ export function resultToDescription(request: SbomerGeneration): string {
   return resolved?.description ?? request.result;
 }
 
-export function statusToColor(request: SbomerGeneration): CarbonTagType {
-  if (!isInProgress(request)) {
-    return isSuccess(request) ? 'green' : 'red';
+export function statusToColor(status: string): CarbonTagType {
+  if (!isInProgress(status)) {
+    return isSuccess(status) ? 'teal' : 'red';
   }
 
   return 'gray';
@@ -145,22 +145,22 @@ export function eventStatusToColor(status: string): CarbonTagType {
   return resolved?.color ?? 'gray';
 }
 
-export function resultToColor(request: SbomerGeneration): CarbonTagType {
-  var resolved = GenerationResults.get(request.result);
+export function resultToColor(result: string): CarbonTagType {
+  var resolved = GenerationResults.get(result);
 
-  return resolved?.color ?? 'blue';
+  return resolved?.color ?? 'warm-gray';
 }
 
-export function isInProgress(request: SbomerGeneration): boolean {
-  if (request.status == 'FINISHED' || request.status == 'FAILED') {
+export function isInProgress(status: string): boolean {
+  if (status == 'FINISHED' || status == 'FAILED') {
     return false;
   }
 
   return true;
 }
 
-export function isSuccess(request: SbomerGeneration): boolean {
-  return request.result == 'SUCCESS' ? true : false;
+export function isSuccess(status: string): boolean {
+  return status == 'FINISHED' ? true : false;
 }
 
 export function extractQueryErrorMessageDetails(error: any): { message: string; details?: string } {
