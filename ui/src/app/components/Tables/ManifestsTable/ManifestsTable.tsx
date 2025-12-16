@@ -63,47 +63,55 @@ export const ManifestsTable = () => {
   );
 
 
-  const table = (
-    <DataTable
-      rows={value || []}
-      headers={[
-        { key: 'id', header: columnNames.id },
-        { key: 'creationTime', header: columnNames.creationTime },
-      ]}
-      render={({ rows, headers }) => (
-        <TableContainer title="Manifests" description="Latest manifests">
-          <Table>
-            <TableHead>
-              <TableRow>
-                {headers.map(header => (
-                  <TableHeader key={header.key}>{header.header}</TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {value && value.map((manifest) => {
-                return (
-                  <TableRow key={manifest.id}>
-                    <TableCell>
-                      <Link to={`/manifests/${manifest.id}`}>
-                        <pre>{manifest.id}</pre>
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <RelativeTimestamp date={manifest?.created} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {pagination}
-        </TableContainer>
-      )}
-    />
-  );
+const table = (
+  <DataTable
+    rows={value || []}
+    headers={[
+      { key: 'id', header: columnNames.id },
+      { key: 'creationTime', header: columnNames.creationTime },
+    ]}
+  >{({
+    rows,
+    headers,
+    getTableProps,
+    getHeaderProps,
+    getRowProps,
+    getCellProps,
+  }) => (
 
-  const noResults = <NoResultsSection title="No manifests found" message="Looks like no manifests were generated." onActionClick={() => {navigate('/')} } actionText={'Take me home'} />;
+    <TableContainer title="Manifests" description="Latest manifests">
+      <Table {...getTableProps()}>
+        <TableHead>
+          <TableRow>
+            {headers.map(header => (
+              <TableHeader {...getHeaderProps({ header })}>
+                {header.header}
+              </TableHeader>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map(row => (
+            <TableRow {...getRowProps({ row })}>
+              <TableCell {...getCellProps({cell: row.cells[0]} )}>
+                <Link to={`/manifests/${row.id}`}>
+                  <pre>{row.id}</pre>
+                </Link>
+              </TableCell>
+              <TableCell {...getCellProps({cell: row.cells[1]} )}>
+                <RelativeTimestamp date={row.cells[1].value} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {pagination}
+    </TableContainer>
+  )}
+  </DataTable>
+);
+
+  const noResults = <NoResultsSection title="No manifests found" message="Looks like no manifests were generated." onActionClick={() => { navigate('/') }} actionText={'Take me home'} />;
   const loadingSkeleton = (
     <TableContainer title="Manifests" description="Latest manifests">
       <DataTableSkeleton

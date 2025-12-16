@@ -80,51 +80,58 @@ export const GenerationTable = () => {
     <DataTable
       rows={value || []}
       headers={headers}
-      render={({ rows, headers }) => (
-        <TableContainer title="Generations" description="Latest generations">
-          <Table aria-label="Generations">
-            <TableHead>
-              <TableRow>
-                {headers.map(header => (
-                  <TableHeader key={header.key}>{header.header}</TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {value && value.map((generation: SbomerGeneration) => {
-                return (
-                  <TableRow key={generation.id}>
-                    <TableCell>
-                      <Link to={`/generations/${generation.id}`}>
-                        <pre>{generation.id}</pre>
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <Tag size='md' type={statusToColor(generation)}>
-                        {generation?.status || 'unknown'}
-                      </Tag>
-                    </TableCell>
-                    <TableCell>
-                      <RelativeTimestamp date={generation.created} />
-                    </TableCell>
-                    <TableCell>
-                      <RelativeTimestamp date={generation.updated} />
-                    </TableCell>
-                    <TableCell>
-                      <RelativeTimestamp date={generation.finished} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {pagination}
-        </TableContainer>
-      )}
-    />
+    >{({
+      rows,
+      headers,
+      getTableProps,
+      getHeaderProps,
+      getRowProps,
+      getCellProps,
+    }) => (
+      <TableContainer title="Generations" description="Latest generations">
+        <Table aria-label="Generations">
+          <TableHead>
+            <TableRow>
+              {headers.map(header => (
+                <TableHeader key={header.key}>{header.header}</TableHeader>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {value && value.map((generation: SbomerGeneration) => {
+              return (
+                <TableRow key={generation.id}>
+                  <TableCell>
+                    <Link to={`/generations/${generation.id}`}>
+                      <pre>{generation.id}</pre>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Tag size='md' type={statusToColor(generation)}>
+                      {generation?.status || 'unknown'}
+                    </Tag>
+                  </TableCell>
+                  <TableCell>
+                    <RelativeTimestamp date={generation.created} />
+                  </TableCell>
+                  <TableCell>
+                    <RelativeTimestamp date={generation.updated} />
+                  </TableCell>
+                  <TableCell>
+                    <RelativeTimestamp date={generation.finished} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+        {pagination}
+      </TableContainer>
+    )}
+    </DataTable>
   );
 
-  const noResults = <NoResultsSection title="No generations found" message="Looks like no generations happened." onActionClick={() => {navigate('/')} } actionText={'Take me home'} />;
+  const noResults = <NoResultsSection title="No generations found" message="Looks like no generations happened." onActionClick={() => { navigate('/') }} actionText={'Take me home'} />;
   const loadingSkeleton = (
     <TableContainer title="Generations" description="Latest generations">
       <DataTableSkeleton
