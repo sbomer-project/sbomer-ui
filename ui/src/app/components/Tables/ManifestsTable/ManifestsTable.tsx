@@ -62,10 +62,14 @@ export const ManifestsTable = () => {
     />
   );
 
+const rows = (value || []).map(manifest => ({
+  id: manifest.id,
+  creationTime: manifest.created,
+}));
 
 const table = (
   <DataTable
-    rows={value || []}
+    rows={rows}
     headers={[
       { key: 'id', header: columnNames.id },
       { key: 'creationTime', header: columnNames.creationTime },
@@ -93,14 +97,31 @@ const table = (
         <TableBody>
           {rows.map(row => (
             <TableRow {...getRowProps({ row })}>
-              <TableCell {...getCellProps({cell: row.cells[0]} )}>
-                <Link to={`/manifests/${row.id}`}>
-                  <pre>{row.id}</pre>
-                </Link>
-              </TableCell>
-              <TableCell {...getCellProps({cell: row.cells[1]} )}>
-                <RelativeTimestamp date={row.cells[1].value} />
-              </TableCell>
+              {row.cells.map(cell => {
+                const cellKey = cell.info.header;
+                switch (cellKey) {
+                  case 'id':
+                    return (
+                      <TableCell {...getCellProps({ cell })}>
+                        <Link to={`/manifests/${cell.value}`}>
+                          <pre>{cell.value}</pre>
+                        </Link>
+                      </TableCell>
+                    );
+                  case 'creationTime':
+                    return (
+                      <TableCell {...getCellProps({ cell })}>
+                        <RelativeTimestamp date={cell.value as Date | undefined} />
+                      </TableCell>
+                    );
+                  default:
+                    return (
+                      <TableCell {...getCellProps({ cell })}>
+                        {cell.value}
+                      </TableCell>
+                    );
+                }
+              })}
             </TableRow>
           ))}
         </TableBody>
