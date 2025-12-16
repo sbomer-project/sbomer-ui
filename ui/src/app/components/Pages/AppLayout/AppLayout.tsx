@@ -146,7 +146,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 isActive={isSideNavExpanded}
                 isCollapsible={true}
               />
-              <HeaderName prefix="" href="/nextgen">SBOMer</HeaderName>
+              <HeaderName prefix="" href="/">SBOMer</HeaderName>
 
               <HeaderGlobalBar>
                 <HeaderGlobalAction

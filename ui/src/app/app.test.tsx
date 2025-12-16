@@ -6,13 +6,13 @@ import '@testing-library/jest-dom';
 
 describe('App tests', () => {
   test('should render default App component', () => {
-    const { asFragment } = render(<App basename='/nextgen'/>);
+    const { asFragment } = render(<App basename='/'/>);
 
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('should render a nav-toggle button', () => {
-    render(<App basename={'/nextgen'}/>);
+    render(<App basename={'/'}/>);
 
     expect(screen.getByRole('button', { name: 'Global navigation' })).toBeVisible();
   });
@@ -23,7 +23,7 @@ describe('App tests', () => {
   it.skip('should hide the sidebar on smaller viewports', () => {
     Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 600 });
 
-    render(<App basename={'/nextgen'} />);
+    render(<App basename={'/'} />);
 
     window.dispatchEvent(new Event('resize'));
 
@@ -31,7 +31,7 @@ describe('App tests', () => {
   });
 
   it('should expand the sidebar on larger viewports', () => {
-    render(<App basename={'/nextgen'}/>);
+    render(<App basename={'/'}/>);
 
     window.dispatchEvent(new Event('resize'));
 
@@ -41,7 +41,7 @@ describe('App tests', () => {
   it('should hide the sidebar when clicking the nav-toggle button', async () => {
     const user = userEvent.setup();
 
-    render(<App basename={'/nextgen'}/>);
+    render(<App basename={'/'}/>);
 
     window.dispatchEvent(new Event('resize'));
     const button = screen.getByRole('button', { name: 'Global navigation' });
