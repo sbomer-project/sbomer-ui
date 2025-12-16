@@ -124,7 +124,7 @@ export const GenerationTable = () => {
     />
   );
 
-  const noResults = <NoResultsSection title="No generations found" message="Try adjusting your search criteria." onActionClick={() => { } } actionText={''} />;
+  const noResults = <NoResultsSection title="No generations found" message="Looks like no generations happened." onActionClick={() => {navigate('/')} } actionText={'Take me home'} />;
   const loadingSkeleton = (
     <TableContainer title="Generations" description="Latest generations">
       <DataTableSkeleton

@@ -7,7 +7,7 @@ import { NoResultsSection } from '@app/components/Sections/NoResultsSection/NoRe
 import { RelativeTimestamp } from '@app/components/UtilsComponents/RelativeTimestamp';
 import { DataTable, DataTableSkeleton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '@carbon/react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const columnNames = {
@@ -21,7 +21,7 @@ const headers = [
 ];
 
 export const ManifestsTable = () => {
-
+  const navigate = useNavigate();
   const { pageIndex, pageSize, setFilters } = useManifestsFilters();
 
   // getting the data and applying the filters sent to the backend here
@@ -103,7 +103,7 @@ export const ManifestsTable = () => {
     />
   );
 
-  const noResults = <NoResultsSection title="No manifests found" message="Try adjusting your search criteria." onActionClick={() => { } } actionText={''} />;
+  const noResults = <NoResultsSection title="No manifests found" message="Looks like no manifests were generated." onActionClick={() => {navigate('/')} } actionText={'Take me home'} />;
   const loadingSkeleton = (
     <TableContainer title="Manifests" description="Latest manifests">
       <DataTableSkeleton
