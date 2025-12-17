@@ -92,7 +92,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size='md' type={statusToColor(request)}>
+              <Tag size='md' type={statusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>
@@ -100,7 +100,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Result</StructuredListCell>
             <StructuredListCell>
-              <Tag size='md' type={resultToColor(request)}>
+              <Tag size='md' type={resultToColor(request.result)}>
                 {request.result || 'In progress'}
               </Tag>
             </StructuredListCell>
