@@ -5,3 +5,7 @@ services:
       # Context is one level up (the project root where this script started)
       context: ../../
       dockerfile: images/sbomer-ui/Containerfile
+    ports:
+      - "8086:8080"
+    environment:
+      - API_URL=http://sbom-service:8083
