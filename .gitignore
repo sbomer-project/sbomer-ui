@@ -25,6 +25,9 @@ certs
 # Local environment
 .env
 
+#ignore local dev setup
+sbomer-local-dev/
+
 secret*.txt
 secret*.json
 

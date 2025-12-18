@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  ui:
+    build:
+      # Context is one level up (the project root where this script started)
+      context: ../../
+      dockerfile: images/sbomer-ui/Containerfile
