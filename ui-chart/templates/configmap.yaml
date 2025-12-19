@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ui-nginx-config
+  labels:
+    {{- include "ui-chart.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+{{ .Values.nginxConfig | indent 4 }}

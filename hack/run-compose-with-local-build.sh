@@ -37,8 +37,6 @@ echo "Host Gateway: $GATEWAY_IP"
 # Export for podman-compose to pick up
 export SBOMER_STORAGE_URL="http://${GATEWAY_IP}:8085"
 
-# Path to compose file
-COMPOSE_FILE="./podman/podman-compose.yml"
 
 echo "--- Building with prod ---"
 bash ./hack/build.sh

@@ -142,14 +142,18 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+# Write the volume binding directly in values
+volumes:
+  - name: nginx-config
+    configMap:
+      name: ui-nginx-config # Static name used in configmap.yaml
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
+# Write the mount binding directly in values
+volumeMounts:
+  - name: nginx-config
+    mountPath: /etc/nginx/nginx.conf
+    subPath: nginx.conf
+    readOnly: true
 # - name: foo
 #   mountPath: "/etc/foo"
 #   readOnly: true
@@ -159,3 +163,23 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# Nginx configuration for the UI container
+nginxConfig: |
+  worker_processes auto;
+  error_log /dev/stdout info;
+  pid /run/nginx.pid;
+  events { worker_connections 1024; }
+  http {
+      include /etc/nginx/mime.types;
+      access_log /dev/stdout;
+      server {
+          listen 8080 default_server;
+          root /opt/app-root/src;
+          location / {
+              try_files $uri /index.html;
+          }
+          location /assets/ { alias /opt/app-root/src/assets/; }
+          location /images/ { alias /opt/app-root/src/images/; }
+      }
+  }
