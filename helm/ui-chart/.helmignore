@@ -21,3 +21,8 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Ignore UI build artifacts
+**/dist/
+**/node_modules/
+**/*.map
