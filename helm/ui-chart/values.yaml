@@ -183,3 +183,9 @@ nginxConfig: |
           location /images/ { alias /opt/app-root/src/images/; }
       }
   }
+
+# Additional environment variables for the container
+extraEnv:
+  - name: API_URL
+    # override to connect to backned of your choice
+    value: "http://localhost:8080"
