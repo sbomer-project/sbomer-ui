@@ -187,5 +187,5 @@ nginxConfig: |
 # Additional environment variables for the container
 extraEnv:
   - name: API_URL
-    # override to connect to backned of your choice
+    # override to connect to backend of your choice
     value: "http://localhost:8080"
