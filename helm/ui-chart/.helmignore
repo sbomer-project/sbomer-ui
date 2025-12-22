@@ -23,6 +23,10 @@
 .vscode/
 
 # Ignore UI build artifacts
-**/dist/
-**/node_modules/
-**/*.map
+# Ignore specific UI build paths if they are nested within the platform chart
+ui/dist/
+ui/node_modules/
+
+# Standard cleanup
+charts/*.tgz
+*.map
