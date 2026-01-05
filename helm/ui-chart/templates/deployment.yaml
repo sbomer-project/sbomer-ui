@@ -45,9 +45,8 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
-            {{- if .Values.extraEnv }}
-            {{- toYaml .Values.extraEnv | nindent 12 }}
-            {{- end }}
+            - name: API_URL
+              value: {{ .Values.config.apiUrl | quote }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
