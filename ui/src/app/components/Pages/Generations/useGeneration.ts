@@ -32,7 +32,7 @@ export function useGeneration(id: string) {
         return Promise.reject(e);
       }
     },
-    [id],
+    [sbomerApi],
   );
 
   const {

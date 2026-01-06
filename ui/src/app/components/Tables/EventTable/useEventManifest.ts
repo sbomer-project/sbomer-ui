@@ -17,21 +17,17 @@
 ///
 
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
-import { useCallback } from 'react';
 import { useAsyncRetry } from 'react-use';
 
 export function useRequestEventManifest(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
-  const getRequestEvent = useCallback(
-    async (id: string) => {
-      try {
-        return await sbomerApi.getEvent(id);
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
-    [id],
-  );
+  const getRequestEvent = async (id: string) => {
+    try {
+      return await sbomerApi.getEvent(id);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  };
 
   const {
     loading,

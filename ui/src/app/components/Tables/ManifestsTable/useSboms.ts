@@ -17,7 +17,7 @@
 ///
 
 import { useManifestsFilters } from '@app/components/Tables/ManifestsTable/useManifestsFilters';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import { DefaultSbomerApi } from 'src/app/api/DefaultSbomerApi';
 
@@ -27,23 +27,20 @@ export function useManifests() {
 
   const { pageIndex, pageSize } = useManifestsFilters();
 
-  const getManifests = useCallback(
-    async ({
-      pageSize,
-      pageIndex,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-    }) => {
-      try {
-        const pageIndexOffsetted = pageIndex - 1;
-        return await sbomerApi.getManifests({ pageSize, pageIndex: pageIndexOffsetted });
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
-    [pageIndex, pageSize],
-  );
+  const getManifests = async ({
+    pageSize,
+    pageIndex,
+  }: {
+    pageSize: number;
+    pageIndex: number;
+  }) => {
+    try {
+      const pageIndexOffsetted = pageIndex - 1;
+      return await sbomerApi.getManifests({ pageSize, pageIndex: pageIndexOffsetted });
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  };
 
   const { loading, value, error, retry } = useAsyncRetry(
     () =>

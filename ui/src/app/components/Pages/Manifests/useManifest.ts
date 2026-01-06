@@ -30,7 +30,7 @@ export function useManifest(id: string) {
         return Promise.reject(e);
       }
     },
-    [id],
+    [sbomerApi],
   );
 
   const {

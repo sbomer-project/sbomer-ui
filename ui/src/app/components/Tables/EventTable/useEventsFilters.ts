@@ -48,7 +48,7 @@ export function useEventsFilters() {
         return params;
       });
     },
-    [],
+    [setSearchParams],
   );
 
   return { query, pageIndex, pageSize, setFilters };

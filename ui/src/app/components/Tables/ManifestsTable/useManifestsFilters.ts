@@ -42,7 +42,7 @@ export function useManifestsFilters() {
         return params;
       });
     },
-    [],
+    [setSearchParams],
   );
 
   return { pageIndex, pageSize, setFilters };
