@@ -3,7 +3,6 @@ import { resultToColor, statusToColor } from '@app/utils/Utils';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
-export default RelativeTimestamp;
 
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import { NoResultsSection } from '@app/components/Sections/NoResultsSection/NoResultSection';

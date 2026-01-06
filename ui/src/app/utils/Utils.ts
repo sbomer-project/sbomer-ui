@@ -64,30 +64,29 @@ const EventStatuses = new Map<
  * @returns A human readable time.
  */
 export function timestampToHumanReadable(millis: number, seconds?: false, suffix?: string): string {
-  var secs = millis / 1000;
-  var d = Math.floor(secs / 3600 / 24);
-  var h = Math.floor((secs - d * 3600 * 24) / 3600);
-  var m = Math.floor((secs % 3600) / 60);
-  var s = Math.floor((secs % 3600) % 60);
+  const secs = millis / 1000;
+  const d = Math.floor(secs / 3600 / 24);
+  const h = Math.floor((secs - d * 3600 * 24) / 3600);
+  const m = Math.floor((secs % 3600) / 60);
 
   if (secs < 60) {
     return 'just now';
   }
 
-  var hrd = '';
+  let hrd = '';
 
   if (d > 3) {
     // More than 3 days: only show days
-    hrd = d + (d == 1 ? ' day' : ' days');
+    hrd = d + (d === 1 ? ' day' : ' days');
   } else if (d >= 1) {
     // 1-3 days: show days and hours
-    var dDisplay = d + (d == 1 ? ' day' : ' days');
-    var hDisplay = h > 0 ? ' ' + h + (h == 1 ? ' hour' : ' hours') : '';
+    const dDisplay = d + (d === 1 ? ' day' : ' days');
+    const hDisplay = h > 0 ? ' ' + h + (h === 1 ? ' hour' : ' hours') : '';
     hrd = dDisplay + hDisplay;
   } else {
     // Less than 1 day: show hours and minutes
-    var hDisplay = h > 0 ? h + (h == 1 ? ' hour' : ' hours') : '';
-    var mDisplay = m > 0 ? (h > 0 ? ' ' : '') + m + (m == 1 ? ' minute' : ' minutes') : '';
+    const hDisplay = h > 0 ? h + (h === 1 ? ' hour' : ' hours') : '';
+    const mDisplay = m > 0 ? (h > 0 ? ' ' : '') + m + (m === 1 ? ' minute' : ' minutes') : '';
     hrd = hDisplay + mDisplay;
 
     // If no hours or minutes, show "just now"
@@ -174,6 +173,7 @@ export function extractQueryErrorMessageDetails(error: any): { message: string; 
           details: Array.isArray(json.details) ? json.details.join(', ') : json.details,
         };
       } catch {
+        // JSON parse failed, fall through to return original message
       }
     }
     return { message: error.message };

@@ -9,7 +9,6 @@ import { EventPage } from './components/Pages/Events/EventPage';
 import { NotFoundPage } from './components/Pages/NotFound/NotFoundPage';
 import { HelpPage } from './components/Pages/Help/HelpPage';
 
-let routeFocusTimer: number;
 export interface IAppRoute {
   label?: string; // Excluding the label will exclude the route from the nav sidebar in AppLayout
   element: React.ReactNode;
