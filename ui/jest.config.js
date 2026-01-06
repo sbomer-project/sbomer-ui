@@ -46,4 +46,7 @@ module.exports = {
 
   // The test environment that will be used for testing.
   testEnvironment: "jsdom",
+
+  // Setup files to run after the test framework is installed
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
