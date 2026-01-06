@@ -11,15 +11,6 @@ import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp
 import { DataTable, DataTableSkeleton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, Tag } from '@carbon/react';
 import { SbomerGeneration } from '@app/types';
 
-const columnNames = {
-  id: 'ID',
-  status: 'Status',
-  result: 'Result',
-  creationTime: 'Created',
-  updatedTime: 'Updated',
-  finishedTime: 'Finished',
-};
-
 const headers = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
@@ -28,9 +19,6 @@ const headers = [
   { key: 'updatedTime', header: 'Updated' },
   { key: 'finishedTime', header: 'Finished' },
 ];
-
-// Derive HeaderKey type from the headers array
-type HeaderKey = (typeof headers)[number]['key'];
 
 export const GenerationTable = () => {
   const navigate = useNavigate();
@@ -170,7 +158,7 @@ export const GenerationTable = () => {
   const loadingSkeleton = (
     <TableContainer title="Generations" description="Latest generations">
       <DataTableSkeleton
-        columnCount={Object.keys(columnNames).length}
+        columnCount={headers.length}
         showHeader={false}
         showToolbar={false}
         rowCount={10}

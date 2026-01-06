@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
   TableToolbar,
-  TableToolbarAction,
   TableToolbarContent,
   TableToolbarSearch,
   Tag,
@@ -152,7 +151,7 @@ export const EventTable = () => {
 
 
   return (
-    <DataTable rows={value || []} headers={headers} children={({ rows, headers }) => (
+    <DataTable rows={value || []} headers={headers} children={({ headers }) => (
       <TableContainer title="Events" description="Latest events">
         <TableToolbar>
           <TableToolbarContent>

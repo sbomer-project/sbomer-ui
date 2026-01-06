@@ -19,7 +19,7 @@ import {
   StructuredListWrapper,
 } from '@carbon/react';
 import * as React from 'react';
-import { Meta, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const ManifestPageContent: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -94,7 +94,7 @@ const ManifestPageContent: React.FunctionComponent = () => {
           <Button
             kind="primary"
             renderIcon={Download}
-            onClick={(e) => downloadManifest(manifest)}
+            onClick={() => downloadManifest(manifest)}
           >
             Download
           </Button>

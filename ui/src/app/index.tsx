@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom';
+import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { IAppRoute, routes } from './routes';
 import './app.css';

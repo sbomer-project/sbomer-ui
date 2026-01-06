@@ -1,4 +1,4 @@
-import { Button, Heading, Tile, Stack } from '@carbon/react';
+import { Button, Heading, Stack, Tile } from '@carbon/react';
 import React from 'react';
 
 interface NoResultsSectionProps {

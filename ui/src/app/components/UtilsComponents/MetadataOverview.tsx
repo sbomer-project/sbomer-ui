@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heading, Stack, Tile, Tag, Tooltip } from '@carbon/react';
+import { Heading, Stack, Tag, Tile, Tooltip } from '@carbon/react';
 import { Link } from 'react-router-dom';
 
 export interface MetadataOverviewProps {

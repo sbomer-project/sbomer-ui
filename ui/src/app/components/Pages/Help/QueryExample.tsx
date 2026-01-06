@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Column, CodeSnippet, Button } from '@carbon/react';
+import { Button, CodeSnippet, Column, Grid } from '@carbon/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 interface QueryExampleProps {

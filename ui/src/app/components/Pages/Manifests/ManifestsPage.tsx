@@ -1,6 +1,5 @@
 import { ManifestsTable } from '@app/components/Tables/ManifestsTable/ManifestsTable';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { Stack } from '@carbon/react';
 import * as React from 'react';
 import { AppLayout } from '../AppLayout/AppLayout';
 

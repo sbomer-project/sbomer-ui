@@ -79,7 +79,6 @@ export class DefaultSbomerApi implements SbomerApi {
       data.content.forEach((sbom: any) => {
         sboms.push(new SbomerManifest(sbom));
       });
-    } else {
     }
 
     return { data: sboms, total: data.totalHits };
