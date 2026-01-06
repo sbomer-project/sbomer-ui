@@ -18,7 +18,7 @@
 
 import { useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
-import { DefaultSbomerApi } from 'src/app/api/DefaultSbomerApi';
+import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 
 export function useGenerations(initialPage: number, intialPageSize: number) {
   const sbomerApi = DefaultSbomerApi.getInstance();
