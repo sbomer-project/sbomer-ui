@@ -51,7 +51,11 @@ module.exports = [
       // TypeScript rules
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/interface-name-prefix": "off",
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+      }],
+      "no-unused-vars": "off", // Disabled in favor of @typescript-eslint/no-unused-vars
 
       // React rules
       "react/prop-types": "off",

@@ -138,31 +138,31 @@ export type GenerateParams = {
 export type SbomerApi = {
   getBaseUrl(): string;
   stats(): Promise<SbomerStats>;
-  getLogPaths(generationId: string): Promise<Array<string>>;
+  getLogPaths(_generationId: string): Promise<Array<string>>;
 
-  getGenerations(pagination: {
+  getGenerations(_pagination: {
     pageSize: number;
     pageIndex: number;
   }): Promise<{ data: SbomerGeneration[]; total: number }>;
 
-  getManifests(pagination: { pageSize: number; pageIndex: number }): Promise<{ data: SbomerManifest[]; total: number }>;
-  getManifestsForGeneration(generationId: string): Promise<{ data: SbomerManifest[]; total: number }>;
+  getManifests(_pagination: { pageSize: number; pageIndex: number }): Promise<{ data: SbomerManifest[]; total: number }>;
+  getManifestsForGeneration(_generationId: string): Promise<{ data: SbomerManifest[]; total: number }>;
 
-  getGeneration(id: string): Promise<SbomerGeneration>;
+  getGeneration(_id: string): Promise<SbomerGeneration>;
 
-  getManifest(id: string): Promise<SbomerManifest>;
+  getManifest(_id: string): Promise<SbomerManifest>;
 
-  getManifestJson(id: string): Promise<string>;
+  getManifestJson(_id: string): Promise<string>;
 
   getEvents(
-    pagination: {
+    _pagination: {
       pageSize: number;
       pageIndex: number;
     },
-    query: string,
+    _query: string,
   ): Promise<{ data: SbomerEvent[]; total: number }>;
 
-  getEvent(id: string): Promise<SbomerEvent>;
+  getEvent(_id: string): Promise<SbomerEvent>;
 
-  getEventGenerations(id: string): Promise<{ data: SbomerGeneration[]; total: number }>;
+  getEventGenerations(_id: string): Promise<{ data: SbomerGeneration[]; total: number }>;
 };
