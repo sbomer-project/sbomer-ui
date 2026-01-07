@@ -85,9 +85,7 @@ module.exports = (env) => {
         // },
         {
           test: /\.(jpg|jpeg|png|gif)$/i,
-          include: [
-            path.resolve(__dirname, 'src'),
-          ],
+          include: [path.resolve(__dirname, 'src')],
           type: 'asset/inline',
           use: [
             {
@@ -104,20 +102,20 @@ module.exports = (env) => {
           use: ['style-loader', 'css-loader'],
         },
         {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                quietDeps: true, // Suppress deprecation warnings from dependencies
+          test: /\.scss$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                sassOptions: {
+                  quietDeps: true, // Suppress deprecation warnings from dependencies
+                },
               },
             },
-          },
-        ],
-      },
+          ],
+        },
       ],
     },
     output: {

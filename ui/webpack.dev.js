@@ -39,7 +39,7 @@ module.exports = merge(common('development'), {
     client: {
       overlay: {
         runtimeErrors: (error) => {
-          if (error.message  === 'ResizeObserver loop completed with undelivered notifications.') {
+          if (error.message === 'ResizeObserver loop completed with undelivered notifications.') {
             return false;
           }
 

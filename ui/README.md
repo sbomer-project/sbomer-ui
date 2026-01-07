@@ -1,4 +1,5 @@
 ## Development scripts
+
 ```sh
 # Install development/build dependencies
 npm install
@@ -29,7 +30,8 @@ npm run start
 ```
 
 ## Configurations
-* [TypeScript Config](./tsconfig.json)
-* [Webpack Config](./webpack.common.js)
-* [Jest Config](./jest.config.js)
-* [Editor Config](./.editorconfig)
+
+- [TypeScript Config](./tsconfig.json)
+- [Webpack Config](./webpack.common.js)
+- [Jest Config](./jest.config.js)
+- [Editor Config](./.editorconfig)
