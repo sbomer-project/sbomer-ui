@@ -21,12 +21,11 @@ import { useEventsFilters } from '@app/components/Tables/EventTable/useEventsFil
 import { useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 
-
 export function useRequestEvents() {
   const sbomerApi = DefaultSbomerApi.getInstance();
   const [total, setTotal] = useState(0);
 
-  const {query, pageIndex, pageSize } = useEventsFilters();
+  const { query, pageIndex, pageSize } = useEventsFilters();
 
   const getRequestEvents = async ({
     pageSize,

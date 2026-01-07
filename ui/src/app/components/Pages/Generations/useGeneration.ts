@@ -16,11 +16,9 @@
 /// limitations under the License.
 ///
 
-
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 import { useCallback } from 'react';
 import { useAsyncRetry } from 'react-use';
-
 
 export function useGeneration(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();

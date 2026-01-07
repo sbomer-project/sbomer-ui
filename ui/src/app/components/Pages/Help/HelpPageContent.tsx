@@ -10,7 +10,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  Tabs
+  Tabs,
 } from '@carbon/react';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -21,8 +21,8 @@ export const HelpPageContent = () => {
       <Stack gap={5}>
         <Heading>Help</Heading>
         <p>
-          Welcome to the SBOMer help section. Here you can find documentation and guides
-          to help you use the application's features effectively.
+          Welcome to the SBOMer help section. Here you can find documentation and guides to help you
+          use the application's features effectively.
         </p>
       </Stack>
 
@@ -30,7 +30,8 @@ export const HelpPageContent = () => {
         <AccordionItem title="Query Language Reference" open>
           <Stack gap={7}>
             <p>
-              Use the search bar on the <RouterLink to="/events">Events page</RouterLink> to filter and sort events.
+              Use the search bar on the <RouterLink to="/events">Events page</RouterLink> to filter
+              and sort events.
             </p>
 
             <Tabs>
@@ -53,17 +54,47 @@ export const HelpPageContent = () => {
                 <TabPanel>
                   <Stack>
                     <QueryExample description="Find all new events" query="status:NEW" />
-                    <QueryExample description="Find failed events that were not a timeout" query='status:ERROR -reason:~"timeout"' />
-                    <QueryExample description="Find events processed after the start of 2025" query="finished:>=2025" />
-                    <QueryExample description="Show new or processed events, sorted by oldest first" query="status:NEW,PROCESSED sort:created:asc" />
-                    <QueryExample description="Find events updated in September 2025" query="updated:>=2025-09-01 updated:<2025-10-01" />
+                    <QueryExample
+                      description="Find failed events that were not a timeout"
+                      query='status:ERROR -reason:~"timeout"'
+                    />
+                    <QueryExample
+                      description="Find events processed after the start of 2025"
+                      query="finished:>=2025"
+                    />
+                    <QueryExample
+                      description="Show new or processed events, sorted by oldest first"
+                      query="status:NEW,PROCESSED sort:created:asc"
+                    />
+                    <QueryExample
+                      description="Find events updated in September 2025"
+                      query="updated:>=2025-09-01 updated:<2025-10-01"
+                    />
                     <QueryExample description="Find events with a specific ID" query="id:E0AAAAA" />
-                    <QueryExample description='Find events where the reason contains "network"' query='reason:~"network"' />
-                    <QueryExample description="Find all events except those with status ERROR" query="-status:ERROR" />
-                    <QueryExample description="Find events created before September 2025" query="created:<2025-09" />
-                    <QueryExample description="Sort events by finished date, newest first" query="sort:finished:desc" />
-                    <QueryExample description="Find events for a specific metadata type" query="metadata.type:PROCESS" />
-                    <QueryExample description="Find events NOT for a specific metadata type" query="-metadata.type:PROCESS" />
+                    <QueryExample
+                      description='Find events where the reason contains "network"'
+                      query='reason:~"network"'
+                    />
+                    <QueryExample
+                      description="Find all events except those with status ERROR"
+                      query="-status:ERROR"
+                    />
+                    <QueryExample
+                      description="Find events created before September 2025"
+                      query="created:<2025-09"
+                    />
+                    <QueryExample
+                      description="Sort events by finished date, newest first"
+                      query="sort:finished:desc"
+                    />
+                    <QueryExample
+                      description="Find events for a specific metadata type"
+                      query="metadata.type:PROCESS"
+                    />
+                    <QueryExample
+                      description="Find events NOT for a specific metadata type"
+                      query="-metadata.type:PROCESS"
+                    />
                   </Stack>
                 </TabPanel>
               </TabPanels>

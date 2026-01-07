@@ -18,21 +18,27 @@
 
 import { SbomerGeneration } from '@app/types';
 
-type CarbonTagType = 'red' | 'green' | 'blue' | 'gray' | 'magenta' | 'purple' | 'cyan' | 'teal' | 'cool-gray' | 'warm-gray' | 'high-contrast' | 'outline';
+type CarbonTagType =
+  | 'red'
+  | 'green'
+  | 'blue'
+  | 'gray'
+  | 'magenta'
+  | 'purple'
+  | 'cyan'
+  | 'teal'
+  | 'cool-gray'
+  | 'warm-gray'
+  | 'high-contrast'
+  | 'outline';
 
-const GenerationStatuses = new Map<
-  string,
-  { description?: string; color: CarbonTagType }
->([
+const GenerationStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['GENERATING', { description: 'In progress', color: 'blue' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
 ]);
 
-const GenerationResults = new Map<
-  string,
-  { description?: string; color: CarbonTagType }
->([
+const GenerationResults = new Map<string, { description?: string; color: CarbonTagType }>([
   ['ERR_CONFIG_MISSING', { description: 'Missing configuration', color: 'red' }],
   ['ERR_GENERAL', { description: 'General error', color: 'red' }],
   ['ERR_CONFIG_INVALID', { description: 'Invalid configuration', color: 'red' }],
@@ -43,10 +49,7 @@ const GenerationResults = new Map<
   ['SUCCESS', { description: 'Success', color: 'green' }],
 ]);
 
-const EventStatuses = new Map<
-  string,
-  { description?: string; color: CarbonTagType }
->([
+const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['IGNORED', { description: 'Ignored', color: 'gray' }],
   ['IN_PROGRESS', { description: 'In progress', color: 'blue' }],
@@ -54,7 +57,7 @@ const EventStatuses = new Map<
   ['NEW', { description: 'New', color: 'teal' }],
   ['PROCESSED', { description: 'Processed', color: 'purple' }],
   ['ERROR', { description: 'Error', color: 'red' }],
-  ['INITIALIZED', { description: 'Initialized', color: 'blue' }]
+  ['INITIALIZED', { description: 'Initialized', color: 'blue' }],
 ]);
 
 /**
@@ -105,8 +108,6 @@ export function timestampToHumanReadable(millis: number, seconds?: false, suffix
 
   return hrd;
 }
-
-
 
 export function statusToDescription(request: SbomerGeneration): string {
   const resolved = GenerationStatuses.get(request.status);
@@ -182,7 +183,9 @@ export function extractQueryErrorMessageDetails(error: any): { message: string; 
   if (typeof error?.message === 'object') {
     return {
       message: error.message.message || 'Unknown error',
-      details: Array.isArray(error.message.details) ? error.message.details.join(', ') : error.message.details,
+      details: Array.isArray(error.message.details)
+        ? error.message.details.join(', ')
+        : error.message.details,
     };
   }
 

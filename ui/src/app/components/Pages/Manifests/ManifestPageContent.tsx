@@ -60,51 +60,47 @@ const ManifestPageContent: React.FunctionComponent = () => {
     <Stack gap={7}>
       <Heading>Manifest {id}</Heading>
 
-        <StructuredListWrapper isCondensed>
-          <StructuredListHead>
-            <StructuredListRow head>
-              <StructuredListCell head>Property</StructuredListCell>
-              <StructuredListCell head>Value</StructuredListCell>
-            </StructuredListRow>
-          </StructuredListHead>
-          <StructuredListBody>
-            <StructuredListRow>
-              <StructuredListCell>ID</StructuredListCell>
-              <StructuredListCell>
-                <span >
-                  {manifest.id}
-                </span>
-              </StructuredListCell>
-            </StructuredListRow>
-            <StructuredListRow>
-              <StructuredListCell>Created</StructuredListCell>
-              <StructuredListCell>
-                {manifest.created ? (
-                  <Stack gap={2}>
-                    <RelativeTimestamp date={manifest.created} />
-                    <span>{manifest.created.toISOString()}</span>
-                  </Stack>
-                ) : 'N/A'}
-              </StructuredListCell>
-            </StructuredListRow>
-          </StructuredListBody>
-        </StructuredListWrapper>
+      <StructuredListWrapper isCondensed>
+        <StructuredListHead>
+          <StructuredListRow head>
+            <StructuredListCell head>Property</StructuredListCell>
+            <StructuredListCell head>Value</StructuredListCell>
+          </StructuredListRow>
+        </StructuredListHead>
+        <StructuredListBody>
+          <StructuredListRow>
+            <StructuredListCell>ID</StructuredListCell>
+            <StructuredListCell>
+              <span>{manifest.id}</span>
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Created</StructuredListCell>
+            <StructuredListCell>
+              {manifest.created ? (
+                <Stack gap={2}>
+                  <RelativeTimestamp date={manifest.created} />
+                  <span>{manifest.created.toISOString()}</span>
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+        </StructuredListBody>
+      </StructuredListWrapper>
 
-        <ButtonSet>
-          <Button
-            kind="primary"
-            renderIcon={Download}
-            onClick={() => downloadManifest(manifest)}
-          >
-            Download
-          </Button>
-        </ButtonSet>
-        <MetadataOverview metadata={manifest.metadata} redirectPrefix="manifests" />
+      <ButtonSet>
+        <Button kind="primary" renderIcon={Download} onClick={() => downloadManifest(manifest)}>
+          Download
+        </Button>
+      </ButtonSet>
+      <MetadataOverview metadata={manifest.metadata} redirectPrefix="manifests" />
 
-        <Stack gap={5}>
-          <Heading>Raw JSON</Heading>
-          <CodeSnippet type="multi">
-            {JSON.stringify(
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
             manifest,
             (key, value) => {
               if (value instanceof Map) {
@@ -112,11 +108,11 @@ const ManifestPageContent: React.FunctionComponent = () => {
               }
               return value;
             },
-            2
+            2,
           )}
-          </CodeSnippet>
-        </Stack>
+        </CodeSnippet>
       </Stack>
+    </Stack>
   );
 };
 

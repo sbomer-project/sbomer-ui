@@ -27,13 +27,7 @@ export function useManifests() {
 
   const { pageIndex, pageSize } = useManifestsFilters();
 
-  const getManifests = async ({
-    pageSize,
-    pageIndex,
-  }: {
-    pageSize: number;
-    pageIndex: number;
-  }) => {
+  const getManifests = async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
     try {
       const pageIndexOffsetted = pageIndex - 1;
       return await sbomerApi.getManifests({ pageSize, pageIndex: pageIndexOffsetted });

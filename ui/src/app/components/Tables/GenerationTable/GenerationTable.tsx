@@ -8,7 +8,19 @@ import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection
 import { NoResultsSection } from '@app/components/Sections/NoResultsSection/NoResultSection';
 import { useGenerations } from '@app/components/Tables/GenerationTable/useGenerations';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
-import { DataTable, DataTableSkeleton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, Tag } from '@carbon/react';
+import {
+  DataTable,
+  DataTableSkeleton,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tag,
+} from '@carbon/react';
 import { SbomerGeneration } from '@app/types';
 
 const headers = [
@@ -25,11 +37,8 @@ export const GenerationTable = () => {
   const paramPage = useSearchParam('page') || 1;
   const paramPageSize = useSearchParam('pageSize') || 10;
 
-
-  const [{ pageIndex, pageSize, value, loading, total, error }, { setPageIndex, setPageSize }] = useGenerations(
-    +paramPage - 1,
-    +paramPageSize,
-  );
+  const [{ pageIndex, pageSize, value, loading, total, error }, { setPageIndex, setPageSize }] =
+    useGenerations(+paramPage - 1, +paramPageSize);
 
   const onSetPage = (newPage: number) => {
     setPageIndex(newPage - 1);
@@ -79,29 +88,20 @@ export const GenerationTable = () => {
 
   const table = (
     <DataTable rows={rows} headers={headers}>
-      {({
-        rows,
-        headers,
-        getTableProps,
-        getHeaderProps,
-        getRowProps,
-        getCellProps,
-      }) => (
+      {({ rows, headers, getTableProps, getHeaderProps, getRowProps, getCellProps }) => (
         <TableContainer title="Generations" description="Latest generations">
           <Table aria-label="Generations" {...getTableProps()}>
             <TableHead>
               <TableRow>
-                {headers.map(header => (
-                  <TableHeader {...getHeaderProps({ header })}>
-                    {header.header}
-                  </TableHeader>
+                {headers.map((header) => (
+                  <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map(row => (
+              {rows.map((row) => (
                 <TableRow {...getRowProps({ row })}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell) => {
                     const cellKey = cell.info.header;
                     switch (cellKey) {
                       case 'id':
@@ -132,16 +132,12 @@ export const GenerationTable = () => {
                       case 'updatedTime':
                       case 'finishedTime':
                         return (
-                          <TableCell  {...getCellProps({ cell })}>
+                          <TableCell {...getCellProps({ cell })}>
                             <RelativeTimestamp date={cell.value as Date | undefined} />
                           </TableCell>
                         );
                       default:
-                        return (
-                          <TableCell {...getCellProps({ cell })}>
-                            {cell.value}
-                          </TableCell>
-                        );
+                        return <TableCell {...getCellProps({ cell })}>{cell.value}</TableCell>;
                     }
                   })}
                 </TableRow>
@@ -154,7 +150,16 @@ export const GenerationTable = () => {
     </DataTable>
   );
 
-  const noResults = <NoResultsSection title="No generations found" message="Looks like no generations happened." onActionClick={() => { navigate('/') }} actionText={'Take me home'} />;
+  const noResults = (
+    <NoResultsSection
+      title="No generations found"
+      message="Looks like no generations happened."
+      onActionClick={() => {
+        navigate('/');
+      }}
+      actionText={'Take me home'}
+    />
+  );
   const loadingSkeleton = (
     <TableContainer title="Generations" description="Latest generations">
       <DataTableSkeleton
@@ -167,12 +172,15 @@ export const GenerationTable = () => {
     </TableContainer>
   );
 
-  const tableArea =
-    error ? <ErrorSection title="Could not load generations" message={error.message} /> :
-      loading ? loadingSkeleton :
-        total === 0 ? noResults : table;
+  const tableArea = error ? (
+    <ErrorSection title="Could not load generations" message={error.message} />
+  ) : loading ? (
+    loadingSkeleton
+  ) : total === 0 ? (
+    noResults
+  ) : (
+    table
+  );
 
-  return <div className='table-wrapper'>
-    {tableArea}
-  </div>;
+  return <div className="table-wrapper">{tableArea}</div>;
 };

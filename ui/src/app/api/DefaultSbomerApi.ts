@@ -68,7 +68,13 @@ export class DefaultSbomerApi implements SbomerApi {
     if (response.status != 200) {
       const body = await response.text();
 
-      throw new Error('Failed fetching manifests from SBOMer, got: ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed fetching manifests from SBOMer, got: ' +
+          response.status +
+          " response: '" +
+          body +
+          "'",
+      );
     }
 
     const data = await response.json();
@@ -84,7 +90,9 @@ export class DefaultSbomerApi implements SbomerApi {
     return { data: sboms, total: data.totalHits };
   }
 
-  async getManifestsForGeneration(generationId: string): Promise<{ data: SbomerManifest[]; total: number }> {
+  async getManifestsForGeneration(
+    generationId: string,
+  ): Promise<{ data: SbomerManifest[]; total: number }> {
     const response = await fetch(
       `${this.baseUrl}/api/v1beta2/manifests?query=generation.id==${generationId}&pageSize=20&pageIndex=0`,
     );
@@ -92,7 +100,13 @@ export class DefaultSbomerApi implements SbomerApi {
     if (response.status != 200) {
       const body = await response.text();
 
-      throw new Error('Failed fetching manifests from SBOMer, got: ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed fetching manifests from SBOMer, got: ' +
+          response.status +
+          " response: '" +
+          body +
+          "'",
+      );
     }
 
     const data = await response.json();
@@ -117,7 +131,9 @@ export class DefaultSbomerApi implements SbomerApi {
     const response = await fetch(`${this.baseUrl}/api/v1beta2/manifests/${id}/bom`);
     if (response.status !== 200) {
       const body = await response.text();
-      throw new Error('Failed to fetch manifest JSON, got: ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed to fetch manifest JSON, got: ' + response.status + " response: '" + body + "'",
+      );
     }
     return await response.json();
   }
@@ -145,7 +161,9 @@ export class DefaultSbomerApi implements SbomerApi {
     if (response.status != 200) {
       const body = await response.text();
 
-      throw new Error('Failed fetching SBOMer statistics, got ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed fetching SBOMer statistics, got ' + response.status + " response: '" + body + "'",
+      );
     }
 
     return (await response.json()) as SbomerStats;
@@ -162,7 +180,13 @@ export class DefaultSbomerApi implements SbomerApi {
     if (response.status != 200) {
       const body = await response.text();
 
-      throw new Error('Failed fetching generations from SBOMer, got: ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed fetching generations from SBOMer, got: ' +
+          response.status +
+          " response: '" +
+          body +
+          "'",
+      );
     }
 
     const data = await response.json();
@@ -197,7 +221,9 @@ export class DefaultSbomerApi implements SbomerApi {
     if (response.status != 200) {
       const body = await response.text();
 
-      throw new Error('Failed fetching events from SBOMer, got: ' + response.status + " response: '" + body + "'");
+      throw new Error(
+        'Failed fetching events from SBOMer, got: ' + response.status + " response: '" + body + "'",
+      );
     }
 
     const data = await response.json();
@@ -235,7 +261,11 @@ export class DefaultSbomerApi implements SbomerApi {
       if (response.status !== 200) {
         const body = await response.text();
         throw new Error(
-          'Failed fetching generations from SBOMer, got: ' + response.status + " response: '" + body + "'",
+          'Failed fetching generations from SBOMer, got: ' +
+            response.status +
+            " response: '" +
+            body +
+            "'",
         );
       }
 

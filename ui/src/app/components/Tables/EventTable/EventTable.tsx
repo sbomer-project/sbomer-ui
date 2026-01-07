@@ -22,7 +22,7 @@ import {
   TableToolbarContent,
   TableToolbarSearch,
   Tag,
-  Tile
+  Tile,
 } from '@carbon/react';
 import { Help } from '@carbon/icons-react';
 import React from 'react';
@@ -64,11 +64,12 @@ export const EventTable = () => {
     setFilters(query, pageIndex, newPerPage);
   };
 
-
   const isQueryValidationError = (error: any) => {
-    return error?.message?.includes('The provided query is not valid') ||
+    return (
+      error?.message?.includes('The provided query is not valid') ||
       error?.status === 400 ||
-      error?.code === 'INVALID_QUERY';
+      error?.code === 'INVALID_QUERY'
+    );
   };
 
   const clearFilters = () => {
@@ -121,8 +122,6 @@ export const EventTable = () => {
     setQuerySearchbarValue(event.target.value);
   };
 
-
-
   if (loading) {
     return loadingSkeleton;
   }
@@ -131,58 +130,66 @@ export const EventTable = () => {
     return <ErrorSection title="Could not load events" message={error.message} />;
   }
 
-  const queryErrorTile = error && isQueryValidationError(error) && (() => {
-    const { message, details } = extractQueryErrorMessageDetails(error);
-    return (
-      <Tile>
-        <Stack gap={5}>
-          <Heading>Invalid Query</Heading>
-          <p>
-            {message || 'Your search query is not valid. Please check your syntax or clear filters to try again.'}
-          </p>
-          {details && <p>{details}</p>}
-          <Button kind="primary" size="sm" onClick={clearFilters}>
-            Clear filters
-          </Button>
-        </Stack>
-      </Tile>
-    );
-  })();
-
+  const queryErrorTile =
+    error &&
+    isQueryValidationError(error) &&
+    (() => {
+      const { message, details } = extractQueryErrorMessageDetails(error);
+      return (
+        <Tile>
+          <Stack gap={5}>
+            <Heading>Invalid Query</Heading>
+            <p>
+              {message ||
+                'Your search query is not valid. Please check your syntax or clear filters to try again.'}
+            </p>
+            {details && <p>{details}</p>}
+            <Button kind="primary" size="sm" onClick={clearFilters}>
+              Clear filters
+            </Button>
+          </Stack>
+        </Tile>
+      );
+    })();
 
   return (
-    <DataTable rows={value || []} headers={headers} children={({ headers }) => (
-      <TableContainer title="Events" description="Latest events">
-        <TableToolbar>
-          <TableToolbarContent>
-            <TableToolbarSearch
-              persistent
-              labelText="Search events"
-              placeholder="Enter query"
-              value={querySearchbarValue}
-              onChange={querySearchBarValueOnChange}
-              onClear={clearFilters}
-              onKeyDown={(event) => { if (event.key === 'Enter') executeSearch(); }}
-              size="md"
-            />
-            <Button
-              kind="ghost"
-              hasIconOnly
-              iconDescription="Query Reference"
-              renderIcon={Help}
-              onClick={() => navigate("/help")}
-            />
-          </TableToolbarContent>
-        </TableToolbar>
+    <DataTable
+      rows={value || []}
+      headers={headers}
+      children={({ headers }) => (
+        <TableContainer title="Events" description="Latest events">
+          <TableToolbar>
+            <TableToolbarContent>
+              <TableToolbarSearch
+                persistent
+                labelText="Search events"
+                placeholder="Enter query"
+                value={querySearchbarValue}
+                onChange={querySearchBarValueOnChange}
+                onClear={clearFilters}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') executeSearch();
+                }}
+                size="md"
+              />
+              <Button
+                kind="ghost"
+                hasIconOnly
+                iconDescription="Query Reference"
+                renderIcon={Help}
+                onClick={() => navigate('/help')}
+              />
+            </TableToolbarContent>
+          </TableToolbar>
 
-        {queryErrorTile
-          ? queryErrorTile
-          : value && value.length > 0 ? (
+          {queryErrorTile ? (
+            queryErrorTile
+          ) : value && value.length > 0 ? (
             <>
               <Table>
                 <TableHead>
                   <TableRow>
-                    {headers.map(header => (
+                    {headers.map((header) => (
                       <TableHeader key={header.key}>{header.header}</TableHeader>
                     ))}
                   </TableRow>
@@ -190,11 +197,25 @@ export const EventTable = () => {
                 <TableBody>
                   {value.map((requestEvent) => (
                     <TableRow key={requestEvent.id}>
-                      <TableCell><Link to={`/events/${requestEvent.id}`}><pre>{requestEvent.id}</pre></Link></TableCell>
-                      <TableCell><Tag size="md" type={eventStatusToColor(requestEvent.status)}>{requestEvent.status}</Tag></TableCell>
-                      <TableCell><RelativeTimestamp date={requestEvent.created} /></TableCell>
-                      <TableCell><RelativeTimestamp date={requestEvent.updated} /></TableCell>
-                      <TableCell><RelativeTimestamp date={requestEvent.finished} /></TableCell>
+                      <TableCell>
+                        <Link to={`/events/${requestEvent.id}`}>
+                          <pre>{requestEvent.id}</pre>
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <Tag size="md" type={eventStatusToColor(requestEvent.status)}>
+                          {requestEvent.status}
+                        </Tag>
+                      </TableCell>
+                      <TableCell>
+                        <RelativeTimestamp date={requestEvent.created} />
+                      </TableCell>
+                      <TableCell>
+                        <RelativeTimestamp date={requestEvent.updated} />
+                      </TableCell>
+                      <TableCell>
+                        <RelativeTimestamp date={requestEvent.finished} />
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -217,9 +238,9 @@ export const EventTable = () => {
               actionText="Clear filters"
               onActionClick={clearFilters}
             />
-          )
-        }
-      </TableContainer>
-    )} />
+          )}
+        </TableContainer>
+      )}
+    />
   );
 };

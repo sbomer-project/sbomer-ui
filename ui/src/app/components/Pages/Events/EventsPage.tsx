@@ -8,7 +8,7 @@ export function EventsPage() {
 
   return (
     <AppLayout>
-        <EventTable />
+      <EventTable />
     </AppLayout>
   );
 }

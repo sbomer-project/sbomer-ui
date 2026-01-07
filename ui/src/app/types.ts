@@ -145,8 +145,13 @@ export type SbomerApi = {
     pageIndex: number;
   }): Promise<{ data: SbomerGeneration[]; total: number }>;
 
-  getManifests(_pagination: { pageSize: number; pageIndex: number }): Promise<{ data: SbomerManifest[]; total: number }>;
-  getManifestsForGeneration(_generationId: string): Promise<{ data: SbomerManifest[]; total: number }>;
+  getManifests(_pagination: {
+    pageSize: number;
+    pageIndex: number;
+  }): Promise<{ data: SbomerManifest[]; total: number }>;
+  getManifestsForGeneration(
+    _generationId: string,
+  ): Promise<{ data: SbomerManifest[]; total: number }>;
 
   getGeneration(_id: string): Promise<SbomerGeneration>;
 

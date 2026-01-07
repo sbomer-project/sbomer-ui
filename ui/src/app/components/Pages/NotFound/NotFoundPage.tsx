@@ -17,18 +17,13 @@ const NotFoundPage: React.FunctionComponent = () => {
         <Stack gap={7}>
           <ErrorFilled size={64} />
           <Stack gap={4}>
-            <Heading>
-              404 - Page not found
-            </Heading>
+            <Heading>404 - Page not found</Heading>
             <p>
-              We couldn't find the page you're looking for. The page may have been moved, deleted, or the URL might be incorrect.
+              We couldn't find the page you're looking for. The page may have been moved, deleted,
+              or the URL might be incorrect.
             </p>
           </Stack>
-          <Button
-            kind="primary"
-            onClick={handleGoHome}
-            size="lg"
-          >
+          <Button kind="primary" onClick={handleGoHome} size="lg">
             Take me home
           </Button>
         </Stack>

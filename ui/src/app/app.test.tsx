@@ -5,18 +5,18 @@ import '@testing-library/jest-dom';
 
 describe('App tests', () => {
   it('should render without crashing', () => {
-    const { container } = render(<App basename='/' />);
+    const { container } = render(<App basename="/" />);
     expect(container).toBeInTheDocument();
   });
 
   it('should render the header with app name', () => {
-    render(<App basename='/' />);
+    render(<App basename="/" />);
     const appNames = screen.getAllByText('SBOMer');
     expect(appNames.length).toBeGreaterThan(0);
   });
 
   it('should render the main navigation', () => {
-    render(<App basename='/' />);
+    render(<App basename="/" />);
     // Check that navigation links exist (using getAllByRole since some appear multiple times)
     const dashboardLinks = screen.getAllByRole('link', { name: 'Dashboard' });
     expect(dashboardLinks.length).toBeGreaterThan(0);

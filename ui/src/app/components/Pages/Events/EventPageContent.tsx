@@ -9,7 +9,7 @@ import {
   StructuredListHead,
   StructuredListRow,
   StructuredListWrapper,
-  Tag
+  Tag,
 } from '@carbon/react';
 
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
@@ -49,9 +49,7 @@ export const EventPageContent = () => {
           <StructuredListRow>
             <StructuredListCell>ID</StructuredListCell>
             <StructuredListCell>
-              <span>
-                {id}
-              </span>
+              <span>{id}</span>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -62,7 +60,9 @@ export const EventPageContent = () => {
                   <RelativeTimestamp date={request.created} />
                   <span>{request.created.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -73,7 +73,9 @@ export const EventPageContent = () => {
                   <RelativeTimestamp date={request.updated} />
                   <span>{request.updated.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -84,20 +86,22 @@ export const EventPageContent = () => {
                   <RelativeTimestamp date={request.finished} />
                   <span>{request.finished.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size='md' type={eventStatusToColor(request.status)}>
+              <Tag size="md" type={eventStatusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <MetadataOverview metadata={request.metadata} redirectPrefix='events'/>
+      <MetadataOverview metadata={request.metadata} redirectPrefix="events" />
       <Stack gap={5}>
         <Heading>Raw JSON</Heading>
         <CodeSnippet type="multi">
@@ -109,7 +113,7 @@ export const EventPageContent = () => {
               }
               return value;
             },
-            2
+            2,
           )}
         </CodeSnippet>
       </Stack>

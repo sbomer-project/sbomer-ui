@@ -6,7 +6,7 @@ import {
   DocumentMultiple_02,
   EventChange,
   Help,
-  Switcher as SwitcherIcon
+  Switcher as SwitcherIcon,
 } from '@carbon/icons-react';
 import {
   Switcher as CarbonSwitcher,
@@ -32,7 +32,7 @@ import {
   SideNavMenu,
   SideNavMenuItem,
   SkipToContent,
-  Theme
+  Theme,
 } from '@carbon/react';
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -48,11 +48,17 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
 
   const [currentTheme, setCurrentTheme] = React.useState<'white' | 'g10' | 'g90' | 'g100'>(() => {
     const savedTheme = localStorage.getItem('sbomer-theme');
-    if (savedTheme === 'white' || savedTheme === 'g10' || savedTheme === 'g90' || savedTheme === 'g100') {
+    if (
+      savedTheme === 'white' ||
+      savedTheme === 'g10' ||
+      savedTheme === 'g90' ||
+      savedTheme === 'g100'
+    ) {
       return savedTheme;
     }
     // default to system preference on first load
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersDark =
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return prefersDark ? 'g100' : 'white';
   });
 
@@ -86,24 +92,22 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   );
 
   const renderSideNavGroup = (group: IAppRouteGroup, groupIndex: number) => {
-    const isAnyChildActive = group.routes?.some(r => r.path && isRouteActive(r.path));
+    const isAnyChildActive = group.routes?.some((r) => r.path && isRouteActive(r.path));
     return (
-      <><SideNavMenu
-        key={`${group.label}-${groupIndex}`}
-        title={group.label}
-        defaultExpanded={isAnyChildActive}
-      >
-        {group.routes.map((route, idx) => route.label ? (
-          <SideNavMenuItem
-            key={`${route.label}-${idx}`}
-            as={NavLink}
-            to={route.path}
-          >
-            {route.label}
-          </SideNavMenuItem>
-        ) : null
-        )}
-      </SideNavMenu>
+      <>
+        <SideNavMenu
+          key={`${group.label}-${groupIndex}`}
+          title={group.label}
+          defaultExpanded={isAnyChildActive}
+        >
+          {group.routes.map((route, idx) =>
+            route.label ? (
+              <SideNavMenuItem key={`${route.label}-${idx}`} as={NavLink} to={route.path}>
+                {route.label}
+              </SideNavMenuItem>
+            ) : null,
+          )}
+        </SideNavMenu>
         <SideNavDivider />
       </>
     );
@@ -112,11 +116,9 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const Navigation = (
     <SideNavItems>
       {routes
-        .filter(route => route.label && route.label !== 'Help')
+        .filter((route) => route.label && route.label !== 'Help')
         .map((route, idx) =>
-          !route.routes
-            ? renderSideNavLink(route, idx)
-            : renderSideNavGroup(route, idx)
+          !route.routes ? renderSideNavLink(route, idx) : renderSideNavGroup(route, idx),
         )}
 
       <SideNavDivider />
@@ -135,73 +137,75 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
 
   return (
     <Theme theme={currentTheme}>
-      <div className='page-wrapper'>
-        <HeaderContainer isSideNavExpanded={true} render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-          <>
-            <SkipToContent href="#main-content">Skip to content</SkipToContent>
-            <Header aria-label="SBOMER">
-              <HeaderMenuButton
-                aria-label={isSideNavExpanded ? 'Close menu' : 'Open menu'}
-                onClick={() => onClickSideNavExpand()}
-                isActive={isSideNavExpanded}
-                isCollapsible={true}
-              />
-              <HeaderName prefix="" href="/">SBOMer</HeaderName>
+      <div className="page-wrapper">
+        <HeaderContainer
+          isSideNavExpanded={true}
+          render={({ isSideNavExpanded, onClickSideNavExpand }) => (
+            <>
+              <SkipToContent href="#main-content">Skip to content</SkipToContent>
+              <Header aria-label="SBOMER">
+                <HeaderMenuButton
+                  aria-label={isSideNavExpanded ? 'Close menu' : 'Open menu'}
+                  onClick={() => onClickSideNavExpand()}
+                  isActive={isSideNavExpanded}
+                  isCollapsible={true}
+                />
+                <HeaderName prefix="" href="/">
+                  SBOMer
+                </HeaderName>
 
-              <HeaderGlobalBar>
-                <HeaderGlobalAction
-                  aria-label="Options"
-                  isActive={menuPanelExpanded}
-                  onClick={() => setMenuPanelExpanded(!menuPanelExpanded)}
-                  tooltipAlignment="end"
-                >
-                  <SwitcherIcon size={20} />
-                </HeaderGlobalAction>
-              </HeaderGlobalBar>
+                <HeaderGlobalBar>
+                  <HeaderGlobalAction
+                    aria-label="Options"
+                    isActive={menuPanelExpanded}
+                    onClick={() => setMenuPanelExpanded(!menuPanelExpanded)}
+                    tooltipAlignment="end"
+                  >
+                    <SwitcherIcon size={20} />
+                  </HeaderGlobalAction>
+                </HeaderGlobalBar>
+              </Header>
 
-            </Header>
-
-            <HeaderPanel aria-label="Application Switcher" expanded={menuPanelExpanded}>
-              <Layer>
-                <CarbonSwitcher aria-label="Switcher Container">
-
-                  <ContainedList label="Appearance" kind="on-page">
-                    <ContainedListItem>
-                      <Select
-                        id="theme-select"
-                        labelText="Theme"
-                        hideLabel
-                        size="sm"
-                        value={currentTheme}
-                        onChange={(e) => {
-                          const newTheme = e.target.value as 'white' | 'g10' | 'g90' | 'g100';
-                          setCurrentTheme(newTheme);
-                          localStorage.setItem('sbomer-theme', newTheme);
-                        }}
-                      >
-                        <SelectItem value="white" text="White (Light)" />
-                        <SelectItem value="g10" text="Gray 10 (Light)" />
-                        <SelectItem value="g90" text="Gray 90 (Dark)" />
-                        <SelectItem value="g100" text="Gray 100 (Darkest)" />
-                      </Select>
-                    </ContainedListItem>
-                  </ContainedList>
-                </CarbonSwitcher>
-              </Layer>
-            </HeaderPanel>
-            <SideNav
-              aria-label="Side navigation"
-              expanded={isSideNavExpanded}
-              isFixedNav
-              isPersistent
-              isRail
-              isChildOfHeader
-            >
-              {Navigation}
-            </SideNav>
-
-          </>
-        )} />
+              <HeaderPanel aria-label="Application Switcher" expanded={menuPanelExpanded}>
+                <Layer>
+                  <CarbonSwitcher aria-label="Switcher Container">
+                    <ContainedList label="Appearance" kind="on-page">
+                      <ContainedListItem>
+                        <Select
+                          id="theme-select"
+                          labelText="Theme"
+                          hideLabel
+                          size="sm"
+                          value={currentTheme}
+                          onChange={(e) => {
+                            const newTheme = e.target.value as 'white' | 'g10' | 'g90' | 'g100';
+                            setCurrentTheme(newTheme);
+                            localStorage.setItem('sbomer-theme', newTheme);
+                          }}
+                        >
+                          <SelectItem value="white" text="White (Light)" />
+                          <SelectItem value="g10" text="Gray 10 (Light)" />
+                          <SelectItem value="g90" text="Gray 90 (Dark)" />
+                          <SelectItem value="g100" text="Gray 100 (Darkest)" />
+                        </Select>
+                      </ContainedListItem>
+                    </ContainedList>
+                  </CarbonSwitcher>
+                </Layer>
+              </HeaderPanel>
+              <SideNav
+                aria-label="Side navigation"
+                expanded={isSideNavExpanded}
+                isFixedNav
+                isPersistent
+                isRail
+                isChildOfHeader
+              >
+                {Navigation}
+              </SideNav>
+            </>
+          )}
+        />
         <Content className="main-content">
           <Grid>
             <Column sm={4} md={8} lg={16}>

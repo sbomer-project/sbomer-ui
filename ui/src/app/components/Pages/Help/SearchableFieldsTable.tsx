@@ -1,4 +1,12 @@
-import { Stack, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@carbon/react';
+import {
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
 import React from 'react';
 
 export const SearchableFieldsTable = () => (
@@ -13,13 +21,19 @@ export const SearchableFieldsTable = () => (
     </TableHead>
     <TableBody>
       <TableRow>
-        <TableCell><code>id</code></TableCell>
+        <TableCell>
+          <code>id</code>
+        </TableCell>
         <TableCell>String</TableCell>
         <TableCell>Unique identifier for the record</TableCell>
-        <TableCell><code>E0AAAAA</code></TableCell>
+        <TableCell>
+          <code>E0AAAAA</code>
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>status</code></TableCell>
+        <TableCell>
+          <code>status</code>
+        </TableCell>
         <TableCell>Enum</TableCell>
         <TableCell>Current processing state of the record</TableCell>
         <TableCell>
@@ -33,10 +47,14 @@ export const SearchableFieldsTable = () => (
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>reason</code></TableCell>
+        <TableCell>
+          <code>reason</code>
+        </TableCell>
         <TableCell>String</TableCell>
         <TableCell>Human-readable explanation for current status</TableCell>
-        <TableCell><code>"Processing failed"</code></TableCell>
+        <TableCell>
+          <code>"Processing failed"</code>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell>
@@ -50,7 +68,8 @@ export const SearchableFieldsTable = () => (
         </TableCell>
         <TableCell>Date/Timestamp</TableCell>
         <TableCell>
-          Record timestamps. Supports partial dates and comparison operators (<code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>)
+          Record timestamps. Supports partial dates and comparison operators (<code>&gt;</code>,{' '}
+          <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>)
         </TableCell>
         <TableCell>
           <Stack gap={6}>
@@ -63,11 +82,11 @@ export const SearchableFieldsTable = () => (
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>metadata.subfield</code></TableCell>
-        <TableCell>String</TableCell>
         <TableCell>
-          Nested metadata fields accessed using dot notation.
+          <code>metadata.subfield</code>
         </TableCell>
+        <TableCell>String</TableCell>
+        <TableCell>Nested metadata fields accessed using dot notation.</TableCell>
         <TableCell>
           <Stack>
             <code>metadata.type:build</code>

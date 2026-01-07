@@ -72,11 +72,15 @@ describe('Utils', () => {
     it('should return description for known statuses', () => {
       expect(statusToDescription({ status: 'FAILED' } as SbomerGeneration)).toBe('Failed');
       expect(statusToDescription({ status: 'GENERATING' } as SbomerGeneration)).toBe('In progress');
-      expect(statusToDescription({ status: 'FINISHED' } as SbomerGeneration)).toBe('Successfully finished');
+      expect(statusToDescription({ status: 'FINISHED' } as SbomerGeneration)).toBe(
+        'Successfully finished',
+      );
     });
 
     it('should return original status for unknown statuses', () => {
-      expect(statusToDescription({ status: 'UNKNOWN_STATUS' } as SbomerGeneration)).toBe('UNKNOWN_STATUS');
+      expect(statusToDescription({ status: 'UNKNOWN_STATUS' } as SbomerGeneration)).toBe(
+        'UNKNOWN_STATUS',
+      );
     });
   });
 
@@ -99,22 +103,42 @@ describe('Utils', () => {
 
   describe('resultToDescription', () => {
     it('should return "In progress" when result is null', () => {
-      expect(resultToDescription({ result: null } as unknown as SbomerGeneration)).toBe('In progress');
+      expect(resultToDescription({ result: null } as unknown as SbomerGeneration)).toBe(
+        'In progress',
+      );
     });
 
     it('should return description for known results', () => {
-      expect(resultToDescription({ result: 'SUCCESS' } as unknown as SbomerGeneration)).toBe('Success');
-      expect(resultToDescription({ result: 'ERR_CONFIG_MISSING' } as unknown as SbomerGeneration)).toBe('Missing configuration');
-      expect(resultToDescription({ result: 'ERR_GENERAL' } as unknown as SbomerGeneration)).toBe('General error');
-      expect(resultToDescription({ result: 'ERR_CONFIG_INVALID' } as unknown as SbomerGeneration)).toBe('Invalid configuration');
-      expect(resultToDescription({ result: 'ERR_INDEX_INVALID' } as unknown as SbomerGeneration)).toBe('Invalid product index');
-      expect(resultToDescription({ result: 'ERR_GENERATION' } as unknown as SbomerGeneration)).toBe('Generation failure');
-      expect(resultToDescription({ result: 'ERR_SYSTEM' } as unknown as SbomerGeneration)).toBe('System error');
-      expect(resultToDescription({ result: 'ERR_MULTI' } as unknown as SbomerGeneration)).toBe('Multiple errors');
+      expect(resultToDescription({ result: 'SUCCESS' } as unknown as SbomerGeneration)).toBe(
+        'Success',
+      );
+      expect(
+        resultToDescription({ result: 'ERR_CONFIG_MISSING' } as unknown as SbomerGeneration),
+      ).toBe('Missing configuration');
+      expect(resultToDescription({ result: 'ERR_GENERAL' } as unknown as SbomerGeneration)).toBe(
+        'General error',
+      );
+      expect(
+        resultToDescription({ result: 'ERR_CONFIG_INVALID' } as unknown as SbomerGeneration),
+      ).toBe('Invalid configuration');
+      expect(
+        resultToDescription({ result: 'ERR_INDEX_INVALID' } as unknown as SbomerGeneration),
+      ).toBe('Invalid product index');
+      expect(resultToDescription({ result: 'ERR_GENERATION' } as unknown as SbomerGeneration)).toBe(
+        'Generation failure',
+      );
+      expect(resultToDescription({ result: 'ERR_SYSTEM' } as unknown as SbomerGeneration)).toBe(
+        'System error',
+      );
+      expect(resultToDescription({ result: 'ERR_MULTI' } as unknown as SbomerGeneration)).toBe(
+        'Multiple errors',
+      );
     });
 
     it('should return original result for unknown results', () => {
-      expect(resultToDescription({ result: 'UNKNOWN_RESULT' } as unknown as SbomerGeneration)).toBe('UNKNOWN_RESULT');
+      expect(resultToDescription({ result: 'UNKNOWN_RESULT' } as unknown as SbomerGeneration)).toBe(
+        'UNKNOWN_RESULT',
+      );
     });
   });
 
@@ -201,7 +225,8 @@ describe('Utils', () => {
   describe('extractQueryErrorMessageDetails', () => {
     it('should extract message and details from JSON response string', () => {
       const error = {
-        message: 'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
+        message:
+          'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
       };
       const result = extractQueryErrorMessageDetails(error);
       expect(result.message).toBe('Bad request');

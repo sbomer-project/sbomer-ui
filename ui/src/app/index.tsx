@@ -7,14 +7,14 @@ import './carbon-styles.scss';
 
 const App = ({ basename }: { basename: string }) => {
   return (
-        <RouterProvider
-          router={createBrowserRouter(
-            routes
-              .filter((route) => !route.routes)
-              .map((route: IAppRoute) => ({ element: route.element, path: route.path }) as RouteObject),
-            { basename: basename }
-          )}
-        />
+    <RouterProvider
+      router={createBrowserRouter(
+        routes
+          .filter((route) => !route.routes)
+          .map((route: IAppRoute) => ({ element: route.element, path: route.path }) as RouteObject),
+        { basename: basename },
+      )}
+    />
   );
 };
 

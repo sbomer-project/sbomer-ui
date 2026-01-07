@@ -26,7 +26,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
   useDocumentTitle('SBOMer | Generations | ' + id);
 
   if (error) {
-    return <ErrorSection title="Could not load generations" message={error.message}  />;
+    return <ErrorSection title="Could not load generations" message={error.message} />;
   }
 
   if (loading) {
@@ -51,9 +51,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>ID</StructuredListCell>
             <StructuredListCell>
-              <span>
-                {request.id}
-              </span>
+              <span>{request.id}</span>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -64,7 +62,9 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   <RelativeTimestamp date={request.created} />
                   <span>{request.created.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -75,7 +75,9 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   <RelativeTimestamp date={request.updated} />
                   <span>{request.updated.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -86,13 +88,15 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   <RelativeTimestamp date={request.finished} />
                   <span>{request.finished.toISOString()}</span>
                 </Stack>
-              ) : 'N/A'}
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size='md' type={statusToColor(request.status)}>
+              <Tag size="md" type={statusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>
@@ -100,18 +104,18 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Result</StructuredListCell>
             <StructuredListCell>
-              <Tag size='md' type={resultToColor(request.result)}>
+              <Tag size="md" type={resultToColor(request.result)}>
                 {request.result || 'In progress'}
               </Tag>
             </StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <MetadataOverview metadata={request.metadata} redirectPrefix='generations'/>
-        <Stack gap={5}>
-          <Heading>Raw JSON</Heading>
-          <CodeSnippet type="multi">
-            {JSON.stringify(
+      <MetadataOverview metadata={request.metadata} redirectPrefix="generations" />
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
             request,
             (key, value) => {
               if (value instanceof Map) {
@@ -119,10 +123,10 @@ const GenerationPageContent: React.FunctionComponent = () => {
               }
               return value;
             },
-            2
+            2,
           )}
-          </CodeSnippet>
-        </Stack>
+        </CodeSnippet>
+      </Stack>
     </Stack>
   );
 };

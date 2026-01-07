@@ -1,4 +1,13 @@
-import { CodeSnippet, Stack, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@carbon/react';
+import {
+  CodeSnippet,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
 import React from 'react';
 
 export const SyntaxOperationsTable = () => (
@@ -12,7 +21,9 @@ export const SyntaxOperationsTable = () => (
     </TableHead>
     <TableBody>
       <TableRow>
-        <TableCell><code>:</code></TableCell>
+        <TableCell>
+          <code>:</code>
+        </TableCell>
         <TableCell>Exact match</TableCell>
         <TableCell>
           <CodeSnippet type="inline">status:NEW</CodeSnippet>
@@ -21,7 +32,9 @@ export const SyntaxOperationsTable = () => (
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>:~</code></TableCell>
+        <TableCell>
+          <code>:~</code>
+        </TableCell>
         <TableCell>Contains</TableCell>
         <TableCell>
           <CodeSnippet type="inline">reason:~"fail"</CodeSnippet>
@@ -29,7 +42,7 @@ export const SyntaxOperationsTable = () => (
       </TableRow>
       <TableRow>
         <TableCell>
-          <Stack orientation='horizontal'>
+          <Stack orientation="horizontal">
             <code>:&gt;=</code>
             <code>:&lt;=</code>
             <code>:&lt;</code>
@@ -42,21 +55,27 @@ export const SyntaxOperationsTable = () => (
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>,</code></TableCell>
+        <TableCell>
+          <code>,</code>
+        </TableCell>
         <TableCell>OR values</TableCell>
         <TableCell>
           <CodeSnippet type="inline">status:NEW,ERROR</CodeSnippet>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>-</code></TableCell>
+        <TableCell>
+          <code>-</code>
+        </TableCell>
         <TableCell>Negate</TableCell>
         <TableCell>
           <CodeSnippet type="inline">-status:PROCESSED</CodeSnippet>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell><code>sort:</code></TableCell>
+        <TableCell>
+          <code>sort:</code>
+        </TableCell>
         <TableCell>Sort</TableCell>
         <TableCell>
           <CodeSnippet type="inline">sort:created:desc</CodeSnippet>

@@ -29,11 +29,7 @@ export function useEventGeneration(id: string) {
     }
   };
 
-  const {
-    loading,
-    value,
-    error,
-  } = useAsyncRetry(
+  const { loading, value, error } = useAsyncRetry(
     () =>
       getRequestEventGenerations(id).then((data) => {
         return data;

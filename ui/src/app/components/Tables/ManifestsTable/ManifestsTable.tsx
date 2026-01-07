@@ -1,14 +1,23 @@
 import { useManifestsFilters } from '@app/components/Tables/ManifestsTable/useManifestsFilters';
 import { useManifests } from '@app/components/Tables/ManifestsTable/useSboms';
 
-
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import { NoResultsSection } from '@app/components/Sections/NoResultsSection/NoResultSection';
 import { RelativeTimestamp } from '@app/components/UtilsComponents/RelativeTimestamp';
-import { DataTable, DataTableSkeleton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '@carbon/react';
+import {
+  DataTable,
+  DataTableSkeleton,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@carbon/react';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 
 const columnNames = {
   id: 'ID',
@@ -28,13 +37,12 @@ export const ManifestsTable = () => {
   const [{ value, loading, total, error }] = useManifests();
 
   const onSetPage = (newPage: number) => {
-    setFilters(newPage, pageSize)
+    setFilters(newPage, pageSize);
   };
 
   const onPerPageSelect = (newPerPage: number) => {
-    setFilters(pageIndex, newPerPage)
+    setFilters(pageIndex, newPerPage);
   };
-
 
   const pagination = (
     <Pagination
@@ -62,77 +70,73 @@ export const ManifestsTable = () => {
     />
   );
 
-const rows = (value || []).map(manifest => ({
-  id: manifest.id,
-  creationTime: manifest.created,
-}));
+  const rows = (value || []).map((manifest) => ({
+    id: manifest.id,
+    creationTime: manifest.created,
+  }));
 
-const table = (
-  <DataTable
-    rows={rows}
-    headers={[
-      { key: 'id', header: columnNames.id },
-      { key: 'creationTime', header: columnNames.creationTime },
-    ]}
-  >{({
-    rows,
-    headers,
-    getTableProps,
-    getHeaderProps,
-    getRowProps,
-    getCellProps,
-  }) => (
+  const table = (
+    <DataTable
+      rows={rows}
+      headers={[
+        { key: 'id', header: columnNames.id },
+        { key: 'creationTime', header: columnNames.creationTime },
+      ]}
+    >
+      {({ rows, headers, getTableProps, getHeaderProps, getRowProps, getCellProps }) => (
+        <TableContainer title="Manifests" description="Latest manifests">
+          <Table {...getTableProps()}>
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow {...getRowProps({ row })}>
+                  {row.cells.map((cell) => {
+                    const cellKey = cell.info.header;
+                    switch (cellKey) {
+                      case 'id':
+                        return (
+                          <TableCell {...getCellProps({ cell })}>
+                            <Link to={`/manifests/${cell.value}`}>
+                              <pre>{cell.value}</pre>
+                            </Link>
+                          </TableCell>
+                        );
+                      case 'creationTime':
+                        return (
+                          <TableCell {...getCellProps({ cell })}>
+                            <RelativeTimestamp date={cell.value as Date | undefined} />
+                          </TableCell>
+                        );
+                      default:
+                        return <TableCell {...getCellProps({ cell })}>{cell.value}</TableCell>;
+                    }
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {pagination}
+        </TableContainer>
+      )}
+    </DataTable>
+  );
 
-    <TableContainer title="Manifests" description="Latest manifests">
-      <Table {...getTableProps()}>
-        <TableHead>
-          <TableRow>
-            {headers.map(header => (
-              <TableHeader {...getHeaderProps({ header })}>
-                {header.header}
-              </TableHeader>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map(row => (
-            <TableRow {...getRowProps({ row })}>
-              {row.cells.map(cell => {
-                const cellKey = cell.info.header;
-                switch (cellKey) {
-                  case 'id':
-                    return (
-                      <TableCell {...getCellProps({ cell })}>
-                        <Link to={`/manifests/${cell.value}`}>
-                          <pre>{cell.value}</pre>
-                        </Link>
-                      </TableCell>
-                    );
-                  case 'creationTime':
-                    return (
-                      <TableCell {...getCellProps({ cell })}>
-                        <RelativeTimestamp date={cell.value as Date | undefined} />
-                      </TableCell>
-                    );
-                  default:
-                    return (
-                      <TableCell {...getCellProps({ cell })}>
-                        {cell.value}
-                      </TableCell>
-                    );
-                }
-              })}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {pagination}
-    </TableContainer>
-  )}
-  </DataTable>
-);
-
-  const noResults = <NoResultsSection title="No manifests found" message="Looks like no manifests were generated." onActionClick={() => { navigate('/') }} actionText={'Take me home'} />;
+  const noResults = (
+    <NoResultsSection
+      title="No manifests found"
+      message="Looks like no manifests were generated."
+      onActionClick={() => {
+        navigate('/');
+      }}
+      actionText={'Take me home'}
+    />
+  );
   const loadingSkeleton = (
     <TableContainer title="Manifests" description="Latest manifests">
       <DataTableSkeleton
@@ -145,14 +149,15 @@ const table = (
     </TableContainer>
   );
 
+  const tableArea = error ? (
+    <ErrorSection title="Could not load manifests" message={error.message} />
+  ) : loading ? (
+    loadingSkeleton
+  ) : total === 0 ? (
+    noResults
+  ) : (
+    table
+  );
 
-  const tableArea =
-    error ? <ErrorSection title="Could not load manifests" message={error.message} /> :
-      loading ? loadingSkeleton :
-        total === 0 ? noResults : table;
-
-
-  return <div className='table-wrapper'>
-    {tableArea}
-  </div>
+  return <div className="table-wrapper">{tableArea}</div>;
 };

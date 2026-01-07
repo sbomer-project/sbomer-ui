@@ -1,15 +1,11 @@
 import { AppLayout } from '@app/components/Pages/AppLayout/AppLayout';
 import { AboutSection } from '@app/components/Sections/AboutSection/AboutSection';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import {
-  Heading,
-  InlineNotification,
-  Stack
-} from '@carbon/react';
+import { Heading, InlineNotification, Stack } from '@carbon/react';
 import * as React from 'react';
 
 const Dashboard: React.FunctionComponent = () => {
-  useDocumentTitle("SBOMer | Dashboard");
+  useDocumentTitle('SBOMer | Dashboard');
 
   return (
     <AppLayout>

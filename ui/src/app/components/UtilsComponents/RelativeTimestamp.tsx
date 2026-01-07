@@ -13,19 +13,13 @@ interface RelativeTimestampProps {
  * Displays a relative timestamp with a tooltip showing the ISO string.
  * Shows "N/A" for missing or invalid dates.
  */
-export const RelativeTimestamp: React.FC<RelativeTimestampProps> = ({
-  date,
-}) => {
+export const RelativeTimestamp: React.FC<RelativeTimestampProps> = ({ date }) => {
   if (!date) {
     return <span>N/A</span>;
   }
 
   const isoString = date.toISOString();
-  const relativeTime = timestampToHumanReadable(
-    Date.now() - date.getTime(),
-    false,
-    'ago'
-  );
+  const relativeTime = timestampToHumanReadable(Date.now() - date.getTime(), false, 'ago');
 
   return (
     <span>
