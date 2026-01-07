@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Check Formatting (Prettier)
-        run: npx prettier --check .
+        run: npm run format:check
 
       - name: Lint (TypeScript/ESLint)
         run: npm run lint
