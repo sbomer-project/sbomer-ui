@@ -36,22 +36,26 @@ jobs:
         run: npm ci
 
       - name: Check Formatting (Prettier)
+        id: format
         run: npm run format:check
 
       - name: Lint (TypeScript/ESLint)
+        id: lint
         run: npm run lint
 
       - name: Run Tests
+        id: test
         run: npm test
 
       - name: Run Build
+        id: build
         run: npm run build
 
       - name: Generate Quality Summary
         if: always()
         run: |
           echo "## UI Build Results" >> $GITHUB_STEP_SUMMARY
-          echo "- **Linting:** ${{ steps.lint.outcome == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Formatting:** ${{ steps.format.outcome == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tests:** ${{ steps.test.outcome == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Build:** ${{ steps.build.outcome == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Linting:** $([[ '${{ steps.lint.outcome }}' == 'success' ]] && echo '✅' || echo '❌')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Formatting:** $([[ '${{ steps.format.outcome }}' == 'success' ]] && echo '✅' || echo '❌')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tests:** $([[ '${{ steps.test.outcome }}' == 'success' ]] && echo '✅' || echo '❌')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** $([[ '${{ steps.build.outcome }}' == 'success' ]] && echo '✅' || echo '❌')" >> $GITHUB_STEP_SUMMARY
