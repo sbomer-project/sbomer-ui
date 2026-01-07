@@ -109,23 +109,23 @@ export function timestampToHumanReadable(millis: number, seconds?: false, suffix
 
 
 export function statusToDescription(request: SbomerGeneration): string {
-  var resolved = GenerationStatuses.get(request.status);
+  const resolved = GenerationStatuses.get(request.status);
 
   return resolved?.description ?? request.status;
 }
 
 export function eventStatusToDescription(eventStatus: string): string {
-  var resolved = EventStatuses.get(eventStatus);
+  const resolved = EventStatuses.get(eventStatus);
 
   return resolved?.description ?? eventStatus;
 }
 
 export function resultToDescription(request: SbomerGeneration): string {
-  if (request.result == null) {
+  if (request.result === null) {
     return 'In progress';
   }
 
-  var resolved = GenerationResults.get(request.result);
+  const resolved = GenerationResults.get(request.result);
 
   return resolved?.description ?? request.result;
 }
@@ -139,19 +139,19 @@ export function statusToColor(status: string): CarbonTagType {
 }
 
 export function eventStatusToColor(status: string): CarbonTagType {
-  var resolved = EventStatuses.get(status);
+  const resolved = EventStatuses.get(status);
 
   return resolved?.color ?? 'gray';
 }
 
 export function resultToColor(result: string): CarbonTagType {
-  var resolved = GenerationResults.get(result);
+  const resolved = GenerationResults.get(result);
 
   return resolved?.color ?? 'warm-gray';
 }
 
 export function isInProgress(status: string): boolean {
-  if (status == 'FINISHED' || status == 'FAILED') {
+  if (status === 'FINISHED' || status === 'FAILED') {
     return false;
   }
 
@@ -159,7 +159,7 @@ export function isInProgress(status: string): boolean {
 }
 
 export function isSuccess(status: string): boolean {
-  return status == 'FINISHED' ? true : false;
+  return status === 'FINISHED';
 }
 
 export function extractQueryErrorMessageDetails(error: any): { message: string; details?: string } {
