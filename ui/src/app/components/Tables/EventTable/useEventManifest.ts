@@ -38,7 +38,7 @@ export function useRequestEventManifest(id: string) {
       getRequestEvent(id).then((data) => {
         return data;
       }),
-    [getRequestEvent, id],
+    [id],
   );
 
   return [
