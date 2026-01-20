@@ -62,7 +62,7 @@ export class DefaultSbomerApi implements SbomerApi {
     pageIndex: number;
   }): Promise<{ data: SbomerManifest[]; total: number }> {
     const response = await fetch(
-      `${this.baseUrl}/api/v1beta2/manifests?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}`,
+      `${this.baseUrl}/api/v1/manifests?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}`,
     );
 
     if (response.status != 200) {
@@ -94,7 +94,7 @@ export class DefaultSbomerApi implements SbomerApi {
     generationId: string,
   ): Promise<{ data: SbomerManifest[]; total: number }> {
     const response = await fetch(
-      `${this.baseUrl}/api/v1beta2/manifests?query=generation.id==${generationId}&pageSize=20&pageIndex=0`,
+      `${this.baseUrl}/api/v1/manifests?query=generation.id==${generationId}&pageSize=20&pageIndex=0`,
     );
 
     if (response.status != 200) {
@@ -123,12 +123,12 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getManifest(id: string): Promise<SbomerManifest> {
-    const response = await this.client.get(`/api/v1beta2/manifests/${id}`);
+    const response = await this.client.get(`/api/v1/manifests/${id}`);
     return new SbomerManifest(response.data);
   }
 
   async getManifestJson(id: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/api/v1beta2/manifests/${id}/bom`);
+    const response = await fetch(`${this.baseUrl}/api/v1/manifests/${id}/bom`);
     if (response.status !== 200) {
       const body = await response.text();
       throw new Error(
@@ -139,7 +139,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getLogPaths(generationId: string): Promise<Array<string>> {
-    const response = await this.client.get(`/api/v1beta2/generations/${generationId}/logs`);
+    const response = await this.client.get(`/api/v1/generations/${generationId}/logs`);
 
     if (response.status != 200) {
       throw new Error(
@@ -156,7 +156,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async stats(): Promise<SbomerStats> {
-    const response = await fetch(`${this.baseUrl}/api/v1beta2/stats`);
+    const response = await fetch(`${this.baseUrl}/api/v1/stats`);
 
     if (response.status != 200) {
       const body = await response.text();
@@ -174,7 +174,7 @@ export class DefaultSbomerApi implements SbomerApi {
     pageIndex: number;
   }): Promise<{ data: SbomerGeneration[]; total: number }> {
     const response = await fetch(
-      `${this.baseUrl}/api/v1beta2/generations?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}`,
+      `${this.baseUrl}/api/v1/generations?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}`,
     );
 
     if (response.status != 200) {
@@ -203,7 +203,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getGeneration(id: string): Promise<SbomerGeneration> {
-    const response = await this.client.get(`/api/v1beta2/generations/${id}`);
+    const response = await this.client.get(`/api/v1/generations/${id}`);
     return new SbomerGeneration(response.data);
   }
 
@@ -215,7 +215,7 @@ export class DefaultSbomerApi implements SbomerApi {
     query: string,
   ): Promise<{ data: SbomerEvent[]; total: number }> {
     const response = await fetch(
-      `${this.baseUrl}/api/v1beta2/events/?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}&query=${encodeURIComponent(query)}`,
+      `${this.baseUrl}/api/v1/requests/?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}&query=${encodeURIComponent(query)}`,
     );
 
     if (response.status != 200) {
@@ -242,7 +242,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getEvent(id: string): Promise<SbomerEvent> {
-    const response = await this.client.get(`/api/v1beta2/events/${id}`);
+    const response = await this.client.get(`/api/v1/events/${id}`);
     return new SbomerEvent(response.data);
   }
 
@@ -255,7 +255,7 @@ export class DefaultSbomerApi implements SbomerApi {
     // Loop through pages until all content is retrieved
     while (true) {
       const response = await fetch(
-        `${this.baseUrl}/api/v1beta2/generations?query=request.id=eq=${id}&sort=creationTime=desc=&pageSize=${pageSize}&pageIndex=${pageIndex}`,
+        `${this.baseUrl}/api/v1/generations?query=request.id=eq=${id}&sort=creationTime=desc=&pageSize=${pageSize}&pageIndex=${pageIndex}`,
       );
 
       if (response.status !== 200) {
