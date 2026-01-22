@@ -270,7 +270,6 @@ export class DefaultSbomerApi implements SbomerApi {
       }
 
       const data = await response.json();
-
       // Update totalHits on first page
       if (pageIndex === 0) {
         totalHits = data.totalHits;

@@ -66,13 +66,21 @@ export type SbomerStats = {
 
 export class SbomerGeneration {
   public id: string;
+  public generatorName: string;
+  public generatorVersion: string;
+  private created: Date;
+  private updated?: Date;
+  public finished?: Date;
   public status: string;
   public result: string;
   public reason: string;
-  public created: Date;
-  public updated?: Date;
-  public finished?: Date;
-  public request?: object;
+  public requestId: string;
+  public targetType: string;
+  public targetIdentifier: string;
+
+  // todo
+  // generationSBomUrls
+  // enhancements
   public metadata?: Map<string, string>;
 
   constructor(payload: any) {
@@ -82,13 +90,16 @@ export class SbomerGeneration {
     this.reason = payload.reason;
 
     this.created = new Date(payload.created);
-
     this.updated = payload.updated ? new Date(payload.updated) : undefined;
-
     this.finished = payload.finished ? new Date(payload.finished) : undefined;
 
-    this.request = payload.request;
+    this.requestId = payload.requestId;
     this.metadata = payload.metadata ? new Map(Object.entries(payload.metadata)) : undefined;
+    this.generatorName = payload.generatorName;
+    this.generatorVersion = payload.generatorVersion;
+    this.requestId = payload.requestId;
+    this.targetType = payload.targetType;
+    this.targetIdentifier = payload.targetIdentifier;
   }
 }
 
@@ -106,28 +117,13 @@ export class SbomerManifest {
 
 export class SbomerEvent {
   public id: string;
-  public parent: any;
   public created: Date;
-  public updated: Date;
-  public finished?: Date;
   public status: string;
-  public reason: string;
-  public metadata?: Map<string, string>;
-  public request?: object;
-  public generations: SbomerGeneration[] = [];
 
   constructor(payload: any) {
     this.id = payload.id;
-    this.parent = payload.parent;
-    this.created = new Date(payload.created);
-    this.updated = new Date(payload.updated);
-    if (payload.finished) {
-      this.finished = new Date(payload.finished);
-    }
+    this.created = new Date(payload.creationDate);
     this.status = payload.status;
-    this.reason = payload.reason;
-    this.metadata = payload.metadata ? new Map(Object.entries(payload.metadata)) : undefined;
-    this.request = payload.request;
   }
 }
 

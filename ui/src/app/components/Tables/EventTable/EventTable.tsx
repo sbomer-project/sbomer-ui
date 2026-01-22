@@ -31,8 +31,6 @@ import { Link, useNavigate } from 'react-router-dom';
 const columnNames = {
   id: 'ID',
   created: 'Created',
-  updated: 'Updated',
-  finished: 'Finished',
   status: 'Status',
 };
 
@@ -40,8 +38,6 @@ const headers = [
   { key: 'id', header: columnNames.id },
   { key: 'status', header: columnNames.status },
   { key: 'created', header: columnNames.created },
-  { key: 'updated', header: columnNames.updated },
-  { key: 'finished', header: columnNames.finished },
 ];
 
 export const EventTable = () => {
@@ -209,12 +205,6 @@ export const EventTable = () => {
                       </TableCell>
                       <TableCell>
                         <RelativeTimestamp date={requestEvent.created} />
-                      </TableCell>
-                      <TableCell>
-                        <RelativeTimestamp date={requestEvent.updated} />
-                      </TableCell>
-                      <TableCell>
-                        <RelativeTimestamp date={requestEvent.finished} />
                       </TableCell>
                     </TableRow>
                   ))}
