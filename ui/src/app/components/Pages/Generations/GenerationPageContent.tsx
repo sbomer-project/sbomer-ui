@@ -111,7 +111,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <MetadataOverview metadata={request.metadata} redirectPrefix="generations" />
       <Stack gap={5}>
         <Heading>Raw JSON</Heading>
         <CodeSnippet type="multi">
