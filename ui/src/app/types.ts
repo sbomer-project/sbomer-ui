@@ -68,8 +68,8 @@ export class SbomerGeneration {
   public id: string;
   public generatorName: string;
   public generatorVersion: string;
-  private created: Date;
-  private updated?: Date;
+  public created: Date;
+  public updated?: Date;
   public finished?: Date;
   public status: string;
   public result: string;
@@ -141,19 +141,7 @@ export type SbomerApi = {
     pageIndex: number;
   }): Promise<{ data: SbomerGeneration[]; total: number }>;
 
-  getManifests(_pagination: {
-    pageSize: number;
-    pageIndex: number;
-  }): Promise<{ data: SbomerManifest[]; total: number }>;
-  getManifestsForGeneration(
-    _generationId: string,
-  ): Promise<{ data: SbomerManifest[]; total: number }>;
-
   getGeneration(_id: string): Promise<SbomerGeneration>;
-
-  getManifest(_id: string): Promise<SbomerManifest>;
-
-  getManifestJson(_id: string): Promise<string>;
 
   getEvents(
     _pagination: {

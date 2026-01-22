@@ -17,7 +17,6 @@ import {
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { useGeneration } from './useGeneration';
-import { MetadataOverview } from '@app/components/UtilsComponents/MetadataOverview';
 
 const GenerationPageContent: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();

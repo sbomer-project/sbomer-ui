@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Dashboard } from './components/Pages/Dashboard/Dashboard';
 import { GenerationPage } from './components/Pages/Generations/GenerationPage';
 import { GenerationsPage } from './components/Pages/Generations/GenerationsPage';
-import { ManifestPage } from './components/Pages/Manifests/ManifestPage';
-import { ManifestsPage } from './components/Pages/Manifests/ManifestsPage';
+
 import { EventsPage } from './components/Pages/Events/EventsPage';
 import { EventPage } from './components/Pages/Events/EventPage';
 import { NotFoundPage } from './components/Pages/NotFound/NotFoundPage';

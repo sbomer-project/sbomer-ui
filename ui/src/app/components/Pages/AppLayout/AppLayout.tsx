@@ -3,7 +3,6 @@ import {
   Application,
   ChevronRight,
   Dashboard,
-  DocumentMultiple_02,
   EventChange,
   Help,
   Switcher as SwitcherIcon,
@@ -65,7 +64,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const getRouteIcon = (path: string, label?: string) => {
     if (path === '/' || label === 'Dashboard') return Dashboard;
     if (path.includes('/generations') || label === 'Generations') return Application;
-    if (path.includes('/manifests') || label === 'Manifests') return DocumentMultiple_02;
     if (path.includes('/events') || label === 'Events') return EventChange;
     if (path.includes('/help') || label === 'Help') return Help;
     return ChevronRight;

@@ -17,7 +17,7 @@
 ///
 
 import axios, { Axios, AxiosError } from 'axios';
-import { SbomerApi, SbomerEvent, SbomerGeneration, SbomerManifest, SbomerStats } from '../types';
+import { SbomerApi, SbomerEvent, SbomerGeneration, SbomerStats } from '../types';
 
 type Options = {
   baseUrl: string;
@@ -55,87 +55,6 @@ export class DefaultSbomerApi implements SbomerApi {
         return Promise.reject(error);
       },
     );
-  }
-
-  async getManifests(pagination: {
-    pageSize: number;
-    pageIndex: number;
-  }): Promise<{ data: SbomerManifest[]; total: number }> {
-    const response = await fetch(
-      `${this.baseUrl}/api/v1/manifests?pageSize=${pagination.pageSize}&pageIndex=${pagination.pageIndex}`,
-    );
-
-    if (response.status != 200) {
-      const body = await response.text();
-
-      throw new Error(
-        'Failed fetching manifests from SBOMer, got: ' +
-          response.status +
-          " response: '" +
-          body +
-          "'",
-      );
-    }
-
-    const data = await response.json();
-
-    const sboms: SbomerManifest[] = [];
-
-    if (data.content) {
-      data.content.forEach((sbom: any) => {
-        sboms.push(new SbomerManifest(sbom));
-      });
-    }
-
-    return { data: sboms, total: data.totalHits };
-  }
-
-  async getManifestsForGeneration(
-    generationId: string,
-  ): Promise<{ data: SbomerManifest[]; total: number }> {
-    const response = await fetch(
-      `${this.baseUrl}/api/v1/manifests?query=generation.id==${generationId}&pageSize=20&pageIndex=0`,
-    );
-
-    if (response.status != 200) {
-      const body = await response.text();
-
-      throw new Error(
-        'Failed fetching manifests from SBOMer, got: ' +
-          response.status +
-          " response: '" +
-          body +
-          "'",
-      );
-    }
-
-    const data = await response.json();
-
-    const sboms: SbomerManifest[] = [];
-
-    if (data.content) {
-      data.content.forEach((sbom: any) => {
-        sboms.push(new SbomerManifest(sbom));
-      });
-    }
-
-    return { data: sboms, total: data.totalHits };
-  }
-
-  async getManifest(id: string): Promise<SbomerManifest> {
-    const response = await this.client.get(`/api/v1/manifests/${id}`);
-    return new SbomerManifest(response.data);
-  }
-
-  async getManifestJson(id: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/api/v1/manifests/${id}/bom`);
-    if (response.status !== 200) {
-      const body = await response.text();
-      throw new Error(
-        'Failed to fetch manifest JSON, got: ' + response.status + " response: '" + body + "'",
-      );
-    }
-    return await response.json();
   }
 
   async getLogPaths(generationId: string): Promise<Array<string>> {
