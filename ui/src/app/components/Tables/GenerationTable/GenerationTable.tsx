@@ -9,7 +9,6 @@ import { NoResultsSection } from '@app/components/Sections/NoResultsSection/NoRe
 import { useGenerations } from '@app/components/Tables/GenerationTable/useGenerations';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import {
-  DataTable,
   DataTableSkeleton,
   Pagination,
   Table,
@@ -77,77 +76,59 @@ export const GenerationTable = () => {
     />
   );
 
-  const rows = (value ?? []).map((g: SbomerGeneration) => ({
-    id: String(g.id),
-    status: g.status ?? 'unknown',
-    result: g.result ?? 'unknown',
-    creationTime: g.created ? new Date(g.created) : undefined,
-    updatedTime: g.updated ? new Date(g.updated) : undefined,
-    finishedTime: g.finished ? new Date(g.finished) : undefined,
-  }));
+  const rows =
+    (value ?? []).map((g: SbomerGeneration) => ({
+      id: String(g.id),
+      status: g.status ?? 'unknown',
+      result: g.result ?? 'unknown',
+      creationTime: g.created ? new Date(g.created) : undefined,
+      updatedTime: g.updated ? new Date(g.updated) : undefined,
+      finishedTime: g.finished ? new Date(g.finished) : undefined,
+    })) ?? [];
 
   const table = (
-    <DataTable rows={rows} headers={headers}>
-      {({ rows, headers, getTableProps, getHeaderProps, getRowProps, getCellProps }) => (
-        <TableContainer title="Generations" description="Latest generations">
-          <Table aria-label="Generations" {...getTableProps()}>
-            <TableHead>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
-                  {row.cells.map((cell) => {
-                    const cellKey = cell.info.header;
-                    switch (cellKey) {
-                      case 'id':
-                        return (
-                          <TableCell {...getCellProps({ cell })}>
-                            <Link to={`/generations/${cell.value}`}>
-                              <pre>{cell.value}</pre>
-                            </Link>
-                          </TableCell>
-                        );
-                      case 'status':
-                        return (
-                          <TableCell {...getCellProps({ cell })}>
-                            <Tag size="md" type={statusToColor(cell.value as string)}>
-                              {cell.value || 'unknown'}
-                            </Tag>
-                          </TableCell>
-                        );
-                      case 'result':
-                        return (
-                          <TableCell {...getCellProps({ cell })}>
-                            <Tag size="md" type={resultToColor(cell.value as string)}>
-                              {cell.value || 'unknown'}
-                            </Tag>
-                          </TableCell>
-                        );
-                      case 'creationTime':
-                      case 'updatedTime':
-                      case 'finishedTime':
-                        return (
-                          <TableCell {...getCellProps({ cell })}>
-                            <RelativeTimestamp date={cell.value as Date | undefined} />
-                          </TableCell>
-                        );
-                      default:
-                        return <TableCell {...getCellProps({ cell })}>{cell.value}</TableCell>;
-                    }
-                  })}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {pagination}
-        </TableContainer>
-      )}
-    </DataTable>
+    <TableContainer title="Generations" description="Latest generations">
+      <Table aria-label="Generations">
+        <TableHead>
+          <TableRow>
+            {headers.map((header) => (
+              <TableHeader key={header.key}>{header.header}</TableHeader>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>
+                <Link to={`/generations/${row.id}`}>
+                  <pre>{row.id}</pre>
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Tag size="md" type={statusToColor(row.status)}>
+                  {row.status || 'unknown'}
+                </Tag>
+              </TableCell>
+              <TableCell>
+                <Tag size="md" type={resultToColor(row.result)}>
+                  {row.result || 'unknown'}
+                </Tag>
+              </TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.creationTime} />
+              </TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.updatedTime} />
+              </TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.finishedTime} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {pagination}
+    </TableContainer>
   );
 
   const noResults = (
@@ -160,6 +141,7 @@ export const GenerationTable = () => {
       actionText={'Take me home'}
     />
   );
+
   const loadingSkeleton = (
     <TableContainer title="Generations" description="Latest generations">
       <DataTableSkeleton

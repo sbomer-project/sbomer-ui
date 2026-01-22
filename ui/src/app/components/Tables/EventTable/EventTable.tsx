@@ -6,7 +6,6 @@ import { RelativeTimestamp } from '@app/components/UtilsComponents/RelativeTimes
 import { eventStatusToColor, extractQueryErrorMessageDetails } from '@app/utils/Utils';
 import {
   Button,
-  DataTable,
   DataTableSkeleton,
   Heading,
   Pagination,
@@ -31,6 +30,8 @@ import { Link, useNavigate } from 'react-router-dom';
 const columnNames = {
   id: 'ID',
   created: 'Created',
+  updated: 'Updated',
+  finished: 'Finished',
   status: 'Status',
 };
 
@@ -72,6 +73,7 @@ export const EventTable = () => {
     setQuerySearchbarValue('');
     setFilters('', 1, 10);
   };
+
   const executeSearch = () => {
     setFilters(querySearchbarValue || '', 1, pageSize);
   };
@@ -105,7 +107,7 @@ export const EventTable = () => {
   const loadingSkeleton = (
     <TableContainer title="Events" description="Latest events">
       <DataTableSkeleton
-        columnCount={Object.keys(headers).length}
+        columnCount={headers.length}
         showHeader={false}
         showToolbar={false}
         rowCount={10}
@@ -149,88 +151,82 @@ export const EventTable = () => {
     })();
 
   return (
-    <DataTable
-      rows={value || []}
-      headers={headers}
-      children={({ headers }) => (
-        <TableContainer title="Events" description="Latest events">
-          <TableToolbar>
-            <TableToolbarContent>
-              <TableToolbarSearch
-                persistent
-                labelText="Search events"
-                placeholder="Enter query"
-                value={querySearchbarValue}
-                onChange={querySearchBarValueOnChange}
-                onClear={clearFilters}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') executeSearch();
-                }}
-                size="md"
-              />
-              <Button
-                kind="ghost"
-                hasIconOnly
-                iconDescription="Query Reference"
-                renderIcon={Help}
-                onClick={() => navigate('/help')}
-              />
-            </TableToolbarContent>
-          </TableToolbar>
+    <TableContainer title="Events" description="Latest events">
+      <TableToolbar>
+        <TableToolbarContent>
+          <TableToolbarSearch
+            persistent
+            labelText="Search events"
+            placeholder="Enter query"
+            value={querySearchbarValue}
+            onChange={querySearchBarValueOnChange}
+            onClear={clearFilters}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') executeSearch();
+            }}
+            size="md"
+          />
+          <Button
+            kind="ghost"
+            hasIconOnly
+            iconDescription="Query Reference"
+            renderIcon={Help}
+            onClick={() => navigate('/help')}
+          />
+        </TableToolbarContent>
+      </TableToolbar>
 
-          {queryErrorTile ? (
-            queryErrorTile
-          ) : value && value.length > 0 ? (
-            <>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header) => (
-                      <TableHeader key={header.key}>{header.header}</TableHeader>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {value.map((requestEvent) => (
-                    <TableRow key={requestEvent.id}>
-                      <TableCell>
-                        <Link to={`/events/${requestEvent.id}`}>
-                          <pre>{requestEvent.id}</pre>
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Tag size="md" type={eventStatusToColor(requestEvent.status)}>
-                          {requestEvent.status}
-                        </Tag>
-                      </TableCell>
-                      <TableCell>
-                        <RelativeTimestamp date={requestEvent.created} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <Pagination
-                page={pageIndex}
-                pageSize={pageSize}
-                pageSizes={[10, 20, 50, 100]}
-                totalItems={total || 0}
-                onChange={({ page, pageSize: newPageSize }) => {
-                  if (page !== pageIndex) onSetPage(page);
-                  if (newPageSize !== pageSize) onPerPageSelect(newPageSize);
-                }}
-              />
-            </>
-          ) : (
-            <NoResultsSection
-              title="No events found"
-              message="Try adjusting your search query or clear the filters to see all events."
-              actionText="Clear filters"
-              onActionClick={clearFilters}
-            />
-          )}
-        </TableContainer>
+      {queryErrorTile ? (
+        queryErrorTile
+      ) : value && value.length > 0 ? (
+        <>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader key={header.key}>{header.header}</TableHeader>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {value.map((requestEvent) => (
+                <TableRow key={requestEvent.id}>
+                  <TableCell>
+                    <Link to={`/events/${requestEvent.id}`}>
+                      <pre>{requestEvent.id}</pre>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Tag size="md" type={eventStatusToColor(requestEvent.status)}>
+                      {requestEvent.status}
+                    </Tag>
+                  </TableCell>
+                  <TableCell>
+                    <RelativeTimestamp date={requestEvent.created} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Pagination
+            page={pageIndex}
+            pageSize={pageSize}
+            pageSizes={[10, 20, 50, 100]}
+            totalItems={total || 0}
+            onChange={({ page, pageSize: newPageSize }) => {
+              if (page !== pageIndex) onSetPage(page);
+              if (newPageSize !== pageSize) onPerPageSelect(newPageSize);
+            }}
+          />
+        </>
+      ) : (
+        <NoResultsSection
+          title="No events found"
+          message="Try adjusting your search query or clear the filters to see all events."
+          actionText="Clear filters"
+          onActionClick={clearFilters}
+        />
       )}
-    />
+    </TableContainer>
   );
 };
