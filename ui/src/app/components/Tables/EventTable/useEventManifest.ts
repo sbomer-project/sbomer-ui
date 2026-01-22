@@ -19,9 +19,9 @@
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 import { useAsyncRetry } from 'react-use';
 
-export function useRequestEventManifest(id: string) {
+export function useEvent(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
-  const getRequestEvent = async (id: string) => {
+  const getEvent = async (id: string) => {
     try {
       return await sbomerApi.getEvent(id);
     } catch (e) {
@@ -35,10 +35,10 @@ export function useRequestEventManifest(id: string) {
     error,
   } = useAsyncRetry(
     () =>
-      getRequestEvent(id).then((data) => {
+      getEvent(id).then((data) => {
         return data;
       }),
-    [getRequestEvent, id],
+    [getEvent, id],
   );
 
   return [

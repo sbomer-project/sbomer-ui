@@ -242,7 +242,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getEvent(id: string): Promise<SbomerEvent> {
-    const response = await this.client.get(`/api/v1/events/${id}`);
+    const response = await this.client.get(`/api/v1/requests/${id}`);
     return new SbomerEvent(response.data);
   }
 

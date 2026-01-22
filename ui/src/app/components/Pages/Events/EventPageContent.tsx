@@ -1,4 +1,4 @@
-import { useRequestEventManifest } from '@app/components/Tables/EventTable/useEventManifest';
+import { useEvent } from '@app/components/Tables/EventTable/useEventManifest';
 import {
   CodeSnippet,
   Heading,
@@ -13,7 +13,6 @@ import {
 } from '@carbon/react';
 
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
-import { MetadataOverview } from '@app/components/UtilsComponents/MetadataOverview';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { eventStatusToColor } from '@app/utils/Utils';
 import React from 'react';
@@ -21,13 +20,14 @@ import { useParams } from 'react-router-dom';
 
 export const EventPageContent = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ request, loading, error }] = useRequestEventManifest(id!);
+  const [{ request, loading, error }] = useEvent(id!);
 
   if (error) {
     return <ErrorSection title="Could not load event details" message={error.message} />;
   }
 
-  if (loading) {
+  // Only show skeleton when we have no data yet
+  if (loading && !request) {
     return <SkeletonText />;
   }
 
@@ -66,32 +66,6 @@ export const EventPageContent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Updated</StructuredListCell>
-            <StructuredListCell>
-              {request.updated ? (
-                <Stack gap={2}>
-                  <RelativeTimestamp date={request.updated} />
-                  <span>{request.updated.toISOString()}</span>
-                </Stack>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Finished</StructuredListCell>
-            <StructuredListCell>
-              {request.finished ? (
-                <Stack gap={2}>
-                  <RelativeTimestamp date={request.finished} />
-                  <span>{request.finished.toISOString()}</span>
-                </Stack>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
               <Tag size="md" type={eventStatusToColor(request.status)}>
@@ -101,7 +75,6 @@ export const EventPageContent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <MetadataOverview metadata={request.metadata} redirectPrefix="events" />
       <Stack gap={5}>
         <Heading>Raw JSON</Heading>
         <CodeSnippet type="multi">
