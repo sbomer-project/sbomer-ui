@@ -56,16 +56,6 @@ const routes: AppRouteConfig[] = [
     path: '/generations/:id',
   },
   {
-    element: <ManifestsPage />,
-    label: 'Manifests',
-    path: '/manifests',
-  },
-  {
-    element: <ManifestPage />,
-    path: '/manifests/:id',
-  },
-
-  {
     element: <HelpPage />,
     label: 'Help',
     path: '/help',
