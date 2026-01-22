@@ -30,6 +30,15 @@ const routes: AppRouteConfig[] = [
     path: '/',
   },
   {
+    element: <EventsPage />,
+    label: 'Events',
+    path: '/events',
+  },
+  {
+    element: <EventPage />,
+    path: '/events/:id',
+  },
+  {
     element: <GenerationsPage />,
     path: '/requests',
   },
@@ -55,15 +64,7 @@ const routes: AppRouteConfig[] = [
     element: <ManifestPage />,
     path: '/manifests/:id',
   },
-  {
-    element: <EventsPage />,
-    label: 'Events',
-    path: '/events',
-  },
-  {
-    element: <EventPage />,
-    path: '/events/:id',
-  },
+
   {
     element: <HelpPage />,
     label: 'Help',
