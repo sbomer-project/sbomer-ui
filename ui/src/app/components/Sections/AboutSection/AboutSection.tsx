@@ -17,6 +17,9 @@ export const AboutSection = () => {
         <Button kind="secondary" as={Link} to="generations">
           Generations
         </Button>
+        <Button kind="tertiary" as={Link} to="enhancements">
+          Enhancements
+        </Button>
       </ButtonSet>
     </>
   );
