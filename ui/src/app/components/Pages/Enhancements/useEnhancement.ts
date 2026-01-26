@@ -58,5 +58,3 @@ export function useEnhancement(id: string) {
     },
   ] as const;
 }
-
-// Made with Bob

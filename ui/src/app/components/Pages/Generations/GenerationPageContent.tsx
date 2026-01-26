@@ -4,6 +4,7 @@ import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { resultToColor, statusToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
+  DataTableSkeleton,
   Heading,
   SkeletonText,
   Stack,
@@ -12,15 +13,32 @@ import {
   StructuredListHead,
   StructuredListRow,
   StructuredListWrapper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
   Tag,
 } from '@carbon/react';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGeneration } from './useGeneration';
+import { useGenerationEnhancements } from './useGenerationEnhancements';
+
+const enhancementHeaders = [
+  { key: 'id', header: 'ID' },
+  { key: 'type', header: 'Type' },
+  { key: 'source', header: 'Source' },
+  { key: 'creationTime', header: 'Created' },
+];
 
 const GenerationPageContent: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
   const [{ request, error, loading }] = useGeneration(id!);
+  const [{ value: enhancementsValue, loading: enhancementsLoading, error: enhancementsError }] =
+    useGenerationEnhancements(id!);
 
   useDocumentTitle('SBOMer | Generations | ' + id);
 
@@ -35,6 +53,65 @@ const GenerationPageContent: React.FunctionComponent = () => {
   if (!request) {
     return null;
   }
+
+  const enhancementRows =
+    (enhancementsValue?.data ?? []).map((e: any) => ({
+      id: String(e.id),
+      type: e.type ?? 'unknown',
+      source: e.source ?? 'unknown',
+      creationTime: e.creationTime ? new Date(e.creationTime) : undefined,
+    })) ?? [];
+
+  const enhancementsTable = (
+    <TableContainer title="Enhancements" description="Enhancements for this generation">
+      <Table aria-label="Generation Enhancements">
+        <TableHead>
+          <TableRow>
+            {enhancementHeaders.map((header) => (
+              <TableHeader key={header.key}>{header.header}</TableHeader>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {enhancementRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>
+                <Link to={`/enhancements/${row.id}`}>
+                  <pre>{row.id}</pre>
+                </Link>
+              </TableCell>
+              <TableCell>{row.type}</TableCell>
+              <TableCell>{row.source}</TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.creationTime} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+
+  const enhancementsLoadingSkeleton = (
+    <TableContainer title="Enhancements" description="Enhancements for this generation">
+      <DataTableSkeleton
+        columnCount={enhancementHeaders.length}
+        showHeader={false}
+        showToolbar={false}
+        rowCount={5}
+      />
+    </TableContainer>
+  );
+
+  const enhancementsSection = enhancementsError ? (
+    <ErrorSection title="Could not load enhancements" message={enhancementsError.message} />
+  ) : enhancementsLoading && !enhancementsValue ? (
+    enhancementsLoadingSkeleton
+  ) : enhancementRows.length === 0 ? (
+    <p>No enhancements found for this generation.</p>
+  ) : (
+    enhancementsTable
+  );
 
   return (
     <Stack gap={7}>
@@ -125,6 +202,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           )}
         </CodeSnippet>
       </Stack>
+      {enhancementsSection}
     </Stack>
   );
 };

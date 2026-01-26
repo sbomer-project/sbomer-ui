@@ -92,5 +92,3 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
     },
   ] as const;
 }
-
-// Made with Bob

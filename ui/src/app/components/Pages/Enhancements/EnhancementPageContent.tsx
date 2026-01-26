@@ -166,5 +166,3 @@ const EnhancementPageContent: React.FunctionComponent = () => {
 };
 
 export { EnhancementPageContent };
-
-// Made with Bob

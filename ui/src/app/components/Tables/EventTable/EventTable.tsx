@@ -95,5 +95,3 @@ export const EventTable = () => {
     />
   );
 };
-
-// Made with Bob
