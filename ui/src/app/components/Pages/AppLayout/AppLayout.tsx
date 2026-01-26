@@ -1,13 +1,5 @@
 import { IAppRoute, IAppRouteGroup, routes } from '@app/routes';
-import {
-  Application,
-  ChevronRight,
-  Dashboard,
-  EventChange,
-  Help,
-  Switcher as SwitcherIcon,
-  DataEnrichmentAdd
-} from '@carbon/icons-react';
+import { Switcher as SwitcherIcon } from '@carbon/icons-react';
 import {
   Switcher as CarbonSwitcher,
   Column,
@@ -62,15 +54,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     return prefersDark ? 'g100' : 'white';
   });
 
-  const getRouteIcon = (path: string, label?: string) => {
-    if (path === '/' || label === 'Dashboard') return Dashboard;
-    if (path.includes('/generations') || label === 'Generations') return Application;
-    if (path.includes('/events') || label === 'Events') return EventChange;
-    if (path.includes('/enhancements') || label === 'Enhancements') return DataEnrichmentAdd;
-    if (path.includes('/help') || label === 'Help') return Help;
-    return ChevronRight;
-  };
-
   const isRouteActive = (routePath: string) => {
     if (routePath === '/') {
       return location.pathname === '/';
@@ -81,7 +64,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const renderSideNavLink = (route: IAppRoute, index: number) => (
     <SideNavLink
       key={`${route.label}-${index}`}
-      renderIcon={getRouteIcon(route.path, route.label)}
+      renderIcon={route.icon}
       isActive={isRouteActive(route.path)}
       as={NavLink}
       to={route.path}
@@ -94,44 +77,44 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const renderSideNavGroup = (group: IAppRouteGroup, groupIndex: number) => {
     const isAnyChildActive = group.routes?.some((r) => r.path && isRouteActive(r.path));
     return (
-      <>
-        <SideNavMenu
-          key={`${group.label}-${groupIndex}`}
-          title={group.label}
-          defaultExpanded={isAnyChildActive}
-        >
-          {group.routes.map((route, idx) =>
-            route.label ? (
-              <SideNavMenuItem key={`${route.label}-${idx}`} as={NavLink} to={route.path}>
-                {route.label}
-              </SideNavMenuItem>
-            ) : null,
-          )}
-        </SideNavMenu>
-        <SideNavDivider />
-      </>
+      <SideNavMenu
+        key={`${group.label}-${groupIndex}`}
+        title={group.label}
+        renderIcon={group.icon}
+        defaultExpanded={group.defaultExpanded ?? isAnyChildActive}
+      >
+        {group.routes
+          .filter((route) => route.label)
+          .map((route, idx) => (
+            <SideNavMenuItem key={`${route.label}-${idx}`} as={NavLink} to={route.path}>
+              {route.label}
+            </SideNavMenuItem>
+          ))}
+      </SideNavMenu>
     );
   };
 
   const Navigation = (
     <SideNavItems>
       {routes
-        .filter((route) => route.label && route.label !== 'Help')
-        .map((route, idx) =>
-          !route.routes ? renderSideNavLink(route, idx) : renderSideNavGroup(route, idx),
-        )}
+        .filter((route) => route.label || 'routes' in route)
+        .map((route, idx) => {
+          const items: React.ReactNode[] = [];
 
-      <SideNavDivider />
-      <SideNavLink
-        key="help-link"
-        renderIcon={Help}
-        isActive={isRouteActive('/help')}
-        as={NavLink}
-        to="/help"
-        large
-      >
-        Help
-      </SideNavLink>
+          // Render the route or group
+          if ('routes' in route) {
+            items.push(renderSideNavGroup(route as IAppRouteGroup, idx));
+          } else if (route.label) {
+            items.push(renderSideNavLink(route as IAppRoute, idx));
+          }
+
+          // Add divider if specified
+          if (route.divider) {
+            items.push(<SideNavDivider key={`divider-${idx}`} />);
+          }
+
+          return items;
+        })}
     </SideNavItems>
   );
 
