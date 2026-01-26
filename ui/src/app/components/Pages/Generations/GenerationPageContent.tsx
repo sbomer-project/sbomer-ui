@@ -29,9 +29,13 @@ import { useGenerationEnhancements } from './useGenerationEnhancements';
 
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
-  { key: 'type', header: 'Type' },
-  { key: 'source', header: 'Source' },
-  { key: 'creationTime', header: 'Created' },
+  { key: 'status', header: 'Status' },
+  { key: 'result', header: 'Result' },
+  { key: 'enhancerName', header: 'Enhancer Name' },
+  { key: 'enhancerVersion', header: 'Version' },
+  { key: 'created', header: 'Created' },
+  { key: 'updated', header: 'Updated' },
+  { key: 'finished', header: 'Finished' },
 ];
 
 const GenerationPageContent: React.FunctionComponent = () => {
@@ -55,12 +59,29 @@ const GenerationPageContent: React.FunctionComponent = () => {
   }
 
   const enhancementRows =
-    (enhancementsValue?.data ?? []).map((e: any) => ({
-      id: String(e.id),
-      type: e.type ?? 'unknown',
-      source: e.source ?? 'unknown',
-      creationTime: e.creationTime ? new Date(e.creationTime) : undefined,
-    })) ?? [];
+    (enhancementsValue?.data ?? []).map((e: any) => {
+      const parseDate = (dateValue: any): Date | undefined => {
+        if (!dateValue) return undefined;
+        if (dateValue instanceof Date) return dateValue;
+        try {
+          const parsed = new Date(dateValue);
+          return isNaN(parsed.getTime()) ? undefined : parsed;
+        } catch {
+          return undefined;
+        }
+      };
+
+      return {
+        id: String(e.id),
+        status: e.status ?? 'unknown',
+        result: e.result ?? null,
+        enhancerName: e.enhancerName ?? 'N/A',
+        enhancerVersion: e.enhancerVersion ?? 'N/A',
+        created: parseDate(e.created),
+        updated: parseDate(e.updated),
+        finished: parseDate(e.finished),
+      };
+    }) ?? [];
 
   const enhancementsTable = (
     <TableContainer title="Enhancements" description="Enhancements for this generation">
@@ -80,10 +101,30 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   <pre>{row.id}</pre>
                 </Link>
               </TableCell>
-              <TableCell>{row.type}</TableCell>
-              <TableCell>{row.source}</TableCell>
               <TableCell>
-                <RelativeTimestamp date={row.creationTime} />
+                <Tag size="md" type={statusToColor(row.status)}>
+                  {row.status}
+                </Tag>
+              </TableCell>
+              <TableCell>
+                {row.result ? (
+                  <Tag size="md" type={resultToColor(row.result)}>
+                    {row.result}
+                  </Tag>
+                ) : (
+                  'In progress'
+                )}
+              </TableCell>
+              <TableCell>{row.enhancerName}</TableCell>
+              <TableCell>{row.enhancerVersion}</TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.created} />
+              </TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.updated} />
+              </TableCell>
+              <TableCell>
+                <RelativeTimestamp date={row.finished} />
               </TableCell>
             </TableRow>
           ))}
@@ -184,6 +225,38 @@ const GenerationPageContent: React.FunctionComponent = () => {
                 {request.result || 'In progress'}
               </Tag>
             </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Reason</StructuredListCell>
+            <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Request ID</StructuredListCell>
+            <StructuredListCell>
+              {request.requestId ? (
+                <Link to={`/events/${request.requestId}`}>
+                  <pre>{request.requestId}</pre>
+                </Link>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Generator Name</StructuredListCell>
+            <StructuredListCell>{request.generatorName || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Generator Version</StructuredListCell>
+            <StructuredListCell>{request.generatorVersion || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Target Type</StructuredListCell>
+            <StructuredListCell>{request.targetType || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Target Identifier</StructuredListCell>
+            <StructuredListCell>{request.targetIdentifier || 'N/A'}</StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>

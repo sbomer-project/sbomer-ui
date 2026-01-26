@@ -121,18 +121,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.enhancerVersion || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Generation ID</StructuredListCell>
-            <StructuredListCell>
-              {request.generationId ? (
-                <Link to={`/generations/${request.generationId}`}>
-                  <pre>{request.generationId}</pre>
-                </Link>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
@@ -144,6 +132,19 @@ const EnhancementPageContent: React.FunctionComponent = () => {
               )}
             </StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Generation ID</StructuredListCell>
+            <StructuredListCell>
+              {request.generationId ? (
+                <Link to={`/generations/${request.generationId}`}>
+                  <pre>{request.generationId}</pre>
+                </Link>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+
         </StructuredListBody>
       </StructuredListWrapper>
       <Stack gap={5}>

@@ -52,9 +52,26 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
       const data = await response.json();
       const enhancements: any[] = [];
 
+      // Helper function to safely parse dates
+      const parseDate = (dateValue: any): Date | undefined => {
+        if (!dateValue) return undefined;
+        if (dateValue instanceof Date) return dateValue;
+        try {
+          const parsed = new Date(dateValue);
+          return isNaN(parsed.getTime()) ? undefined : parsed;
+        } catch {
+          return undefined;
+        }
+      };
+
       if (data.content) {
         data.content.forEach((enhancement: any) => {
-          enhancements.push(enhancement);
+          enhancements.push({
+            ...enhancement,
+            created: parseDate(enhancement.created),
+            updated: parseDate(enhancement.updated),
+            finished: parseDate(enhancement.finished),
+          });
         });
       }
 
