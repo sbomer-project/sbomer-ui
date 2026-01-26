@@ -6,6 +6,7 @@ import {
   EventChange,
   Help,
   Switcher as SwitcherIcon,
+  DataEnrichmentAdd
 } from '@carbon/icons-react';
 import {
   Switcher as CarbonSwitcher,
@@ -65,6 +66,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     if (path === '/' || label === 'Dashboard') return Dashboard;
     if (path.includes('/generations') || label === 'Generations') return Application;
     if (path.includes('/events') || label === 'Events') return EventChange;
+    if (path.includes('/enhancements') || label === 'Enhancements') return DataEnrichmentAdd;
     if (path.includes('/help') || label === 'Help') return Help;
     return ChevronRight;
   };
