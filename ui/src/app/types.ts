@@ -103,6 +103,37 @@ export class SbomerGeneration {
   }
 }
 
+export class SbomerEnhancement {
+  public id: string;
+  public status: string;
+  public created: Date;
+  public updated?: Date;
+  public finished?: Date;
+  public result?: string;
+  public reason?: string;
+  public generationId?: string;
+  public requestId?: string;
+  public enhancerName?: string;
+  public enhancerVersion?: string;
+
+  constructor(payload: any) {
+    this.id = payload.id;
+    this.status = payload.status;
+
+    this.created = new Date(payload.created);
+    this.updated = payload.updated ? new Date(payload.updated) : undefined;
+    this.finished = payload.finished ? new Date(payload.finished) : undefined;
+
+    this.result = payload.result;
+    this.reason = payload.reason;
+    this.generationId = payload.generationId;
+    this.requestId = payload.requestId;
+    this.enhancerName = payload.enhancerName;
+    this.enhancerVersion = payload.enhancerVersion;
+  }
+}
+
+
 export class SbomerManifest {
   public id: string;
   public created: Date;
