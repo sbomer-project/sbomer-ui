@@ -1,5 +1,4 @@
 import { AppLayout } from '@app/components/Pages/AppLayout/AppLayout';
-import { GenerationTable } from '@app/components/Tables/GenerationTable/GenerationTable';
 import { GenerationTableRefactored } from '@app/components/Tables/GenerationTable/GenerationTableRefactored';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import * as React from 'react';

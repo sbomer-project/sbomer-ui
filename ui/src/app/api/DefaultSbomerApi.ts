@@ -174,7 +174,7 @@ export class DefaultSbomerApi implements SbomerApi {
     // Loop through pages until all content is retrieved
     while (true) {
       const response = await fetch(
-        `${this.baseUrl}/api/v1/generations?query=request.id=eq=${id}&sort=creationTime=desc=&pageSize=${pageSize}&pageIndex=${pageIndex}`,
+        `${this.baseUrl}/api/v1/requests/${id}/generations?pageSize=${pageSize}&pageIndex=${pageIndex}`,
       );
 
       if (response.status !== 200) {
