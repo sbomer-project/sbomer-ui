@@ -77,7 +77,7 @@ export const EventTable = () => {
       pageSize={pageSize}
       onPageChange={onSetPage}
       onPageSizeChange={onPerPageSelect}
-      searchEnabled={true}
+      searchEnabled={false}
       searchValue={querySearchbarValue}
       searchPlaceholder="Enter query"
       searchLabel="Search events"
