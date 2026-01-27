@@ -34,7 +34,9 @@ const columns: TableColumn<EnhancementRow>[] = [
   {
     key: 'result',
     header: 'Result',
-    render: (row) => <TagCell type={resultToColor(row.result || 'unknown')}>{row.result || 'unknown'}</TagCell>,
+    render: (row) => (
+      <TagCell type={resultToColor(row.result || 'unknown')}>{row.result || 'unknown'}</TagCell>
+    ),
   },
   { key: 'created', header: 'Created', render: (row) => <TimestampCell date={row.created} /> },
   { key: 'updated', header: 'Updated', render: (row) => <TimestampCell date={row.updated} /> },

@@ -133,7 +133,6 @@ export class SbomerEnhancement {
   }
 }
 
-
 export class SbomerManifest {
   public id: string;
   public created: Date;

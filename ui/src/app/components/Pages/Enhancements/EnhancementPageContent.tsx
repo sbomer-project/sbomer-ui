@@ -144,7 +144,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
               )}
             </StructuredListCell>
           </StructuredListRow>
-
         </StructuredListBody>
       </StructuredListWrapper>
       <Stack gap={5}>
