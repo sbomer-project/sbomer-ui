@@ -54,7 +54,7 @@ const columns: TableColumn<GenerationRow>[] = [
   },
 ];
 
-export const GenerationTableRefactored = () => {
+export const GenerationTable = () => {
   const navigate = useNavigate();
   const paramPage = useSearchParam('page') || 1;
   const paramPageSize = useSearchParam('pageSize') || 10;

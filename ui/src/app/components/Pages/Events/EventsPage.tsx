@@ -1,5 +1,5 @@
 import { AppLayout } from '@app/components/Pages/AppLayout/AppLayout';
-import { EventTableRefactored } from '@app/components/Tables/EventTable/EventTableRefactored';
+import { EventTable } from '@app/components/Tables/EventTable/EventTable';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import * as React from 'react';
 
@@ -8,7 +8,7 @@ export function EventsPage() {
 
   return (
     <AppLayout>
-      <EventTableRefactored />
+      <EventTable />
     </AppLayout>
   );
 }

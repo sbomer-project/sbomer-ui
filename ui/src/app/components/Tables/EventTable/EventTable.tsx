@@ -29,7 +29,7 @@ const columns: TableColumn<SbomerEvent>[] = [
   },
 ];
 
-export const EventTableRefactored = () => {
+export const EventTable = () => {
   const { query, pageIndex, pageSize, setFilters } = useEventsFilters();
   const [querySearchbarValue, setQuerySearchbarValue] = React.useState<string>(query || '');
 
