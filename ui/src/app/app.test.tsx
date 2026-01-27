@@ -21,13 +21,16 @@ describe('App tests', () => {
     const dashboardLinks = screen.getAllByRole('link', { name: 'Dashboard' });
     expect(dashboardLinks.length).toBeGreaterThan(0);
 
-    const manifestLinks = screen.getAllByRole('link', { name: 'Manifests' });
-    expect(manifestLinks.length).toBeGreaterThan(0);
+    const eventLinks = screen.getAllByRole('link', { name: 'Events' });
+    expect(eventLinks.length).toBeGreaterThan(0);
 
     const generationLinks = screen.getAllByRole('link', { name: 'Generations' });
     expect(generationLinks.length).toBeGreaterThan(0);
 
-    const eventLinks = screen.getAllByRole('link', { name: 'Events' });
-    expect(eventLinks.length).toBeGreaterThan(0);
+    const enhancementLinks = screen.getAllByRole('link', { name: 'Enhancements' });
+    expect(enhancementLinks.length).toBeGreaterThan(0);
+
+    const helpLinks = screen.getAllByRole('link', { name: 'Help' });
+    expect(helpLinks.length).toBeGreaterThan(0);
   });
 });
