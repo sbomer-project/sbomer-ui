@@ -7,10 +7,8 @@ const js = require('@eslint/js');
 const path = require('path');
 
 module.exports = [
-  // Base JavaScript recommended config
   js.configs.recommended,
 
-  // Global configuration for all files
   {
     languageOptions: {
       parser: tsParser,
@@ -20,8 +18,6 @@ module.exports = [
         ecmaFeatures: {
           jsx: true,
         },
-        project: './tsconfig.json',
-        tsconfigRootDir: __dirname,
       },
       globals: {
         ...globals.browser,
@@ -43,7 +39,6 @@ module.exports = [
     },
 
     rules: {
-      // Import sorting
       'sort-imports': [
         'error',
         {
@@ -51,7 +46,6 @@ module.exports = [
         },
       ],
 
-      // TypeScript rules
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/no-unused-vars': [
@@ -61,29 +55,29 @@ module.exports = [
           varsIgnorePattern: '^_',
         },
       ],
-      'no-unused-vars': 'off', // Disabled in favor of @typescript-eslint/no-unused-vars
+      'no-unused-vars': 'off',
 
-      // React rules
       'react/prop-types': 'off',
-      'react/react-in-jsx-scope': 'off', // Not needed in React 17+
+      'react/react-in-jsx-scope': 'off',
 
-      // React Hooks rules
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
-      // Disabled rules
       'prettier/prettier': 'off',
       'import/no-unresolved': 'off',
       'import/extensions': 'off',
     },
   },
 
-  // TypeScript-specific configuration
   {
     files: ['src/**/*.ts', 'src/**/*.tsx'],
 
     languageOptions: {
       parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
     },
 
     plugins: {
@@ -96,7 +90,6 @@ module.exports = [
     },
   },
 
-  // Ignore patterns
   {
     ignores: ['node_modules/**', 'dist/**', 'build/**', '*.config.js', 'webpack.*.js'],
   },
