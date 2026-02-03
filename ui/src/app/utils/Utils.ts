@@ -51,13 +51,8 @@ const GenerationResults = new Map<string, { description?: string; color: CarbonT
 
 const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['FAILED', { description: 'Failed', color: 'red' }],
-  ['IGNORED', { description: 'Ignored', color: 'gray' }],
-  ['IN_PROGRESS', { description: 'In progress', color: 'blue' }],
-  ['SUCCESS', { description: 'Successfully finished', color: 'green' }],
-  ['NEW', { description: 'New', color: 'teal' }],
-  ['PROCESSED', { description: 'Processed', color: 'purple' }],
-  ['ERROR', { description: 'Error', color: 'red' }],
-  ['INITIALIZED', { description: 'Initialized', color: 'blue' }],
+  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['RECEIVED', { description: 'New', color: 'teal' }],
 ]);
 
 /**
