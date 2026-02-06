@@ -77,9 +77,9 @@ export class SbomerGeneration {
   public requestId: string;
   public targetType: string;
   public targetIdentifier: string;
+  public generationSbomUrls?: string[];
 
   // todo
-  // generationSBomUrls
   // enhancements
   public metadata?: Map<string, string>;
 
@@ -100,6 +100,7 @@ export class SbomerGeneration {
     this.requestId = payload.requestId;
     this.targetType = payload.targetType;
     this.targetIdentifier = payload.targetIdentifier;
+    this.generationSbomUrls = payload.generationSbomUrls;
   }
 }
 

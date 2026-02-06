@@ -87,13 +87,8 @@ describe('Utils', () => {
   describe('eventStatusToDescription', () => {
     it('should return description for known event statuses', () => {
       expect(eventStatusToDescription('FAILED')).toBe('Failed');
-      expect(eventStatusToDescription('IGNORED')).toBe('Ignored');
-      expect(eventStatusToDescription('IN_PROGRESS')).toBe('In progress');
-      expect(eventStatusToDescription('SUCCESS')).toBe('Successfully finished');
-      expect(eventStatusToDescription('NEW')).toBe('New');
-      expect(eventStatusToDescription('PROCESSED')).toBe('Processed');
-      expect(eventStatusToDescription('ERROR')).toBe('Error');
-      expect(eventStatusToDescription('INITIALIZED')).toBe('Initialized');
+      expect(eventStatusToDescription('FINISHED')).toBe('Successfully finished');
+      expect(eventStatusToDescription('RECEIVED')).toBe('Received/New');
     });
 
     it('should return original status for unknown event statuses', () => {
@@ -160,13 +155,8 @@ describe('Utils', () => {
   describe('eventStatusToColor', () => {
     it('should return correct colors for known event statuses', () => {
       expect(eventStatusToColor('FAILED')).toBe('red');
-      expect(eventStatusToColor('IGNORED')).toBe('gray');
-      expect(eventStatusToColor('IN_PROGRESS')).toBe('blue');
-      expect(eventStatusToColor('SUCCESS')).toBe('green');
-      expect(eventStatusToColor('NEW')).toBe('teal');
-      expect(eventStatusToColor('PROCESSED')).toBe('purple');
-      expect(eventStatusToColor('ERROR')).toBe('red');
-      expect(eventStatusToColor('INITIALIZED')).toBe('blue');
+      expect(eventStatusToColor('FINISHED')).toBe('green');
+      expect(eventStatusToColor('RECEIVED')).toBe('teal');
     });
 
     it('should return "gray" for unknown event statuses', () => {

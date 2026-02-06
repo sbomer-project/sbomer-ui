@@ -258,6 +258,22 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>Target Identifier</StructuredListCell>
             <StructuredListCell>{request.targetIdentifier || 'N/A'}</StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.generationSbomUrls && request.generationSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.generationSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
       <Stack gap={5}>
