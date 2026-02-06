@@ -52,7 +52,7 @@ const GenerationResults = new Map<string, { description?: string; color: CarbonT
 const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
-  ['RECEIVED', { description: 'New', color: 'teal' }],
+  ['RECEIVED', { description: 'Received/New', color: 'teal' }],
 ]);
 
 /**
