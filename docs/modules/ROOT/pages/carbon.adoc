@@ -1,0 +1,7 @@
+# Carbon Design System
+
+UI is written using Carbon Design System, an open-source design system created by IBM.
+
+For more information about Carbon, see the official documentation: https://www.carbondesignsystem.com/.
+
+More information about Carbon React can be found here: https://carbondesignsystem.com/components/overview/components/.

@@ -1,0 +1,5 @@
+name: ui-docs
+title: SBOMer User Interface
+version: '1.0'
+nav:
+  - modules/ROOT/nav.adoc
