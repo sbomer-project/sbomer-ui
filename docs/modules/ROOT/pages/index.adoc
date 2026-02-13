@@ -1,0 +1,5 @@
+# SBOMer User Interface
+
+SBOMer UI is a web application built using React and the Carbon Design System.
+
+It provides a user-friendly interface for managing and visualizing entities in the SBOMer system.
