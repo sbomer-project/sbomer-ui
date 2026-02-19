@@ -25,11 +25,19 @@ const EnhancementPageContent: React.FunctionComponent = () => {
   useDocumentTitle('SBOMer | Enhancements | ' + id);
 
   if (error) {
-    return <ErrorSection title="Could not load enhancement" message={error.message} />;
+    return (
+      <Stack gap={6}>
+        <ErrorSection title="Could not load enhancement" message={error.message} />
+      </Stack>
+    );
   }
 
   if (loading) {
-    return <SkeletonText />;
+    return (
+      <Stack gap={6}>
+        <SkeletonText />
+      </Stack>
+    );
   }
 
   if (!request) {

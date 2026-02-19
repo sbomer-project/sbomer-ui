@@ -145,7 +145,11 @@ export function TablePage<T>({
   const isValidationError = isQueryValidationError ? isQueryValidationError(error) : false;
 
   if (error && !isValidationError) {
-    return <ErrorSection title={`Could not load ${title.toLowerCase()}`} message={error.message} />;
+    return (
+      <TableContainer title={title} description={description}>
+        <ErrorSection title={`Could not load ${title.toLowerCase()}`} message={error.message} />
+      </TableContainer>
+    );
   }
 
   const queryErrorTile =

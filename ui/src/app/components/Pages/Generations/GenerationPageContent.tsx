@@ -47,11 +47,19 @@ const GenerationPageContent: React.FunctionComponent = () => {
   useDocumentTitle('SBOMer | Generations | ' + id);
 
   if (error) {
-    return <ErrorSection title="Could not load generations" message={error.message} />;
+    return (
+      <Stack gap={6}>
+        <ErrorSection title="Could not load generations" message={error.message} />
+      </Stack>
+    );
   }
 
   if (loading) {
-    return <SkeletonText />;
+    return (
+      <Stack gap={6}>
+        <SkeletonText />
+      </Stack>
+    );
   }
 
   if (!request) {
@@ -145,7 +153,9 @@ const GenerationPageContent: React.FunctionComponent = () => {
   );
 
   const enhancementsSection = enhancementsError ? (
-    <ErrorSection title="Could not load enhancements" message={enhancementsError.message} />
+    <Stack gap={6}>
+      <ErrorSection title="Could not load enhancements" message={enhancementsError.message} />
+    </Stack>
   ) : enhancementsLoading && !enhancementsValue ? (
     enhancementsLoadingSkeleton
   ) : enhancementRows.length === 0 ? (
