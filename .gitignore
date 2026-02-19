@@ -32,3 +32,6 @@ secret*.txt
 secret*.json
 
 .sonarlint/
+
+.bob
+.bobmodes
