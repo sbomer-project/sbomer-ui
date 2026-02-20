@@ -6,6 +6,7 @@ import {
   Button,
   DataTableSkeleton,
   Heading,
+  Link as CarbonLink,
   Pagination,
   Stack,
   Table,
@@ -23,7 +24,7 @@ import {
 } from '@carbon/react';
 import { Help } from '@carbon/icons-react';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 export interface TableColumn<T> {
   key: string;
@@ -253,9 +254,9 @@ export function TablePage<T>({
 
 // Helper components for common cell types
 export const LinkCell: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
-  <Link to={to}>
-    <pre>{children}</pre>
-  </Link>
+  <CarbonLink as={RouterLink} to={to}>
+    {children}
+  </CarbonLink>
 );
 
 export const TagCell: React.FC<{ type: any; children: React.ReactNode }> = ({ type, children }) => (
