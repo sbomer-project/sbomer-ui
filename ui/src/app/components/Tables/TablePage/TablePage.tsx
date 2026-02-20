@@ -4,6 +4,7 @@ import { RelativeTimestamp } from '@app/components/UtilsComponents/RelativeTimes
 import { extractQueryErrorMessageDetails } from '@app/utils/Utils';
 import {
   Button,
+  Link as CarbonLink,
   DataTableSkeleton,
   Heading,
   Pagination,
@@ -23,7 +24,7 @@ import {
 } from '@carbon/react';
 import { Help } from '@carbon/icons-react';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 export interface TableColumn<T> {
   key: string;
@@ -117,10 +118,15 @@ export function TablePage<T>({
       ]}
       totalItems={total || 0}
       onChange={({ page, pageSize: newPageSize }) => {
-        if (page !== pageIndex) {
-          onPageChange(page);
-        } else if (newPageSize !== pageSize) {
+        if (newPageSize !== pageSize) {
+          // When page size changes, reset to page 1
           onPageSizeChange(newPageSize);
+          if (page !== 1) {
+            onPageChange(1);
+          }
+        } else if (page !== pageIndex) {
+          // Only page changed
+          onPageChange(page);
         }
       }}
     />
@@ -145,7 +151,11 @@ export function TablePage<T>({
   const isValidationError = isQueryValidationError ? isQueryValidationError(error) : false;
 
   if (error && !isValidationError) {
-    return <ErrorSection title={`Could not load ${title.toLowerCase()}`} message={error.message} />;
+    return (
+      <TableContainer title={title} description={description}>
+        <ErrorSection title={`Could not load ${title.toLowerCase()}`} message={error.message} />
+      </TableContainer>
+    );
   }
 
   const queryErrorTile =
@@ -244,9 +254,9 @@ export function TablePage<T>({
 
 // Helper components for common cell types
 export const LinkCell: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
-  <Link to={to}>
-    <pre>{children}</pre>
-  </Link>
+  <CarbonLink as={RouterLink} to={to}>
+    {children}
+  </CarbonLink>
 );
 
 export const TagCell: React.FC<{ type: any; children: React.ReactNode }> = ({ type, children }) => (

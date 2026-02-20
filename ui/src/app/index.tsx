@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { AppRouteConfig, IAppRoute, routes } from './routes';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './app.css';
 import './carbon-styles.scss';
 
@@ -24,14 +25,16 @@ const flattenRoutes = (routeConfigs: AppRouteConfig[]): IAppRoute[] => {
 
 const App = ({ basename }: { basename: string }) => {
   return (
-    <RouterProvider
-      router={createBrowserRouter(
-        flattenRoutes(routes).map(
-          (route: IAppRoute) => ({ element: route.element, path: route.path }) as RouteObject,
-        ),
-        { basename: basename },
-      )}
-    />
+    <ErrorBoundary>
+      <RouterProvider
+        router={createBrowserRouter(
+          flattenRoutes(routes).map(
+            (route: IAppRoute) => ({ element: route.element, path: route.path }) as RouteObject,
+          ),
+          { basename: basename },
+        )}
+      />
+    </ErrorBoundary>
   );
 };
 

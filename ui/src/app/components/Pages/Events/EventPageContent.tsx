@@ -44,12 +44,20 @@ export const EventPageContent = () => {
     useEventGeneration(id!);
 
   if (error) {
-    return <ErrorSection title="Could not load event details" message={error.message} />;
+    return (
+      <Stack gap={6}>
+        <ErrorSection title="Could not load event details" message={error.message} />
+      </Stack>
+    );
   }
 
   // Only show skeleton when we have no data yet
   if (loading && !request) {
-    return <SkeletonText />;
+    return (
+      <Stack gap={6}>
+        <SkeletonText />
+      </Stack>
+    );
   }
 
   if (!request) {
@@ -122,7 +130,9 @@ export const EventPageContent = () => {
   );
 
   const generationsSection = generationsError ? (
-    <ErrorSection title="Could not load generations" message={generationsError.message} />
+    <Stack gap={6}>
+      <ErrorSection title="Could not load generations" message={generationsError.message} />
+    </Stack>
   ) : generationsLoading && !generationsValue ? (
     generationsLoadingSkeleton
   ) : generationRows.length === 0 ? (
