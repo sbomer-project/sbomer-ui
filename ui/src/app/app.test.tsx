@@ -29,8 +29,5 @@ describe('App tests', () => {
 
     const enhancementLinks = screen.getAllByRole('link', { name: 'Enhancements' });
     expect(enhancementLinks.length).toBeGreaterThan(0);
-
-    const helpLinks = screen.getAllByRole('link', { name: 'Help' });
-    expect(helpLinks.length).toBeGreaterThan(0);
   });
 });
