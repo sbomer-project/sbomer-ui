@@ -84,12 +84,6 @@ const routes: AppRouteConfig[] = [
     path: '/enhancements/:id',
   },
   {
-    element: <HelpPage />,
-    label: 'Help',
-    path: '/help',
-    icon: HelpIcon,
-  },
-  {
     element: <NotFoundPage />,
     path: '*',
   },
