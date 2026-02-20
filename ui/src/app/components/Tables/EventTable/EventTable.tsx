@@ -44,7 +44,7 @@ export const EventTable = () => {
   };
 
   const onPerPageSelect = (newPerPage: number) => {
-    setFilters(query, pageIndex, newPerPage);
+    setFilters(query, 1, newPerPage);
   };
 
   const isQueryValidationError = (error: any) => {

@@ -117,10 +117,15 @@ export function TablePage<T>({
       ]}
       totalItems={total || 0}
       onChange={({ page, pageSize: newPageSize }) => {
-        if (page !== pageIndex) {
-          onPageChange(page);
-        } else if (newPageSize !== pageSize) {
+        if (newPageSize !== pageSize) {
+          // When page size changes, reset to page 1
           onPageSizeChange(newPageSize);
+          if (page !== 1) {
+            onPageChange(1);
+          }
+        } else if (page !== pageIndex) {
+          // Only page changed
+          onPageChange(page);
         }
       }}
     />
