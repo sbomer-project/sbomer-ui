@@ -4,9 +4,9 @@ import { RelativeTimestamp } from '@app/components/UtilsComponents/RelativeTimes
 import { extractQueryErrorMessageDetails } from '@app/utils/Utils';
 import {
   Button,
+  Link as CarbonLink,
   DataTableSkeleton,
   Heading,
-  Link as CarbonLink,
   Pagination,
   Stack,
   Table,
