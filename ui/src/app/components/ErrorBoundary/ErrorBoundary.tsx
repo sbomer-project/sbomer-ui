@@ -47,8 +47,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
           <Stack gap={5}>
             <h2>Something went wrong</h2>
             <p>
-              An unexpected error occurred. Please try refreshing the page or contact support if
-              the problem persists.
+              An unexpected error occurred. Please try refreshing the page or contact support if the
+              problem persists.
             </p>
             {process.env.NODE_ENV === 'development' && (
               <details style={{ whiteSpace: 'pre-wrap' }}>

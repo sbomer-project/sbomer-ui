@@ -5,7 +5,6 @@ import {
   Dashboard as DashboardIcon,
   DataEnrichmentAdd,
   EventChange,
-  Help as HelpIcon,
 } from '@carbon/icons-react';
 import { Dashboard } from './components/Pages/Dashboard/Dashboard';
 import { EnhancementPage } from './components/Pages/Enhancements/EnhancementPage';
@@ -14,7 +13,6 @@ import { EventPage } from './components/Pages/Events/EventPage';
 import { EventsPage } from './components/Pages/Events/EventsPage';
 import { GenerationPage } from './components/Pages/Generations/GenerationPage';
 import { GenerationsPage } from './components/Pages/Generations/GenerationsPage';
-import { HelpPage } from './components/Pages/Help/HelpPage';
 import { NotFoundPage } from './components/Pages/NotFound/NotFoundPage';
 
 export interface IAppRoute {
