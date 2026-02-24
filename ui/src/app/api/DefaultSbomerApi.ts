@@ -165,51 +165,31 @@ export class DefaultSbomerApi implements SbomerApi {
     return new SbomerEvent(response.data);
   }
 
+  // there could possibly be also paginated version if one request ahving many generations would affect the performance
   async getEventGenerations(id: string): Promise<{ data: SbomerGeneration[]; total: number }> {
-    let pageIndex = 0;
-    let totalHits = 0;
-    const pageSize = 200;
     const requests: SbomerGeneration[] = [];
 
-    // Loop through pages until all content is retrieved
-    while (true) {
-      const response = await fetch(
-        `${this.baseUrl}/api/v1/requests/${id}/generations?pageSize=${pageSize}&pageIndex=${pageIndex}`,
+    const response = await fetch(`${this.baseUrl}/api/v1/requests/${id}/generations/all`);
+
+    if (response.status !== 200) {
+      const body = await response.text();
+      throw new Error(
+        'Failed fetching generations from SBOMer, got: ' +
+          response.status +
+          " response: '" +
+          body +
+          "'",
       );
+    }
+    const data = await response.json();
 
-      if (response.status !== 200) {
-        const body = await response.text();
-        throw new Error(
-          'Failed fetching generations from SBOMer, got: ' +
-            response.status +
-            " response: '" +
-            body +
-            "'",
-        );
-      }
-
-      const data = await response.json();
-      // Update totalHits on first page
-      if (pageIndex === 0) {
-        totalHits = data.totalHits;
-      }
-
-      // Add content to the results
-      if (data.content) {
-        data.content.forEach((request: any) => {
-          requests.push(new SbomerGeneration(request));
-        });
-      }
-
-      // If there is no more content, break the loop
-      if (data.pageIndex >= data.totalPages - 1) {
-        break;
-      }
-
-      // Move to the next page
-      pageIndex++;
+    // Add content to the results
+    if (data) {
+      data.forEach((request: any) => {
+        requests.push(new SbomerGeneration(request));
+      });
     }
 
-    return { data: requests, total: totalHits };
+    return { data: requests, total: requests.length };
   }
 }
