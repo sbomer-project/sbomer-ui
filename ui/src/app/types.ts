@@ -68,6 +68,7 @@ export class SbomerGeneration {
   public id: string;
   public generatorName: string;
   public generatorVersion: string;
+  public generatorOptions: Record<string, unknown>;
   public created: Date;
   public updated?: Date;
   public finished?: Date;
@@ -78,9 +79,7 @@ export class SbomerGeneration {
   public targetType: string;
   public targetIdentifier: string;
   public generationSbomUrls?: string[];
-
-  // todo
-  // enhancements
+  public enhancements: SbomerEnhancement[];
   public metadata?: Map<string, string>;
 
   constructor(payload: any) {
@@ -97,10 +96,14 @@ export class SbomerGeneration {
     this.metadata = payload.metadata ? new Map(Object.entries(payload.metadata)) : undefined;
     this.generatorName = payload.generatorName;
     this.generatorVersion = payload.generatorVersion;
+    this.generatorOptions = payload.generatorOptions || {};
     this.requestId = payload.requestId;
     this.targetType = payload.targetType;
     this.targetIdentifier = payload.targetIdentifier;
-    this.generationSbomUrls = payload.generationSbomUrls;
+    this.generationSbomUrls = payload.generationSbomUrls || [];
+    this.enhancements = payload.enhancements
+      ? payload.enhancements.map((enhancement: any) => new SbomerEnhancement(enhancement))
+      : [];
   }
 }
 
@@ -146,15 +149,49 @@ export class SbomerManifest {
   }
 }
 
+export class SbomerPublisher {
+  public id: string;
+  public status: string;
+  public created: Date;
+  public updated?: Date;
+  public finished?: Date;
+  public result?: string;
+  public reason?: string;
+  public requestId: string;
+  public publisherName?: string;
+  public publisherVersion?: string;
+
+  constructor(payload: any) {
+    this.id = payload.id;
+    this.status = payload.status;
+    this.created = new Date(payload.created);
+    this.updated = payload.updated ? new Date(payload.updated) : undefined;
+    this.finished = payload.finished ? new Date(payload.finished) : undefined;
+    this.result = payload.result;
+    this.reason = payload.reason;
+    this.requestId = payload.requestId;
+    this.publisherName = payload.publisherName;
+    this.publisherVersion = payload.publisherVersion;
+  }
+}
+
 export class SbomerEvent {
   public id: string;
   public created: Date;
   public status: string;
+  public generationRecords: SbomerGeneration[];
+  public publisherRecords: SbomerPublisher[];
 
   constructor(payload: any) {
     this.id = payload.id;
     this.created = new Date(payload.creationDate);
     this.status = payload.status;
+    this.generationRecords = payload.generationRecords
+      ? payload.generationRecords.map((record: any) => new SbomerGeneration(record))
+      : [];
+    this.publisherRecords = payload.publisherRecords
+      ? payload.publisherRecords.map((record: any) => new SbomerPublisher(record))
+      : [];
   }
 }
 
