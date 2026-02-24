@@ -1,7 +1,7 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { statusToColor } from '@app/utils/Utils';
+import { statusToColor, targetTypeToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -242,7 +242,11 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Target Type</StructuredListCell>
-            <StructuredListCell>{request.targetType || 'N/A'}</StructuredListCell>
+            <StructuredListCell>
+              <Tag size="md" type={targetTypeToColor(request.targetType)}>
+                {request.targetType || 'N/A'}
+              </Tag>
+            </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Target Identifier</StructuredListCell>
