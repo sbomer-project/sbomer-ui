@@ -23,7 +23,7 @@ export function useEventGeneration(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
   const getRequestEventGenerations = async (id: string) => {
     try {
-      return await sbomerApi.getEventGenerations(id);
+      return await sbomerApi.getAllGenerationsForEvent(id);
     } catch (e) {
       return Promise.reject(e);
     }
