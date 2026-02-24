@@ -16,6 +16,7 @@ interface GenerationRow {
   id: string;
   status: string;
   result: string;
+  targetType: string;
   creationTime: Date | undefined;
   updatedTime: Date | undefined;
   finishedTime: Date | undefined;
@@ -36,6 +37,11 @@ const columns: TableColumn<GenerationRow>[] = [
     key: 'result',
     header: 'Result',
     render: (row) => row.result || 'N/A',
+  },
+  {
+    key: 'targetType',
+    header: 'Target Type',
+    render: (row) => row.targetType || 'N/A',
   },
   {
     key: 'creationTime',
@@ -78,6 +84,7 @@ export const GenerationTable = () => {
       id: String(g.id),
       status: g.status ?? 'N/A',
       result: g.result ?? 'N/A',
+      targetType: g.targetType ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,
       finishedTime: g.finished ? new Date(g.finished) : undefined,

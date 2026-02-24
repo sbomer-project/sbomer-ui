@@ -241,14 +241,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Generator Name</StructuredListCell>
-            <StructuredListCell>{request.generatorName || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Generator Version</StructuredListCell>
-            <StructuredListCell>{request.generatorVersion || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Target Type</StructuredListCell>
             <StructuredListCell>{request.targetType || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -256,6 +248,15 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>Target Identifier</StructuredListCell>
             <StructuredListCell>{request.targetIdentifier || 'N/A'}</StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Generator Name</StructuredListCell>
+            <StructuredListCell>{request.generatorName || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Generator Version</StructuredListCell>
+            <StructuredListCell>{request.generatorVersion || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+
           <StructuredListRow>
             <StructuredListCell>SBOM URLs</StructuredListCell>
             <StructuredListCell>
