@@ -118,7 +118,7 @@ export function eventStatusToDescription(eventStatus: string): string {
 
 export function resultToDescription(request: SbomerGeneration): string {
   if (request.result === null) {
-    return 'In progress';
+    return 'N/A';
   }
 
   const resolved = GenerationResults.get(request.result);

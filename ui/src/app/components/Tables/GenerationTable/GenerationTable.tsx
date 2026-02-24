@@ -6,7 +6,7 @@ import {
   TagCell,
   TimestampCell,
 } from '@app/components/Tables/TablePage/TablePage';
-import { resultToColor, statusToColor } from '@app/utils/Utils';
+import { statusToColor } from '@app/utils/Utils';
 import { SbomerGeneration } from '@app/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,12 +30,12 @@ const columns: TableColumn<GenerationRow>[] = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'unknown'}</TagCell>,
+    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
   },
   {
     key: 'result',
     header: 'Result',
-    render: (row) => <TagCell type={resultToColor(row.result)}>{row.result || 'unknown'}</TagCell>,
+    render: (row) => row.result || 'N/A',
   },
   {
     key: 'creationTime',
@@ -76,8 +76,8 @@ export const GenerationTable = () => {
   const rows: GenerationRow[] =
     (value ?? []).map((g: SbomerGeneration) => ({
       id: String(g.id),
-      status: g.status ?? 'unknown',
-      result: g.result ?? 'unknown',
+      status: g.status ?? 'N/A',
+      result: g.result ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,
       finishedTime: g.finished ? new Date(g.finished) : undefined,

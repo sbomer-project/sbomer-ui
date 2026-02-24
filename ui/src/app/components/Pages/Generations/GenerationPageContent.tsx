@@ -1,7 +1,7 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { resultToColor, statusToColor } from '@app/utils/Utils';
+import { statusToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -81,7 +81,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
 
       return {
         id: String(e.id),
-        status: e.status ?? 'unknown',
+        status: e.status ?? null,
         result: e.result ?? null,
         enhancerName: e.enhancerName ?? 'N/A',
         enhancerVersion: e.enhancerVersion ?? 'N/A',
@@ -114,15 +114,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   {row.status}
                 </Tag>
               </TableCell>
-              <TableCell>
-                {row.result ? (
-                  <Tag size="md" type={resultToColor(row.result)}>
-                    {row.result}
-                  </Tag>
-                ) : (
-                  'In progress'
-                )}
-              </TableCell>
+              <TableCell>{row.result ? row.result : 'N/A'}</TableCell>
               <TableCell>{row.enhancerName}</TableCell>
               <TableCell>{row.enhancerVersion}</TableCell>
               <TableCell>
@@ -230,11 +222,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>
-              <Tag size="md" type={resultToColor(request.result)}>
-                {request.result || 'In progress'}
-              </Tag>
-            </StructuredListCell>
+            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>

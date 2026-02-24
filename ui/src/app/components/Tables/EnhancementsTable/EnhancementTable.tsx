@@ -1,9 +1,9 @@
 import { SbomerEnhancement } from '@app/types';
 import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../TablePage/TablePage';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
-import { resultToColor, statusToColor } from '@app/utils/Utils';
+import { statusToColor } from '@app/utils/Utils';
 import { useEnhancements } from './useEnhancements';
 
 interface EnhancementRow {
@@ -29,14 +29,12 @@ const columns: TableColumn<EnhancementRow>[] = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'unknown'}</TagCell>,
+    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
   },
   {
     key: 'result',
     header: 'Result',
-    render: (row) => (
-      <TagCell type={resultToColor(row.result || 'unknown')}>{row.result || 'unknown'}</TagCell>
-    ),
+    render: (row) => row.result || 'N/A',
   },
   { key: 'created', header: 'Created', render: (row) => <TimestampCell date={row.created} /> },
   { key: 'updated', header: 'Updated', render: (row) => <TimestampCell date={row.updated} /> },
@@ -55,7 +53,11 @@ const columns: TableColumn<EnhancementRow>[] = [
       <LinkCell to={`/generations/${row.generationId}`}>{row.generationId}</LinkCell>
     ),
   },
-  { key: 'requestId', header: 'Request ID', render: (row) => <LinkCell to={`/requests/${row.requestId}`}>{row.requestId}</LinkCell> },
+  {
+    key: 'requestId',
+    header: 'Request ID',
+    render: (row) => <LinkCell to={`/requests/${row.requestId}`}>{row.requestId}</LinkCell>,
+  },
 ];
 
 export const EnhancementTable = () => {

@@ -22,7 +22,7 @@ import {
 
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
-import { eventStatusToColor, resultToColor, statusToColor } from '@app/utils/Utils';
+import { eventStatusToColor, statusToColor } from '@app/utils/Utils';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEventGeneration } from '@app/components/Tables/EventTable/useEventGeneration';
@@ -67,8 +67,8 @@ export const EventPageContent = () => {
   const generationRows =
     (generationsValue?.data ?? []).map((g: SbomerGeneration) => ({
       id: String(g.id),
-      status: g.status ?? 'unknown',
-      result: g.result ?? 'unknown',
+      status: g.status ?? 'N/A',
+      result: g.result ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,
       finishedTime: g.finished ? new Date(g.finished) : undefined,
@@ -94,14 +94,10 @@ export const EventPageContent = () => {
               </TableCell>
               <TableCell>
                 <Tag size="md" type={statusToColor(row.status)}>
-                  {row.status || 'unknown'}
+                  {row.status || 'N/A'}
                 </Tag>
               </TableCell>
-              <TableCell>
-                <Tag size="md" type={resultToColor(row.result)}>
-                  {row.result || 'unknown'}
-                </Tag>
-              </TableCell>
+              <TableCell>{row.result}</TableCell>
               <TableCell>
                 <RelativeTimestamp date={row.creationTime} />
               </TableCell>
