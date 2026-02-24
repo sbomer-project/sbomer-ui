@@ -3,7 +3,7 @@ import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../Tab
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
-import { statusToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor } from '@app/utils/Utils';
 import { useEnhancements } from './useEnhancements';
 
 interface EnhancementRow {
@@ -29,7 +29,7 @@ const columns: TableColumn<EnhancementRow>[] = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
+    render: (row) => <TagCell type={enhancementStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
   },
   {
     key: 'result',

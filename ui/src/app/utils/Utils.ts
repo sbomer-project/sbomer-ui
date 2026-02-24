@@ -55,6 +55,14 @@ const EventStatuses = new Map<string, { description?: string; color: CarbonTagTy
   ['RECEIVED', { description: 'Received/New', color: 'teal' }],
 ]);
 
+const EnhancementStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
+  ['NEW', { description: 'New', color: 'teal' }],
+  ['SCHEDULED', { description: 'Scheduled', color: 'cyan' }],
+  ['FAILED', { description: 'Failed', color: 'red' }],
+  ['ENHANCING', { description: 'In progress', color: 'blue' }],
+  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+]);
+
 /**
  *
  * @param millis Converts timestamp in milliseconds to relative time in human readable format.
@@ -136,6 +144,12 @@ export function statusToColor(status: string): CarbonTagType {
 
 export function eventStatusToColor(status: string): CarbonTagType {
   const resolved = EventStatuses.get(status);
+
+  return resolved?.color ?? 'gray';
+}
+
+export function enhancementStatusToColor(status: string): CarbonTagType {
+  const resolved = EnhancementStatuses.get(status);
 
   return resolved?.color ?? 'gray';
 }
