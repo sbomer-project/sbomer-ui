@@ -1,7 +1,7 @@
 import { SbomerEnhancement } from '@app/types';
 import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../TablePage/TablePage';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
 import { resultToColor, statusToColor } from '@app/utils/Utils';
 import { useEnhancements } from './useEnhancements';
@@ -55,7 +55,7 @@ const columns: TableColumn<EnhancementRow>[] = [
       <LinkCell to={`/generations/${row.generationId}`}>{row.generationId}</LinkCell>
     ),
   },
-  { key: 'requestId', header: 'Request ID', render: (row) => row.requestId || 'N/A' },
+  { key: 'requestId', header: 'Request ID', render: (row) => <LinkCell to={`/requests/${row.requestId}`}>{row.requestId}</LinkCell> },
 ];
 
 export const EnhancementTable = () => {
