@@ -184,5 +184,5 @@ export type SbomerApi = {
 
   getEvent(_id: string): Promise<SbomerEvent>;
 
-  getEventGenerations(_id: string): Promise<{ data: SbomerGeneration[]; total: number }>;
+  getAllGenerationsForEvent(_id: string): Promise<{ data: SbomerGeneration[]; total: number }>;
 };
