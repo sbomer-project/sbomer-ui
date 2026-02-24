@@ -166,7 +166,9 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   // there could possibly be also paginated version if one request ahving many generations would affect the performance
-  async getAllGenerationsForEvent(id: string): Promise<{ data: SbomerGeneration[]; total: number }> {
+  async getAllGenerationsForEvent(
+    id: string,
+  ): Promise<{ data: SbomerGeneration[]; total: number }> {
     const requests: SbomerGeneration[] = [];
 
     const response = await fetch(`${this.baseUrl}/api/v1/requests/${id}/generations/all`);
