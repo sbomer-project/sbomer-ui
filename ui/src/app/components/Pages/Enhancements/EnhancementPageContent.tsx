@@ -1,7 +1,7 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { resultToColor, statusToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   Heading,
@@ -103,18 +103,14 @@ const EnhancementPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size="md" type={statusToColor(request.status)}>
+              <Tag size="md" type={enhancementStatusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>
-              <Tag size="md" type={resultToColor(request.result || 'unknown')}>
-                {request.result || 'In progress'}
-              </Tag>
-            </StructuredListCell>
+            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>

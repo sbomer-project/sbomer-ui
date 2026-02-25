@@ -1,7 +1,11 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { resultToColor, statusToColor } from '@app/utils/Utils';
+import {
+  enhancementStatusToColor,
+  generationStatusToColor,
+  targetTypeToColor,
+} from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -81,7 +85,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
 
       return {
         id: String(e.id),
-        status: e.status ?? 'unknown',
+        status: e.status ?? null,
         result: e.result ?? null,
         enhancerName: e.enhancerName ?? 'N/A',
         enhancerVersion: e.enhancerVersion ?? 'N/A',
@@ -110,19 +114,11 @@ const GenerationPageContent: React.FunctionComponent = () => {
                 </Link>
               </TableCell>
               <TableCell>
-                <Tag size="md" type={statusToColor(row.status)}>
+                <Tag size="md" type={enhancementStatusToColor(row.status)}>
                   {row.status}
                 </Tag>
               </TableCell>
-              <TableCell>
-                {row.result ? (
-                  <Tag size="md" type={resultToColor(row.result)}>
-                    {row.result}
-                  </Tag>
-                ) : (
-                  'In progress'
-                )}
-              </TableCell>
+              <TableCell>{row.result ? row.result : 'N/A'}</TableCell>
               <TableCell>{row.enhancerName}</TableCell>
               <TableCell>{row.enhancerVersion}</TableCell>
               <TableCell>
@@ -223,18 +219,14 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size="md" type={statusToColor(request.status)}>
+              <Tag size="md" type={generationStatusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>
-              <Tag size="md" type={resultToColor(request.result)}>
-                {request.result || 'In progress'}
-              </Tag>
-            </StructuredListCell>
+            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>
@@ -253,6 +245,18 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
+            <StructuredListCell>Target Type</StructuredListCell>
+            <StructuredListCell>
+              <Tag size="md" type={targetTypeToColor(request.targetType)}>
+                {request.targetType || 'N/A'}
+              </Tag>
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Target Identifier</StructuredListCell>
+            <StructuredListCell>{request.targetIdentifier || 'N/A'}</StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
             <StructuredListCell>Generator Name</StructuredListCell>
             <StructuredListCell>{request.generatorName || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -260,14 +264,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>Generator Version</StructuredListCell>
             <StructuredListCell>{request.generatorVersion || 'N/A'}</StructuredListCell>
           </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Target Type</StructuredListCell>
-            <StructuredListCell>{request.targetType || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Target Identifier</StructuredListCell>
-            <StructuredListCell>{request.targetIdentifier || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
+
           <StructuredListRow>
             <StructuredListCell>SBOM URLs</StructuredListCell>
             <StructuredListCell>

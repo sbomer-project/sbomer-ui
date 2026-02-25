@@ -36,6 +36,7 @@ const GenerationStatuses = new Map<string, { description?: string; color: Carbon
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['GENERATING', { description: 'In progress', color: 'blue' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['NEW', { description: 'New', color: 'teal' }],
 ]);
 
 const GenerationResults = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -53,6 +54,14 @@ const EventStatuses = new Map<string, { description?: string; color: CarbonTagTy
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
   ['RECEIVED', { description: 'Received/New', color: 'teal' }],
+]);
+
+const EnhancementStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
+  ['NEW', { description: 'New', color: 'teal' }],
+  ['SCHEDULED', { description: 'Scheduled', color: 'cyan' }],
+  ['FAILED', { description: 'Failed', color: 'red' }],
+  ['ENHANCING', { description: 'In progress', color: 'blue' }],
+  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
 ]);
 
 /**
@@ -118,7 +127,7 @@ export function eventStatusToDescription(eventStatus: string): string {
 
 export function resultToDescription(request: SbomerGeneration): string {
   if (request.result === null) {
-    return 'In progress';
+    return 'N/A';
   }
 
   const resolved = GenerationResults.get(request.result);
@@ -126,12 +135,10 @@ export function resultToDescription(request: SbomerGeneration): string {
   return resolved?.description ?? request.result;
 }
 
-export function statusToColor(status: string): CarbonTagType {
-  if (!isInProgress(status)) {
-    return isSuccess(status) ? 'teal' : 'red';
-  }
+export function generationStatusToColor(status: string): CarbonTagType {
+  const resolved = GenerationStatuses.get(status);
 
-  return 'gray';
+  return resolved?.color ?? 'gray';
 }
 
 export function eventStatusToColor(status: string): CarbonTagType {
@@ -140,10 +147,48 @@ export function eventStatusToColor(status: string): CarbonTagType {
   return resolved?.color ?? 'gray';
 }
 
+export function enhancementStatusToColor(status: string): CarbonTagType {
+  const resolved = EnhancementStatuses.get(status);
+
+  return resolved?.color ?? 'gray';
+}
+
 export function resultToColor(result: string): CarbonTagType {
   const resolved = GenerationResults.get(result);
 
   return resolved?.color ?? 'warm-gray';
+}
+
+/**
+ * Assigns a consistent color to a target type based on a simple hash of the string.
+ * The same target type will always receive the same color, providing visual distinction
+ * between different target types in the UI.
+ * @param targetType The target type string
+ * @returns A Carbon tag color type
+ */
+export function targetTypeToColor(targetType: string): CarbonTagType {
+  // All available Carbon tag colors except red (errors), green (success), and gray (in-progress)
+  const colors: CarbonTagType[] = [
+    'blue',
+    'cyan',
+    'teal',
+    'magenta',
+    'high-contrast',
+    'purple',
+    'outline',
+  ];
+
+  if (!targetType) {
+    return 'outline';
+  }
+
+  // Simple hash: sum of character codes
+  let hash = 0;
+  for (let i = 0; i < targetType.length; i++) {
+    hash += targetType.charCodeAt(i);
+  }
+
+  return colors[hash % colors.length];
 }
 
 export function isInProgress(status: string): boolean {
