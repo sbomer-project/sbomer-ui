@@ -29,7 +29,9 @@ const columns: TableColumn<EnhancementRow>[] = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <TagCell type={enhancementStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
+    render: (row) => (
+      <TagCell type={enhancementStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>
+    ),
   },
   {
     key: 'result',

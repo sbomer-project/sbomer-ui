@@ -22,7 +22,7 @@ import {
 
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
-import { eventStatusToColor, statusToColor } from '@app/utils/Utils';
+import { eventStatusToColor, generationStatusToColor } from '@app/utils/Utils';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEventGeneration } from '@app/components/Tables/EventTable/useEventGeneration';
@@ -93,7 +93,7 @@ export const EventPageContent = () => {
                 </Link>
               </TableCell>
               <TableCell>
-                <Tag size="md" type={statusToColor(row.status)}>
+                <Tag size="md" type={generationStatusToColor(row.status)}>
                   {row.status || 'N/A'}
                 </Tag>
               </TableCell>

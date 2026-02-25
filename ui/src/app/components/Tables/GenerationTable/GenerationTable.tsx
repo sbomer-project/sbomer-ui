@@ -6,7 +6,7 @@ import {
   TagCell,
   TimestampCell,
 } from '@app/components/Tables/TablePage/TablePage';
-import { statusToColor, targetTypeToColor } from '@app/utils/Utils';
+import { generationStatusToColor, targetTypeToColor } from '@app/utils/Utils';
 import { SbomerGeneration } from '@app/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -31,7 +31,9 @@ const columns: TableColumn<GenerationRow>[] = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <TagCell type={statusToColor(row.status)}>{row.status || 'N/A'}</TagCell>,
+    render: (row) => (
+      <TagCell type={generationStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>
+    ),
   },
   {
     key: 'result',

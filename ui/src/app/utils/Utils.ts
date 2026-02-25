@@ -36,6 +36,7 @@ const GenerationStatuses = new Map<string, { description?: string; color: Carbon
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['GENERATING', { description: 'In progress', color: 'blue' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['NEW', { description: 'New', color: 'teal' }],
 ]);
 
 const GenerationResults = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -134,12 +135,10 @@ export function resultToDescription(request: SbomerGeneration): string {
   return resolved?.description ?? request.result;
 }
 
-export function statusToColor(status: string): CarbonTagType {
-  if (!isInProgress(status)) {
-    return isSuccess(status) ? 'teal' : 'red';
-  }
+export function generationStatusToColor(status: string): CarbonTagType {
+  const resolved = GenerationStatuses.get(status);
 
-  return 'gray';
+  return resolved?.color ?? 'gray';
 }
 
 export function eventStatusToColor(status: string): CarbonTagType {
@@ -178,17 +177,17 @@ export function targetTypeToColor(targetType: string): CarbonTagType {
     'purple',
     'outline',
   ];
-  
+
   if (!targetType) {
     return 'outline';
   }
-  
+
   // Simple hash: sum of character codes
   let hash = 0;
   for (let i = 0; i < targetType.length; i++) {
     hash += targetType.charCodeAt(i);
   }
-  
+
   return colors[hash % colors.length];
 }
 

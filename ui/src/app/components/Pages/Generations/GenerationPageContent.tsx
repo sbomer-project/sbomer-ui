@@ -1,7 +1,11 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { statusToColor, targetTypeToColor } from '@app/utils/Utils';
+import {
+  enhancementStatusToColor,
+  generationStatusToColor,
+  targetTypeToColor,
+} from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -110,7 +114,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
                 </Link>
               </TableCell>
               <TableCell>
-                <Tag size="md" type={statusToColor(row.status)}>
+                <Tag size="md" type={enhancementStatusToColor(row.status)}>
                   {row.status}
                 </Tag>
               </TableCell>
@@ -215,7 +219,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Status</StructuredListCell>
             <StructuredListCell>
-              <Tag size="md" type={statusToColor(request.status)}>
+              <Tag size="md" type={generationStatusToColor(request.status)}>
                 {request.status}
               </Tag>
             </StructuredListCell>

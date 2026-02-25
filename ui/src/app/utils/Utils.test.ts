@@ -17,14 +17,15 @@
 ///
 
 import {
+  enhancementStatusToColor,
   eventStatusToColor,
   eventStatusToDescription,
   extractQueryErrorMessageDetails,
+  generationStatusToColor,
   isInProgress,
   isSuccess,
   resultToColor,
   resultToDescription,
-  statusToColor,
   statusToDescription,
   timestampToHumanReadable,
 } from './Utils';
@@ -97,10 +98,8 @@ describe('Utils', () => {
   });
 
   describe('resultToDescription', () => {
-    it('should return "In progress" when result is null', () => {
-      expect(resultToDescription({ result: null } as unknown as SbomerGeneration)).toBe(
-        'In progress',
-      );
+    it('should return "N/A" when result is null', () => {
+      expect(resultToDescription({ result: null } as unknown as SbomerGeneration)).toBe('N/A');
     });
 
     it('should return description for known results', () => {
@@ -137,18 +136,29 @@ describe('Utils', () => {
     });
   });
 
-  describe('statusToColor', () => {
-    it('should return "teal" for successful finished status', () => {
-      expect(statusToColor('FINISHED')).toBe('teal');
+  describe('generationStatusToColor', () => {
+    it('should return correct colors for known generation statuses', () => {
+      expect(generationStatusToColor('FAILED')).toBe('red');
+      expect(generationStatusToColor('GENERATING')).toBe('blue');
+      expect(generationStatusToColor('FINISHED')).toBe('green');
     });
 
-    it('should return "red" for failed status', () => {
-      expect(statusToColor('FAILED')).toBe('red');
+    it('should return "gray" for unknown generation statuses', () => {
+      expect(generationStatusToColor('UNKNOWN_STATUS')).toBe('gray');
+    });
+  });
+
+  describe('enhancementStatusToColor', () => {
+    it('should return correct colors for known enhancement statuses', () => {
+      expect(enhancementStatusToColor('NEW')).toBe('teal');
+      expect(enhancementStatusToColor('SCHEDULED')).toBe('cyan');
+      expect(enhancementStatusToColor('FAILED')).toBe('red');
+      expect(enhancementStatusToColor('ENHANCING')).toBe('blue');
+      expect(enhancementStatusToColor('FINISHED')).toBe('green');
     });
 
-    it('should return "gray" for in-progress statuses', () => {
-      expect(statusToColor('GENERATING')).toBe('gray');
-      expect(statusToColor('PENDING')).toBe('gray');
+    it('should return "gray" for unknown enhancement statuses', () => {
+      expect(enhancementStatusToColor('UNKNOWN_STATUS')).toBe('gray');
     });
   });
 
