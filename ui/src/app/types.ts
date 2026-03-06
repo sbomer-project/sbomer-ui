@@ -137,6 +137,60 @@ export class SbomerEnhancement {
   }
 }
 
+export class GenerationRunRecord {
+  public id: string;
+  public generationId: string;
+  public attemptNumber: number;
+  public state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+  public reason:
+    | 'SUCCESS'
+    | 'ERR_GENERAL'
+    | 'ERR_CONFIG_INVALID'
+    | 'ERR_CONFIG_MISSING'
+    | 'ERR_INDEX_INVALID'
+    | 'ERR_GENERATION'
+    | 'ERR_POST'
+    | 'ERR_OOM'
+    | 'ERR_SYSTEM'
+    | 'ERR_MULTI';
+  public message: string;
+  public startTime: Date;
+  public completionTime?: Date;
+
+  constructor(payload: any) {
+    this.id = payload.id;
+    this.generationId = payload.generationId;
+    this.attemptNumber = payload.attemptNumber;
+    this.state = payload.state;
+    this.reason = payload.reason;
+    this.message = payload.message || '';
+    this.startTime = new Date(payload.startTime);
+    this.completionTime = payload.completionTime ? new Date(payload.completionTime) : undefined;
+  }
+}
+
+export class EnhancementRunRecord {
+  public id: string;
+  public enhancementId: string;
+  public attemptNumber: number;
+  public state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+  public reason: 'SUCCESS' | 'ERR_GENERAL' | 'ERR_CONFIG_INVALID' | 'ERR_ENHANCEMENT';
+  public message: string;
+  public startTime: Date;
+  public completionTime?: Date;
+
+  constructor(payload: any) {
+    this.id = payload.id;
+    this.enhancementId = payload.enhancementId;
+    this.attemptNumber = payload.attemptNumber;
+    this.state = payload.state;
+    this.reason = payload.reason;
+    this.message = payload.message || '';
+    this.startTime = new Date(payload.startTime);
+    this.completionTime = payload.completionTime ? new Date(payload.completionTime) : undefined;
+  }
+}
+
 export class SbomerManifest {
   public id: string;
   public created: Date;
@@ -222,4 +276,12 @@ export type SbomerApi = {
   getEvent(_id: string): Promise<SbomerEvent>;
 
   getAllGenerationsForEvent(_id: string): Promise<{ data: SbomerGeneration[]; total: number }>;
+
+  // Generation Runs
+  getGenerationRuns(_generationId: string): Promise<GenerationRunRecord[]>;
+  getGenerationRun(_generationId: string, _runId: string): Promise<GenerationRunRecord>;
+
+  // Enhancement Runs
+  getEnhancementRuns(_enhancementId: string): Promise<EnhancementRunRecord[]>;
+  getEnhancementRun(_enhancementId: string, _runId: string): Promise<EnhancementRunRecord>;
 };

@@ -64,6 +64,27 @@ const EnhancementStatuses = new Map<string, { description?: string; color: Carbo
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
 ]);
 
+const RunStates = new Map<string, { description?: string; color: CarbonTagType }>([
+  ['PENDING', { description: 'Pending', color: 'gray' }],
+  ['RUNNING', { description: 'Running', color: 'blue' }],
+  ['SUCCEEDED', { description: 'Succeeded', color: 'green' }],
+  ['FAILED', { description: 'Failed', color: 'red' }],
+]);
+
+const RunReasons = new Map<string, { description?: string; color: CarbonTagType }>([
+  ['SUCCESS', { description: 'Success', color: 'green' }],
+  ['ERR_GENERAL', { description: 'General error', color: 'red' }],
+  ['ERR_CONFIG_INVALID', { description: 'Invalid configuration', color: 'red' }],
+  ['ERR_CONFIG_MISSING', { description: 'Missing configuration', color: 'red' }],
+  ['ERR_INDEX_INVALID', { description: 'Invalid product index', color: 'red' }],
+  ['ERR_GENERATION', { description: 'Generation failure', color: 'red' }],
+  ['ERR_POST', { description: 'Post-processing error', color: 'red' }],
+  ['ERR_OOM', { description: 'Out of memory', color: 'red' }],
+  ['ERR_SYSTEM', { description: 'System error', color: 'red' }],
+  ['ERR_MULTI', { description: 'Multiple errors', color: 'red' }],
+  ['ERR_ENHANCEMENT', { description: 'Enhancement failure', color: 'red' }],
+]);
+
 /**
  *
  * @param millis Converts timestamp in milliseconds to relative time in human readable format.
@@ -230,4 +251,39 @@ export function extractQueryErrorMessageDetails(error: any): { message: string; 
   }
 
   return { message: 'Unknown error' };
+}
+
+export function runStateToColor(state: string): CarbonTagType {
+  const resolved = RunStates.get(state);
+  return resolved?.color ?? 'gray';
+}
+
+export function runReasonToColor(reason: string): CarbonTagType {
+  const resolved = RunReasons.get(reason);
+  return resolved?.color ?? 'warm-gray';
+}
+
+export function runReasonToDescription(reason: string): string {
+  const resolved = RunReasons.get(reason);
+  return resolved?.description ?? reason;
+}
+
+/**
+ * Calculate duration between two timestamps
+ * @param startTime Start timestamp
+ * @param completionTime Completion timestamp (optional)
+ * @returns Human-readable duration string
+ */
+export function calculateDuration(startTime: Date, completionTime?: Date): string {
+  if (!completionTime) {
+    return 'In progress';
+  }
+
+  const durationMs = completionTime.getTime() - startTime.getTime();
+  
+  if (durationMs < 0) {
+    return 'N/A';
+  }
+
+  return timestampToHumanReadable(durationMs, false);
 }

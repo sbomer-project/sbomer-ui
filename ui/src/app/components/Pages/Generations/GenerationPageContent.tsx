@@ -1,4 +1,5 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
+import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
@@ -30,6 +31,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useGeneration } from './useGeneration';
 import { useGenerationEnhancements } from './useGenerationEnhancements';
+import { useGenerationRuns } from './useGenerationRuns';
 
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
@@ -47,6 +49,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
   const [{ request, error, loading }] = useGeneration(id!);
   const [{ value: enhancementsValue, loading: enhancementsLoading, error: enhancementsError }] =
     useGenerationEnhancements(id!);
+  const [{ runs, loading: runsLoading, error: runsError }] = useGenerationRuns(id!);
 
   useDocumentTitle('SBOMer | Generations | ' + id);
 
@@ -299,6 +302,19 @@ const GenerationPageContent: React.FunctionComponent = () => {
         </CodeSnippet>
       </Stack>
       {enhancementsSection}
+      {runsError ? (
+        <Stack gap={6}>
+          <ErrorSection title="Could not load execution history" message={runsError.message} />
+        </Stack>
+      ) : runsLoading && !runs ? (
+        <TableContainer title="Execution History" description="Execution attempts and retry history">
+          <DataTableSkeleton columnCount={6} showHeader={false} showToolbar={false} rowCount={3} />
+        </TableContainer>
+      ) : runs && runs.length > 0 ? (
+        <RunsTable runs={runs} parentType="generation" parentId={id!} />
+      ) : (
+        <p>No execution history found for this generation.</p>
+      )}
     </Stack>
   );
 };

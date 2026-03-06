@@ -17,7 +17,14 @@
 ///
 
 import axios, { Axios, AxiosError } from 'axios';
-import { SbomerApi, SbomerEvent, SbomerGeneration, SbomerStats } from '../types';
+import {
+  EnhancementRunRecord,
+  GenerationRunRecord,
+  SbomerApi,
+  SbomerEvent,
+  SbomerGeneration,
+  SbomerStats,
+} from '../types';
 
 type Options = {
   baseUrl: string;
@@ -193,5 +200,99 @@ export class DefaultSbomerApi implements SbomerApi {
     }
 
     return { data: requests, total: requests.length };
+  }
+
+  async getGenerationRuns(generationId: string): Promise<GenerationRunRecord[]> {
+    const response = await this.client.get(`/api/v1/sboms/generations/${generationId}/runs`);
+
+    if (response.status !== 200) {
+      throw new Error(
+        'Failed to retrieve runs for Generation ' +
+          generationId +
+          ', got ' +
+          response.status +
+          " response: '" +
+          response.data +
+          "'",
+      );
+    }
+
+    const runs: GenerationRunRecord[] = [];
+    if (Array.isArray(response.data)) {
+      response.data.forEach((run: any) => {
+        runs.push(new GenerationRunRecord(run));
+      });
+    }
+
+    return runs;
+  }
+
+  async getGenerationRun(generationId: string, runId: string): Promise<GenerationRunRecord> {
+    const response = await this.client.get(
+      `/api/v1/sboms/generations/${generationId}/runs/${runId}`,
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        'Failed to retrieve run ' +
+          runId +
+          ' for Generation ' +
+          generationId +
+          ', got ' +
+          response.status +
+          " response: '" +
+          response.data +
+          "'",
+      );
+    }
+
+    return new GenerationRunRecord(response.data);
+  }
+
+  async getEnhancementRuns(enhancementId: string): Promise<EnhancementRunRecord[]> {
+    const response = await this.client.get(`/api/v1/sboms/enhancements/${enhancementId}/runs`);
+
+    if (response.status !== 200) {
+      throw new Error(
+        'Failed to retrieve runs for Enhancement ' +
+          enhancementId +
+          ', got ' +
+          response.status +
+          " response: '" +
+          response.data +
+          "'",
+      );
+    }
+
+    const runs: EnhancementRunRecord[] = [];
+    if (Array.isArray(response.data)) {
+      response.data.forEach((run: any) => {
+        runs.push(new EnhancementRunRecord(run));
+      });
+    }
+
+    return runs;
+  }
+
+  async getEnhancementRun(enhancementId: string, runId: string): Promise<EnhancementRunRecord> {
+    const response = await this.client.get(
+      `/api/v1/sboms/enhancements/${enhancementId}/runs/${runId}`,
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        'Failed to retrieve run ' +
+          runId +
+          ' for Enhancement ' +
+          enhancementId +
+          ', got ' +
+          response.status +
+          " response: '" +
+          response.data +
+          "'",
+      );
+    }
+
+    return new EnhancementRunRecord(response.data);
   }
 }
