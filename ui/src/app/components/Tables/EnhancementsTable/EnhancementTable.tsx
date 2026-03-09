@@ -3,7 +3,7 @@ import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../Tab
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
-import { enhancementStatusToColor, runReasonToColor, runReasonToDescription } from '@app/utils/Utils';
+import { enhancementStatusToColor } from '@app/utils/Utils';
 import { useEnhancements } from './useEnhancements';
 
 interface EnhancementRow {
@@ -12,8 +12,6 @@ interface EnhancementRow {
   updated: Date | undefined;
   finished: Date | undefined;
   status: string;
-  result: string | undefined;
-  reason: string | undefined;
   enhancerType: string | undefined;
   enhancerVersion: string | undefined;
   generationId: string | undefined;
@@ -33,24 +31,9 @@ const columns: TableColumn<EnhancementRow>[] = [
       <TagCell type={enhancementStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>
     ),
   },
-  {
-    key: 'result',
-    header: 'Result',
-    render: (row) => row.result || 'N/A',
-  },
   { key: 'created', header: 'Created', render: (row) => <TimestampCell date={row.created} /> },
   { key: 'updated', header: 'Updated', render: (row) => <TimestampCell date={row.updated} /> },
   { key: 'finished', header: 'Finished', render: (row) => <TimestampCell date={row.finished} /> },
-  {
-    key: 'reason',
-    header: 'Reason',
-    render: (row) =>
-      row.reason ? (
-        <TagCell type={runReasonToColor(row.reason)}>{runReasonToDescription(row.reason)}</TagCell>
-      ) : (
-        'N/A'
-      ),
-  },
   { key: 'enhancerType', header: 'Enhancer Type', render: (row) => row.enhancerType || 'N/A' },
   {
     key: 'enhancerVersion',
@@ -94,11 +77,9 @@ export const EnhancementTable = () => {
     (value ?? []).map((enhancement: SbomerEnhancement) => ({
       id: enhancement.id,
       status: enhancement.status,
-      result: enhancement.result,
       created: enhancement.created,
       updated: enhancement.updated,
       finished: enhancement.finished,
-      reason: enhancement.reason,
       enhancerType: enhancement.enhancerName,
       enhancerVersion: enhancement.enhancerVersion,
       generationId: enhancement.generationId,
