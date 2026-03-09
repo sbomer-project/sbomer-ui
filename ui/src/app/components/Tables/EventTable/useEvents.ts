@@ -18,7 +18,7 @@
 
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 import { useEventsFilters } from '@app/components/Tables/EventTable/useEventsFilters';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 
 export function useRequestEvents() {
@@ -27,26 +27,29 @@ export function useRequestEvents() {
 
   const { query, pageIndex, pageSize } = useEventsFilters();
 
-  const getRequestEvents = async ({
-    pageSize,
-    pageIndex,
-    query,
-  }: {
-    pageSize: number;
-    pageIndex: number;
-    query: string;
-  }) => {
-    try {
-      const pageIndexOffsetted = pageIndex - 1;
-      const response = await sbomerApi.getEvents(
-        { pageSize, pageIndex: pageIndexOffsetted },
-        query,
-      );
-      return response;
-    } catch (e) {
-      return Promise.reject(e);
-    }
-  };
+  const getRequestEvents = useCallback(
+    async ({
+      pageSize,
+      pageIndex,
+      query,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      query: string;
+    }) => {
+      try {
+        const pageIndexOffsetted = pageIndex - 1;
+        const response = await sbomerApi.getEvents(
+          { pageSize, pageIndex: pageIndexOffsetted },
+          query,
+        );
+        return response;
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    [sbomerApi],
+  );
 
   const { loading, value, error, retry } = useAsyncRetry(
     () =>
@@ -58,7 +61,7 @@ export function useRequestEvents() {
         setTotal(data.total);
         return data.data;
       }),
-    [pageIndex, pageSize, query],
+    [getRequestEvents, pageIndex, pageSize, query],
   );
 
   return [

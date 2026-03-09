@@ -17,10 +17,12 @@
 ///
 
 import {
+  calculateDuration,
   enhancementStatusToColor,
   eventStatusToColor,
   eventStatusToDescription,
   extractQueryErrorMessageDetails,
+  formatDuration,
   generationStatusToColor,
   isInProgress,
   isSuccess,
@@ -287,6 +289,95 @@ describe('Utils', () => {
       expect(extractQueryErrorMessageDetails(null).message).toBe('Unknown error');
       expect(extractQueryErrorMessageDetails(undefined).message).toBe('Unknown error');
       expect(extractQueryErrorMessageDetails({}).message).toBe('Unknown error');
+    });
+  });
+
+  describe('formatDuration', () => {
+    it('should return "less than a second" for durations under 1 second', () => {
+      expect(formatDuration(0)).toBe('less than a second');
+      expect(formatDuration(500)).toBe('less than a second');
+      expect(formatDuration(999)).toBe('less than a second');
+    });
+
+    it('should format seconds only for durations under 1 minute', () => {
+      expect(formatDuration(1000)).toBe('1s');
+      expect(formatDuration(30000)).toBe('30s');
+      expect(formatDuration(59000)).toBe('59s');
+    });
+
+    it('should format minutes and seconds for durations under 1 hour', () => {
+      expect(formatDuration(60000)).toBe('1m');
+      expect(formatDuration(90000)).toBe('1m 30s');
+      expect(formatDuration(120000)).toBe('2m');
+      expect(formatDuration(3540000)).toBe('59m');
+    });
+
+    it('should format hours and minutes for durations under 1 day (no seconds)', () => {
+      expect(formatDuration(3600000)).toBe('1h');
+      expect(formatDuration(3660000)).toBe('1h 1m');
+      expect(formatDuration(7200000)).toBe('2h');
+      expect(formatDuration(7320000)).toBe('2h 2m');
+      expect(formatDuration(86340000)).toBe('23h 59m');
+    });
+
+    it('should format days, hours, and minutes for durations over 1 day (no seconds)', () => {
+      expect(formatDuration(86400000)).toBe('1d');
+      expect(formatDuration(90000000)).toBe('1d 1h');
+      expect(formatDuration(90060000)).toBe('1d 1h 1m');
+      expect(formatDuration(172800000)).toBe('2d');
+      expect(formatDuration(259200000)).toBe('3d');
+      expect(formatDuration(345600000)).toBe('4d');
+    });
+
+    it('should handle exact time boundaries', () => {
+      expect(formatDuration(1000)).toBe('1s');
+      expect(formatDuration(60000)).toBe('1m');
+      expect(formatDuration(3600000)).toBe('1h');
+      expect(formatDuration(86400000)).toBe('1d');
+    });
+  });
+
+  describe('calculateDuration', () => {
+    it('should return "In progress" when completionTime is not provided', () => {
+      const startTime = new Date('2024-01-01T10:00:00Z');
+      expect(calculateDuration(startTime)).toBe('In progress');
+      expect(calculateDuration(startTime, undefined)).toBe('In progress');
+    });
+
+    it('should return "N/A" when completionTime is before startTime', () => {
+      const startTime = new Date('2024-01-01T10:00:00Z');
+      const completionTime = new Date('2024-01-01T09:00:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('N/A');
+    });
+
+    it('should calculate duration correctly for various time spans', () => {
+      const startTime = new Date('2024-01-01T10:00:00Z');
+      
+      // 30 seconds
+      let completionTime = new Date('2024-01-01T10:00:30Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('30s');
+      
+      // 5 minutes
+      completionTime = new Date('2024-01-01T10:05:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('5m');
+      
+      // 2 hours 30 minutes
+      completionTime = new Date('2024-01-01T12:30:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('2h 30m');
+      
+      // 1 day 3 hours
+      completionTime = new Date('2024-01-02T13:00:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('1d 3h');
+      
+      // 5 days 2 hours 15 minutes
+      completionTime = new Date('2024-01-06T12:15:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('5d 2h 15m');
+    });
+
+    it('should handle same start and completion time', () => {
+      const startTime = new Date('2024-01-01T10:00:00Z');
+      const completionTime = new Date('2024-01-01T10:00:00Z');
+      expect(calculateDuration(startTime, completionTime)).toBe('less than a second');
     });
   });
 });
