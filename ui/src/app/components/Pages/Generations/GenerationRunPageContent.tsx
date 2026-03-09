@@ -113,9 +113,13 @@ const GenerationRunPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>
             <StructuredListCell>
-              <Tag size="md" type={runReasonToColor(run.reason)}>
-                {runReasonToDescription(run.reason)}
-              </Tag>
+              {run.reason ? (
+                <Tag size="md" type={runReasonToColor(run.reason)}>
+                  {runReasonToDescription(run.reason)}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>

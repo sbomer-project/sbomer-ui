@@ -18,7 +18,7 @@
 
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { EnhancementRunRecord, GenerationRunRecord } from '@app/types';
-import { calculateDuration, runReasonToColor, runStateToColor } from '@app/utils/Utils';
+import { calculateDuration, runReasonToColor, runReasonToDescription, runStateToColor } from '@app/utils/Utils';
 import {
   Table,
   TableBody,
@@ -98,9 +98,13 @@ export const RunsTable: React.FunctionComponent<RunsTableProps> = ({
                   </Tag>
                 </TableCell>
                 <TableCell>
-                  <Tag size="md" type={runReasonToColor(row.reason)}>
-                    {row.reason}
-                  </Tag>
+                  {row.reason ? (
+                    <Tag size="md" type={runReasonToColor(row.reason)}>
+                      {runReasonToDescription(row.reason)}
+                    </Tag>
+                  ) : (
+                    'N/A'
+                  )}
                 </TableCell>
                 <TableCell>
                   <RelativeTimestamp date={row.startTime} />

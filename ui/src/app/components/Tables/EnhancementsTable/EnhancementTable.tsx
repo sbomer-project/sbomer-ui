@@ -3,7 +3,7 @@ import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../Tab
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParam } from 'react-use';
-import { enhancementStatusToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor, runReasonToColor, runReasonToDescription } from '@app/utils/Utils';
 import { useEnhancements } from './useEnhancements';
 
 interface EnhancementRow {
@@ -41,7 +41,16 @@ const columns: TableColumn<EnhancementRow>[] = [
   { key: 'created', header: 'Created', render: (row) => <TimestampCell date={row.created} /> },
   { key: 'updated', header: 'Updated', render: (row) => <TimestampCell date={row.updated} /> },
   { key: 'finished', header: 'Finished', render: (row) => <TimestampCell date={row.finished} /> },
-  { key: 'reason', header: 'Reason', render: (row) => row.reason || 'N/A' },
+  {
+    key: 'reason',
+    header: 'Reason',
+    render: (row) =>
+      row.reason ? (
+        <TagCell type={runReasonToColor(row.reason)}>{runReasonToDescription(row.reason)}</TagCell>
+      ) : (
+        'N/A'
+      ),
+  },
   { key: 'enhancerType', header: 'Enhancer Type', render: (row) => row.enhancerType || 'N/A' },
   {
     key: 'enhancerVersion',

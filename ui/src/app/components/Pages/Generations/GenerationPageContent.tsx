@@ -6,6 +6,8 @@ import {
   enhancementStatusToColor,
   generationStatusToColor,
   resultToColor,
+  runReasonToColor,
+  runReasonToDescription,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {
@@ -234,7 +236,15 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
+            <StructuredListCell>
+              {request.reason ? (
+                <Tag size="md" type={runReasonToColor(request.reason)}>
+                  {runReasonToDescription(request.reason)}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Latest Run Result</StructuredListCell>

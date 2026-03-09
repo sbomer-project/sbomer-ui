@@ -312,6 +312,9 @@ export function runReasonToColor(reason: string): CarbonTagType {
 }
 
 export function runReasonToDescription(reason: string): string {
+  if (!reason) {
+    return 'N/A';
+  }
   const resolved = RunReasons.get(reason);
   return resolved?.description ?? reason;
 }
