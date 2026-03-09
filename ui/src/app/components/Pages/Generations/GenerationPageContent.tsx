@@ -237,7 +237,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Latest Result</StructuredListCell>
+            <StructuredListCell>Latest Run Result</StructuredListCell>
             <StructuredListCell>
               {request.latestResult ? (
                 <Tag size="md" type={resultToColor(request.latestResult)}>
