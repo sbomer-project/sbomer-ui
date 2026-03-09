@@ -5,6 +5,7 @@ import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
+  resultToColor,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {
@@ -239,7 +240,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>Latest Result</StructuredListCell>
             <StructuredListCell>
               {request.latestResult ? (
-                <Tag size="md" type={request.latestResult === 'SUCCESS' ? 'green' : 'red'}>
+                <Tag size="md" type={resultToColor(request.latestResult)}>
                   {request.latestResult}
                 </Tag>
               ) : (

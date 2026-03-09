@@ -2,7 +2,7 @@ import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection
 import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { enhancementStatusToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor, resultToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -125,7 +125,7 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             <StructuredListCell>Latest Result</StructuredListCell>
             <StructuredListCell>
               {request.latestResult ? (
-                <Tag size="md" type={request.latestResult === 'SUCCESS' ? 'green' : 'red'}>
+                <Tag size="md" type={resultToColor(request.latestResult)}>
                   {request.latestResult}
                 </Tag>
               ) : (

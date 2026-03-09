@@ -36,7 +36,10 @@ const GenerationStatuses = new Map<string, { description?: string; color: Carbon
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['GENERATING', { description: 'In progress', color: 'blue' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['COMPLETED', { description: 'Completed', color: 'green' }],
   ['NEW', { description: 'New', color: 'teal' }],
+  ['PROCESSING', { description: 'Processing', color: 'blue' }],
+  ['PENDING', { description: 'Pending', color: 'gray' }],
 ]);
 
 const GenerationResults = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -53,7 +56,10 @@ const GenerationResults = new Map<string, { description?: string; color: CarbonT
 const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['COMPLETED', { description: 'Completed', color: 'green' }],
   ['RECEIVED', { description: 'Received/New', color: 'teal' }],
+  ['PROCESSING', { description: 'Processing', color: 'blue' }],
+  ['PENDING', { description: 'Pending', color: 'gray' }],
 ]);
 
 const EnhancementStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -62,6 +68,10 @@ const EnhancementStatuses = new Map<string, { description?: string; color: Carbo
   ['FAILED', { description: 'Failed', color: 'red' }],
   ['ENHANCING', { description: 'In progress', color: 'blue' }],
   ['FINISHED', { description: 'Successfully finished', color: 'green' }],
+  ['COMPLETED', { description: 'Completed', color: 'green' }],
+  ['PROCESSING', { description: 'Processing', color: 'blue' }],
+  ['PENDING', { description: 'Pending', color: 'gray' }],
+  ['NOT_APPLICABLE', { description: 'Not Applicable', color: 'gray' }],
 ]);
 
 const RunStates = new Map<string, { description?: string; color: CarbonTagType }>([
