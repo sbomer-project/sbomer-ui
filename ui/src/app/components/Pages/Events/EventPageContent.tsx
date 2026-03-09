@@ -175,6 +175,18 @@ export const EventPageContent = () => {
               </Tag>
             </StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Child Generations Status</StructuredListCell>
+            <StructuredListCell>
+              {request.childGenerationsStatus ? (
+                <Tag size="md" type={eventStatusToColor(request.childGenerationsStatus)}>
+                  {request.childGenerationsStatus}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
       <Stack gap={5}>

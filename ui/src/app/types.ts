@@ -81,6 +81,8 @@ export class SbomerGeneration {
   public generationSbomUrls?: string[];
   public enhancements: SbomerEnhancement[];
   public metadata?: Map<string, string>;
+  public childEnhancementsStatus?: string;
+  public latestResult?: string;
 
   constructor(payload: any) {
     this.id = payload.id;
@@ -104,6 +106,8 @@ export class SbomerGeneration {
     this.enhancements = payload.enhancements
       ? payload.enhancements.map((enhancement: any) => new SbomerEnhancement(enhancement))
       : [];
+    this.childEnhancementsStatus = payload.childEnhancementsStatus;
+    this.latestResult = payload.latestResult;
   }
 }
 
@@ -119,6 +123,8 @@ export class SbomerEnhancement {
   public requestId?: string;
   public enhancerName?: string;
   public enhancerVersion?: string;
+  public latestResult?: string;
+  public enhancementSbomUrls?: string[];
 
   constructor(payload: any) {
     this.id = payload.id;
@@ -134,6 +140,8 @@ export class SbomerEnhancement {
     this.requestId = payload.requestId;
     this.enhancerName = payload.enhancerName;
     this.enhancerVersion = payload.enhancerVersion;
+    this.latestResult = payload.latestResult;
+    this.enhancementSbomUrls = payload.enhancementSbomUrls || [];
   }
 }
 
@@ -235,6 +243,7 @@ export class SbomerEvent {
   public status: string;
   public generationRecords: SbomerGeneration[];
   public publisherRecords: SbomerPublisher[];
+  public childGenerationsStatus?: string;
 
   constructor(payload: any) {
     this.id = payload.id;
@@ -246,6 +255,7 @@ export class SbomerEvent {
     this.publisherRecords = payload.publisherRecords
       ? payload.publisherRecords.map((record: any) => new SbomerPublisher(record))
       : [];
+    this.childGenerationsStatus = payload.childGenerationsStatus;
   }
 }
 

@@ -122,6 +122,18 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
+            <StructuredListCell>Latest Result</StructuredListCell>
+            <StructuredListCell>
+              {request.latestResult ? (
+                <Tag size="md" type={request.latestResult === 'SUCCESS' ? 'green' : 'red'}>
+                  {request.latestResult}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
             <StructuredListCell>Enhancer Name</StructuredListCell>
             <StructuredListCell>{request.enhancerName || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -148,6 +160,22 @@ const EnhancementPageContent: React.FunctionComponent = () => {
                 <Link to={`/generations/${request.generationId}`}>
                   <pre>{request.generationId}</pre>
                 </Link>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.enhancementSbomUrls && request.enhancementSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.enhancementSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
               ) : (
                 'N/A'
               )}

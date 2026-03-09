@@ -236,6 +236,30 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
+            <StructuredListCell>Latest Result</StructuredListCell>
+            <StructuredListCell>
+              {request.latestResult ? (
+                <Tag size="md" type={request.latestResult === 'SUCCESS' ? 'green' : 'red'}>
+                  {request.latestResult}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Child Enhancements Status</StructuredListCell>
+            <StructuredListCell>
+              {request.childEnhancementsStatus ? (
+                <Tag size="md" type={generationStatusToColor(request.childEnhancementsStatus)}>
+                  {request.childEnhancementsStatus}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
