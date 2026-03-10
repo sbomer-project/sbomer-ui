@@ -23,15 +23,6 @@ const columns: TableColumn<SbomerEvent>[] = [
     render: (event) => <TagCell type={eventStatusToColor(event.status)}>{event.status}</TagCell>,
   },
   {
-    key: 'childGenerationsStatus',
-    header: 'Child Generations Status',
-    render: (event) => (
-      <TagCell type={eventStatusToColor(event.childGenerationsStatus || 'N/A')}>
-        {event.childGenerationsStatus || 'N/A'}
-      </TagCell>
-    ),
-  },
-  {
     key: 'created',
     header: 'Created',
     render: (event) => <TimestampCell date={event.created} />,

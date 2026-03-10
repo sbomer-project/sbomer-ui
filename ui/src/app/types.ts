@@ -243,7 +243,6 @@ export class SbomerEvent {
   public status: string;
   public generationRecords: SbomerGeneration[];
   public publisherRecords: SbomerPublisher[];
-  public childGenerationsStatus?: string;
 
   constructor(payload: any) {
     this.id = payload.id;
@@ -255,7 +254,6 @@ export class SbomerEvent {
     this.publisherRecords = payload.publisherRecords
       ? payload.publisherRecords.map((record: any) => new SbomerPublisher(record))
       : [];
-    this.childGenerationsStatus = payload.childGenerationsStatus;
   }
 }
 
