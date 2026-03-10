@@ -27,13 +27,7 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
   const [pageSize, setPageSize] = useState(initialPageSize || 10);
 
   const getEnhancements = useCallback(
-    async ({
-      pageSize,
-      pageIndex,
-    }: {
-      pageSize: number;
-      pageIndex: number;
-    }) => {
+    async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
       try {
         const response = await fetch(
           `${sbomerApi.getBaseUrl()}/api/v1/enhancements?pageSize=${pageSize}&pageIndex=${pageIndex}`,

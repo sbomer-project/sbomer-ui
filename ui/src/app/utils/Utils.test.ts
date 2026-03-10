@@ -352,23 +352,23 @@ describe('Utils', () => {
 
     it('should calculate duration correctly for various time spans', () => {
       const startTime = new Date('2024-01-01T10:00:00Z');
-      
+
       // 30 seconds
       let completionTime = new Date('2024-01-01T10:00:30Z');
       expect(calculateDuration(startTime, completionTime)).toBe('30s');
-      
+
       // 5 minutes
       completionTime = new Date('2024-01-01T10:05:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('5m');
-      
+
       // 2 hours 30 minutes
       completionTime = new Date('2024-01-01T12:30:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('2h 30m');
-      
+
       // 1 day 3 hours
       completionTime = new Date('2024-01-02T13:00:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('1d 3h');
-      
+
       // 5 days 2 hours 15 minutes
       completionTime = new Date('2024-01-06T12:15:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('5d 2h 15m');

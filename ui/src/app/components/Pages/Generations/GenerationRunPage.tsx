@@ -29,4 +29,3 @@ const GenerationRunPage: React.FunctionComponent = () => {
 };
 
 export { GenerationRunPage };
-

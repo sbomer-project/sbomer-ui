@@ -228,9 +228,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getGenerationRun(generationId: string, runId: string): Promise<GenerationRunRecord> {
-    const response = await this.client.get(
-      `/api/v1/generations/${generationId}/runs/${runId}`,
-    );
+    const response = await this.client.get(`/api/v1/generations/${generationId}/runs/${runId}`);
 
     if (response.status !== 200) {
       throw new Error(
@@ -275,9 +273,7 @@ export class DefaultSbomerApi implements SbomerApi {
   }
 
   async getEnhancementRun(enhancementId: string, runId: string): Promise<EnhancementRunRecord> {
-    const response = await this.client.get(
-      `/api/v1/enhancements/${enhancementId}/runs/${runId}`,
-    );
+    const response = await this.client.get(`/api/v1/enhancements/${enhancementId}/runs/${runId}`);
 
     if (response.status !== 200) {
       throw new Error(

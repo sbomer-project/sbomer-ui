@@ -71,9 +71,7 @@ const GenerationRunPageContent: React.FunctionComponent = () => {
 
   return (
     <Stack gap={7}>
-      <Heading>
-        Generation Run - Attempt #{run.attemptNumber}
-      </Heading>
+      <Heading>Generation Run - Attempt #{run.attemptNumber}</Heading>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
           <StructuredListRow head>
@@ -165,4 +163,3 @@ const GenerationRunPageContent: React.FunctionComponent = () => {
 };
 
 export { GenerationRunPageContent };
-

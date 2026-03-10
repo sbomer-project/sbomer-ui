@@ -203,7 +203,10 @@ const EnhancementPageContent: React.FunctionComponent = () => {
           <ErrorSection title="Could not load execution history" message={runsError.message} />
         </Stack>
       ) : runsLoading && !runs ? (
-        <TableContainer title="Execution History" description="Execution attempts and retry history">
+        <TableContainer
+          title="Execution History"
+          description="Execution attempts and retry history"
+        >
           <DataTableSkeleton columnCount={6} showHeader={false} showToolbar={false} rowCount={3} />
         </TableContainer>
       ) : runs && runs.length > 0 ? (

@@ -104,7 +104,7 @@ const RunReasons = new Map<string, { description?: string; color: CarbonTagType 
  */
 export function formatDuration(millis: number): string {
   const totalSeconds = Math.floor(millis / 1000);
-  
+
   if (totalSeconds < 1) {
     return 'less than a second';
   }
@@ -331,7 +331,7 @@ export function calculateDuration(startTime: Date, completionTime?: Date): strin
   }
 
   const durationMs = completionTime.getTime() - startTime.getTime();
-  
+
   if (durationMs < 0) {
     return 'N/A';
   }

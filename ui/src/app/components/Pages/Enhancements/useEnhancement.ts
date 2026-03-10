@@ -49,10 +49,10 @@ export function useEnhancement(id: string) {
     [sbomerApi],
   );
 
-  const { loading, value, error, retry } = useAsyncRetry(() => getEnhancement(id), [
-    getEnhancement,
-    id,
-  ]);
+  const { loading, value, error, retry } = useAsyncRetry(
+    () => getEnhancement(id),
+    [getEnhancement, id],
+  );
 
   return [
     {

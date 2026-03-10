@@ -22,7 +22,7 @@ import { useAsyncRetry } from 'react-use';
 
 export function useEventGeneration(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
-  
+
   const getRequestEventGenerations = useCallback(
     async (id: string) => {
       try {

@@ -16,6 +16,7 @@ interface GenerationRow {
   id: string;
   status: string;
   targetType: string;
+  childrenEnhancementsStatus: string;
   creationTime: Date | undefined;
   updatedTime: Date | undefined;
   finishedTime: Date | undefined;
@@ -29,9 +30,18 @@ const columns: TableColumn<GenerationRow>[] = [
   },
   {
     key: 'status',
-    header: 'Status',
+    header: 'Generation Raw Status',
     render: (row) => (
       <TagCell type={generationStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>
+    ),
+  },
+  {
+    key: 'childrenEnhancementsStatus',
+    header: 'Children Enhancements Status',
+    render: (row) => (
+      <TagCell type={generationStatusToColor(row.childrenEnhancementsStatus)}>
+        {row.childrenEnhancementsStatus || 'N/A'}
+      </TagCell>
     ),
   },
   {
@@ -81,6 +91,7 @@ export const GenerationTable = () => {
     (value ?? []).map((g: SbomerGeneration) => ({
       id: String(g.id),
       status: g.status ?? 'N/A',
+      childrenEnhancementsStatus: g.childEnhancementsStatus ?? 'N/A',
       targetType: g.targetType ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,

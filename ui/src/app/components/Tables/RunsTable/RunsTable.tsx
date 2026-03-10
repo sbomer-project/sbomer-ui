@@ -18,7 +18,12 @@
 
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { EnhancementRunRecord, GenerationRunRecord } from '@app/types';
-import { calculateDuration, runReasonToColor, runReasonToDescription, runStateToColor } from '@app/utils/Utils';
+import {
+  calculateDuration,
+  runReasonToColor,
+  runReasonToDescription,
+  runStateToColor,
+} from '@app/utils/Utils';
 import {
   Table,
   TableBody,
@@ -121,4 +126,3 @@ export const RunsTable: React.FunctionComponent<RunsTableProps> = ({
     </TableContainer>
   );
 };
-

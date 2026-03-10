@@ -71,9 +71,7 @@ const EnhancementRunPageContent: React.FunctionComponent = () => {
 
   return (
     <Stack gap={7}>
-      <Heading>
-        Enhancement Run - Attempt #{run.attemptNumber}
-      </Heading>
+      <Heading>Enhancement Run - Attempt #{run.attemptNumber}</Heading>
       <StructuredListWrapper isCondensed>
         <StructuredListHead>
           <StructuredListRow head>
