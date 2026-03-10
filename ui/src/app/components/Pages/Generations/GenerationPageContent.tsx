@@ -349,7 +349,13 @@ const GenerationPageContent: React.FunctionComponent = () => {
           <DataTableSkeleton columnCount={6} showHeader={false} showToolbar={false} rowCount={3} />
         </TableContainer>
       ) : runs && runs.length > 0 ? (
-        <RunsTable runs={runs} parentType="generation" parentId={id!} title='Generation Execution History' description='Generation execution attempts and retry history'/>
+        <RunsTable
+          runs={runs}
+          parentType="generation"
+          parentId={id!}
+          title="Generation Execution History"
+          description="Generation execution attempts and retry history"
+        />
       ) : (
         <p>No generation execution history found for this generation.</p>
       )}
