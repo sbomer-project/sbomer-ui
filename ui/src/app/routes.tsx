@@ -8,10 +8,12 @@ import {
 } from '@carbon/icons-react';
 import { Dashboard } from './components/Pages/Dashboard/Dashboard';
 import { EnhancementPage } from './components/Pages/Enhancements/EnhancementPage';
+import { EnhancementRunPage } from './components/Pages/Enhancements/EnhancementRunPage';
 import { EnhancementsPage } from './components/Pages/Enhancements/EnhancementsPage';
 import { EventPage } from './components/Pages/Events/EventPage';
 import { EventsPage } from './components/Pages/Events/EventsPage';
 import { GenerationPage } from './components/Pages/Generations/GenerationPage';
+import { GenerationRunPage } from './components/Pages/Generations/GenerationRunPage';
 import { GenerationsPage } from './components/Pages/Generations/GenerationsPage';
 import { NotFoundPage } from './components/Pages/NotFound/NotFoundPage';
 
@@ -63,6 +65,10 @@ const routes: AppRouteConfig[] = [
     path: '/generations/:id',
   },
   {
+    element: <GenerationRunPage />,
+    path: '/generations/:id/runs/:runId',
+  },
+  {
     element: <GenerationsPage />,
     path: '/requests',
   },
@@ -80,6 +86,10 @@ const routes: AppRouteConfig[] = [
   {
     element: <EnhancementPage />,
     path: '/enhancements/:id',
+  },
+  {
+    element: <EnhancementRunPage />,
+    path: '/enhancements/:id/runs/:runId',
   },
   {
     element: <NotFoundPage />,

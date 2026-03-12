@@ -1,9 +1,11 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
+import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { enhancementStatusToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor, resultToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
+  DataTableSkeleton,
   Heading,
   SkeletonText,
   Stack,
@@ -12,15 +14,18 @@ import {
   StructuredListHead,
   StructuredListRow,
   StructuredListWrapper,
+  TableContainer,
   Tag,
 } from '@carbon/react';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useEnhancement } from './useEnhancement';
+import { useEnhancementRuns } from './useEnhancementRuns';
 
 const EnhancementPageContent: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
   const [{ request, error, loading }] = useEnhancement(id!);
+  const [{ runs, loading: runsLoading, error: runsError }] = useEnhancementRuns(id!);
 
   useDocumentTitle('SBOMer | Enhancements | ' + id);
 
@@ -117,6 +122,18 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
+            <StructuredListCell>Latest Run Result</StructuredListCell>
+            <StructuredListCell>
+              {request.latestResult ? (
+                <Tag size="md" type={resultToColor(request.latestResult)}>
+                  {request.latestResult}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
             <StructuredListCell>Enhancer Name</StructuredListCell>
             <StructuredListCell>{request.enhancerName || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -148,6 +165,22 @@ const EnhancementPageContent: React.FunctionComponent = () => {
               )}
             </StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.enhancementSbomUrls && request.enhancementSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.enhancementSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
       <Stack gap={5}>
@@ -165,6 +198,28 @@ const EnhancementPageContent: React.FunctionComponent = () => {
           )}
         </CodeSnippet>
       </Stack>
+      {runsError ? (
+        <Stack gap={6}>
+          <ErrorSection title="Could not load execution history" message={runsError.message} />
+        </Stack>
+      ) : runsLoading && !runs ? (
+        <TableContainer
+          title="Enhancement execution History"
+          description="Enhancement execution attempts and retry history"
+        >
+          <DataTableSkeleton columnCount={6} showHeader={false} showToolbar={false} rowCount={3} />
+        </TableContainer>
+      ) : runs && runs.length > 0 ? (
+        <RunsTable
+          runs={runs}
+          parentType="enhancement"
+          parentId={id!}
+          title="Enhancement Execution History"
+          description="Enhancement execution attempts and retry history"
+        />
+      ) : (
+        <p>No enhancement execution history found for this enhancement.</p>
+      )}
     </Stack>
   );
 };

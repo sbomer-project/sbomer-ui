@@ -16,7 +16,7 @@
 /// limitations under the License.
 ///
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 
@@ -26,60 +26,57 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
   const [pageIndex, setPageIndex] = useState(initialPage || 0);
   const [pageSize, setPageSize] = useState(initialPageSize || 10);
 
-  const getEnhancements = async ({
-    pageSize,
-    pageIndex,
-  }: {
-    pageSize: number;
-    pageIndex: number;
-  }) => {
-    try {
-      const response = await fetch(
-        `${sbomerApi.getBaseUrl()}/api/v1/enhancements?pageSize=${pageSize}&pageIndex=${pageIndex}`,
-      );
-
-      if (response.status !== 200) {
-        const body = await response.text();
-        throw new Error(
-          'Failed fetching enhancements from SBOMer, got: ' +
-            response.status +
-            " response: '" +
-            body +
-            "'",
+  const getEnhancements = useCallback(
+    async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
+      try {
+        const response = await fetch(
+          `${sbomerApi.getBaseUrl()}/api/v1/enhancements?pageSize=${pageSize}&pageIndex=${pageIndex}`,
         );
-      }
 
-      const data = await response.json();
-      const enhancements: any[] = [];
-
-      // Helper function to safely parse dates
-      const parseDate = (dateValue: any): Date | undefined => {
-        if (!dateValue) return undefined;
-        if (dateValue instanceof Date) return dateValue;
-        try {
-          const parsed = new Date(dateValue);
-          return isNaN(parsed.getTime()) ? undefined : parsed;
-        } catch {
-          return undefined;
+        if (response.status !== 200) {
+          const body = await response.text();
+          throw new Error(
+            'Failed fetching enhancements from SBOMer, got: ' +
+              response.status +
+              " response: '" +
+              body +
+              "'",
+          );
         }
-      };
 
-      if (data.content) {
-        data.content.forEach((enhancement: any) => {
-          enhancements.push({
-            ...enhancement,
-            created: parseDate(enhancement.created),
-            updated: parseDate(enhancement.updated),
-            finished: parseDate(enhancement.finished),
+        const data = await response.json();
+        const enhancements: any[] = [];
+
+        // Helper function to safely parse dates
+        const parseDate = (dateValue: any): Date | undefined => {
+          if (!dateValue) return undefined;
+          if (dateValue instanceof Date) return dateValue;
+          try {
+            const parsed = new Date(dateValue);
+            return isNaN(parsed.getTime()) ? undefined : parsed;
+          } catch {
+            return undefined;
+          }
+        };
+
+        if (data.content) {
+          data.content.forEach((enhancement: any) => {
+            enhancements.push({
+              ...enhancement,
+              created: parseDate(enhancement.created),
+              updated: parseDate(enhancement.updated),
+              finished: parseDate(enhancement.finished),
+            });
           });
-        });
-      }
+        }
 
-      return { data: enhancements, total: data.totalHits };
-    } catch (e) {
-      return Promise.reject(e);
-    }
-  };
+        return { data: enhancements, total: data.totalHits };
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    [sbomerApi],
+  );
 
   const { loading, value, error, retry } = useAsyncRetry(
     () =>
@@ -90,7 +87,7 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
         setTotal(data.total);
         return data.data;
       }),
-    [pageIndex, pageSize],
+    [getEnhancements, pageIndex, pageSize],
   );
 
   return [

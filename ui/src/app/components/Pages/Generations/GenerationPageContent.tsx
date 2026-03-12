@@ -1,9 +1,13 @@
 import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection';
+import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
+  resultToColor,
+  runReasonToColor,
+  runReasonToDescription,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {
@@ -30,6 +34,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useGeneration } from './useGeneration';
 import { useGenerationEnhancements } from './useGenerationEnhancements';
+import { useGenerationRuns } from './useGenerationRuns';
 
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
@@ -47,6 +52,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
   const [{ request, error, loading }] = useGeneration(id!);
   const [{ value: enhancementsValue, loading: enhancementsLoading, error: enhancementsError }] =
     useGenerationEnhancements(id!);
+  const [{ runs, loading: runsLoading, error: runsError }] = useGenerationRuns(id!);
 
   useDocumentTitle('SBOMer | Generations | ' + id);
 
@@ -230,7 +236,39 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
+            <StructuredListCell>
+              {request.reason ? (
+                <Tag size="md" type={runReasonToColor(request.reason)}>
+                  {runReasonToDescription(request.reason)}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Latest Run Result</StructuredListCell>
+            <StructuredListCell>
+              {request.latestResult ? (
+                <Tag size="md" type={resultToColor(request.latestResult)}>
+                  {request.latestResult}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Child Enhancements Status</StructuredListCell>
+            <StructuredListCell>
+              {request.childEnhancementsStatus ? (
+                <Tag size="md" type={generationStatusToColor(request.childEnhancementsStatus)}>
+                  {request.childEnhancementsStatus}
+                </Tag>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
@@ -299,6 +337,28 @@ const GenerationPageContent: React.FunctionComponent = () => {
         </CodeSnippet>
       </Stack>
       {enhancementsSection}
+      {runsError ? (
+        <Stack gap={6}>
+          <ErrorSection title="Could not load execution history" message={runsError.message} />
+        </Stack>
+      ) : runsLoading && !runs ? (
+        <TableContainer
+          title="Generation Execution History"
+          description="Generation execution attempts and retry history"
+        >
+          <DataTableSkeleton columnCount={6} showHeader={false} showToolbar={false} rowCount={3} />
+        </TableContainer>
+      ) : runs && runs.length > 0 ? (
+        <RunsTable
+          runs={runs}
+          parentType="generation"
+          parentId={id!}
+          title="Generation Execution History"
+          description="Generation execution attempts and retry history"
+        />
+      ) : (
+        <p>No generation execution history found for this generation.</p>
+      )}
     </Stack>
   );
 };

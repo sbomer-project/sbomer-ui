@@ -15,8 +15,8 @@ import { useSearchParam } from 'react-use';
 interface GenerationRow {
   id: string;
   status: string;
-  result: string;
   targetType: string;
+  childrenEnhancementsStatus: string;
   creationTime: Date | undefined;
   updatedTime: Date | undefined;
   finishedTime: Date | undefined;
@@ -30,15 +30,19 @@ const columns: TableColumn<GenerationRow>[] = [
   },
   {
     key: 'status',
-    header: 'Status',
+    header: 'Generation Raw Status',
     render: (row) => (
       <TagCell type={generationStatusToColor(row.status)}>{row.status || 'N/A'}</TagCell>
     ),
   },
   {
-    key: 'result',
-    header: 'Result',
-    render: (row) => row.result || 'N/A',
+    key: 'childrenEnhancementsStatus',
+    header: 'Children Enhancements Status',
+    render: (row) => (
+      <TagCell type={generationStatusToColor(row.childrenEnhancementsStatus)}>
+        {row.childrenEnhancementsStatus || 'N/A'}
+      </TagCell>
+    ),
   },
   {
     key: 'targetType',
@@ -87,7 +91,7 @@ export const GenerationTable = () => {
     (value ?? []).map((g: SbomerGeneration) => ({
       id: String(g.id),
       status: g.status ?? 'N/A',
-      result: g.result ?? 'N/A',
+      childrenEnhancementsStatus: g.childEnhancementsStatus ?? 'N/A',
       targetType: g.targetType ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,

@@ -16,41 +16,16 @@
 /// limitations under the License.
 ///
 
-import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
-import { useCallback } from 'react';
-import { useAsyncRetry } from 'react-use';
+import { AppLayout } from '@app/components/Pages/AppLayout/AppLayout';
+import * as React from 'react';
+import { EnhancementRunPageContent } from './EnhancementRunPageContent';
 
-export function useEvent(id: string) {
-  const sbomerApi = DefaultSbomerApi.getInstance();
-
-  const getEvent = useCallback(
-    async (id: string) => {
-      try {
-        return await sbomerApi.getEvent(id);
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
-    [sbomerApi],
+const EnhancementRunPage: React.FunctionComponent = () => {
+  return (
+    <AppLayout>
+      <EnhancementRunPageContent />
+    </AppLayout>
   );
+};
 
-  const {
-    loading,
-    value: request,
-    error,
-  } = useAsyncRetry(
-    () =>
-      getEvent(id).then((data) => {
-        return data;
-      }),
-    [getEvent, id],
-  );
-
-  return [
-    {
-      request,
-      loading,
-      error,
-    },
-  ] as const;
-}
+export { EnhancementRunPage };

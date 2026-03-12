@@ -16,20 +16,18 @@
 /// limitations under the License.
 ///
 
-import { useCallback, useState } from 'react';
-import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
+import { EnhancementRunRecord } from '@app/types';
+import { useCallback } from 'react';
+import { useAsyncRetry } from 'react-use';
 
-export function useGenerations(initialPage: number, intialPageSize: number) {
+export function useEnhancementRuns(enhancementId: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
-  const [total, setTotal] = useState(0);
-  const [pageIndex, setPageIndex] = useState(initialPage || 0);
-  const [pageSize, setPageSize] = useState(intialPageSize || 10);
 
-  const getGenerations = useCallback(
-    async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
+  const getEnhancementRuns = useCallback(
+    async (id: string): Promise<EnhancementRunRecord[]> => {
       try {
-        return await sbomerApi.getGenerations({ pageSize, pageIndex });
+        return await sbomerApi.getEnhancementRuns(id);
       } catch (e) {
         return Promise.reject(e);
       }
@@ -38,29 +36,17 @@ export function useGenerations(initialPage: number, intialPageSize: number) {
   );
 
   const { loading, value, error, retry } = useAsyncRetry(
-    () =>
-      getGenerations({
-        pageSize: pageSize,
-        pageIndex: pageIndex,
-      }).then((data) => {
-        setTotal(data.total);
-        return data.data;
-      }),
-    [getGenerations, pageIndex, pageSize],
+    () => getEnhancementRuns(enhancementId),
+    [getEnhancementRuns, enhancementId],
   );
 
   return [
     {
-      pageIndex,
-      pageSize,
-      total,
-      value,
+      runs: value,
       loading,
       error,
     },
     {
-      setPageIndex,
-      setPageSize,
       retry,
     },
   ] as const;
