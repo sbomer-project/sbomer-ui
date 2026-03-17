@@ -132,7 +132,10 @@ module.exports = (env) => {
         silent: true,
       }),
       new CopyPlugin({
-        patterns: [{ from: './src/config.js', to: '.' }],
+        patterns: [
+          { from: './src/config.js', to: '.' },
+          { from: './src/SBOMerIcon.png', to: '.' },
+        ],
       }),
     ],
     resolve: {
