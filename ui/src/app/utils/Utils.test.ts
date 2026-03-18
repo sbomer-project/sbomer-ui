@@ -73,10 +73,14 @@ describe('Utils', () => {
 
   describe('statusToDescription', () => {
     it('should return description for known statuses', () => {
-      expect(statusToDescription({ status: 'FAILED' } as SbomerGeneration)).toBe('Failed');
-      expect(statusToDescription({ status: 'GENERATING' } as SbomerGeneration)).toBe('In progress');
-      expect(statusToDescription({ status: 'FINISHED' } as SbomerGeneration)).toBe(
-        'Successfully finished',
+      expect(statusToDescription({ status: 'FAILED' } as SbomerGeneration)).toBe(
+        'Failed generation',
+      );
+      expect(statusToDescription({ status: 'GENERATING' } as SbomerGeneration)).toBe(
+        'Generation in progress',
+      );
+      expect(statusToDescription({ status: 'COMPLETED' } as SbomerGeneration)).toBe(
+        'Successfully completed',
       );
     });
 
@@ -89,9 +93,11 @@ describe('Utils', () => {
 
   describe('eventStatusToDescription', () => {
     it('should return description for known event statuses', () => {
-      expect(eventStatusToDescription('FAILED')).toBe('Failed');
-      expect(eventStatusToDescription('FINISHED')).toBe('Successfully finished');
-      expect(eventStatusToDescription('RECEIVED')).toBe('Received/New');
+      expect(eventStatusToDescription('FAILED')).toBe('Failed generations under this event');
+      expect(eventStatusToDescription('FINISHED')).toBe(
+        'Successfully finished all generations under this event',
+      );
+      expect(eventStatusToDescription('PENDING')).toBe('Pending');
     });
 
     it('should return original status for unknown event statuses', () => {
@@ -142,7 +148,7 @@ describe('Utils', () => {
     it('should return correct colors for known generation statuses', () => {
       expect(generationStatusToColor('FAILED')).toBe('red');
       expect(generationStatusToColor('GENERATING')).toBe('blue');
-      expect(generationStatusToColor('FINISHED')).toBe('green');
+      expect(generationStatusToColor('COMPLETED')).toBe('green');
     });
 
     it('should return "gray" for unknown generation statuses', () => {
@@ -152,11 +158,10 @@ describe('Utils', () => {
 
   describe('enhancementStatusToColor', () => {
     it('should return correct colors for known enhancement statuses', () => {
-      expect(enhancementStatusToColor('NEW')).toBe('teal');
-      expect(enhancementStatusToColor('SCHEDULED')).toBe('cyan');
+      expect(enhancementStatusToColor('PENDING')).toBe('teal');
       expect(enhancementStatusToColor('FAILED')).toBe('red');
       expect(enhancementStatusToColor('ENHANCING')).toBe('blue');
-      expect(enhancementStatusToColor('FINISHED')).toBe('green');
+      expect(enhancementStatusToColor('COMPLETED')).toBe('green');
     });
 
     it('should return "gray" for unknown enhancement statuses', () => {
@@ -168,7 +173,8 @@ describe('Utils', () => {
     it('should return correct colors for known event statuses', () => {
       expect(eventStatusToColor('FAILED')).toBe('red');
       expect(eventStatusToColor('FINISHED')).toBe('green');
-      expect(eventStatusToColor('RECEIVED')).toBe('teal');
+      expect(eventStatusToColor('PENDING')).toBe('teal');
+      expect(eventStatusToColor('PROCESSING')).toBe('blue');
     });
 
     it('should return "gray" for unknown event statuses', () => {

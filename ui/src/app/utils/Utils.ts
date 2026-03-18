@@ -33,13 +33,10 @@ type CarbonTagType =
   | 'outline';
 
 const GenerationStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
-  ['FAILED', { description: 'Failed', color: 'red' }],
-  ['GENERATING', { description: 'In progress', color: 'blue' }],
-  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
-  ['COMPLETED', { description: 'Completed', color: 'green' }],
-  ['NEW', { description: 'New', color: 'teal' }],
-  ['PROCESSING', { description: 'Processing', color: 'blue' }],
-  ['PENDING', { description: 'Pending', color: 'gray' }],
+  ['PENDING', { description: 'Pending', color: 'teal' }],
+  ['GENERATING', { description: 'Generation in progress', color: 'blue' }],
+  ['COMPLETED', { description: 'Successfully completed', color: 'green' }],
+  ['FAILED', { description: 'Failed generation', color: 'red' }],
 ]);
 
 const GenerationResults = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -54,24 +51,20 @@ const GenerationResults = new Map<string, { description?: string; color: CarbonT
 ]);
 
 const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
-  ['FAILED', { description: 'Failed', color: 'red' }],
-  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
-  ['COMPLETED', { description: 'Completed', color: 'green' }],
-  ['RECEIVED', { description: 'Received/New', color: 'teal' }],
-  ['PROCESSING', { description: 'Processing', color: 'blue' }],
-  ['PENDING', { description: 'Pending', color: 'gray' }],
+  ['PENDING', { description: 'Pending', color: 'teal' }],
+  ['PROCESSING', { description: 'Processing generations under this event', color: 'blue' }],
+  [
+    'FINISHED',
+    { description: 'Successfully finished all generations under this event', color: 'green' },
+  ],
+  ['FAILED', { description: 'Failed generations under this event', color: 'red' }],
 ]);
 
 const EnhancementStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
-  ['NEW', { description: 'New', color: 'teal' }],
-  ['SCHEDULED', { description: 'Scheduled', color: 'cyan' }],
-  ['FAILED', { description: 'Failed', color: 'red' }],
-  ['ENHANCING', { description: 'In progress', color: 'blue' }],
-  ['FINISHED', { description: 'Successfully finished', color: 'green' }],
-  ['COMPLETED', { description: 'Completed', color: 'green' }],
-  ['PROCESSING', { description: 'Processing', color: 'blue' }],
-  ['PENDING', { description: 'Pending', color: 'gray' }],
-  ['NOT_APPLICABLE', { description: 'Not Applicable', color: 'gray' }],
+  ['PENDING', { description: 'Pending', color: 'teal' }],
+  ['ENHANCING', { description: 'Enhancing in progress', color: 'blue' }],
+  ['COMPLETED', { description: 'Successfully completed enhancement', color: 'green' }],
+  ['FAILED', { description: 'Failed enhancement', color: 'red' }],
 ]);
 
 const RunStates = new Map<string, { description?: string; color: CarbonTagType }>([
@@ -96,45 +89,6 @@ const RunReasons = new Map<string, { description?: string; color: CarbonTagType 
 ]);
 
 /**
- * Formats a duration in milliseconds to a human-readable string.
- * Used for displaying how long something took (e.g., "2 hours 30 minutes").
- * Always shows exact duration with all relevant time components.
- * @param millis Duration in milliseconds
- * @returns A human-readable duration string (e.g., "2h 30m", "3d 5h 20m", "45m")
- */
-export function formatDuration(millis: number): string {
-  const totalSeconds = Math.floor(millis / 1000);
-
-  if (totalSeconds < 1) {
-    return 'less than a second';
-  }
-
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const parts: string[] = [];
-
-  if (days > 0) {
-    parts.push(`${days}d`);
-  }
-  if (hours > 0) {
-    parts.push(`${hours}h`);
-  }
-  if (minutes > 0) {
-    parts.push(`${minutes}m`);
-  }
-  // Only show seconds if duration is less than 1 hour
-  if (seconds > 0 && days === 0 && hours === 0) {
-    parts.push(`${seconds}s`);
-  }
-
-  return parts.length > 0 ? parts.join(' ') : 'less than a second';
-}
-
-/**
- *
  * @param millis Converts timestamp in milliseconds to relative time in human readable format.
  * @param seconds Decides whether seconds should be displayed.
  * @returns A human readable time.
@@ -337,4 +291,42 @@ export function calculateDuration(startTime: Date, completionTime?: Date): strin
   }
 
   return formatDuration(durationMs);
+}
+
+/**
+ * Formats a duration in milliseconds to a human-readable string.
+ * Used for displaying how long something took (e.g., "2 hours 30 minutes").
+ * Always shows exact duration with all relevant time components.
+ * @param millis Duration in milliseconds
+ * @returns A human-readable duration string (e.g., "2h 30m", "3d 5h 20m", "45m")
+ */
+export function formatDuration(millis: number): string {
+  const totalSeconds = Math.floor(millis / 1000);
+
+  if (totalSeconds < 1) {
+    return 'less than a second';
+  }
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts: string[] = [];
+
+  if (days > 0) {
+    parts.push(`${days}d`);
+  }
+  if (hours > 0) {
+    parts.push(`${hours}h`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes}m`);
+  }
+  // Only show seconds if duration is less than 1 hour
+  if (seconds > 0 && days === 0 && hours === 0) {
+    parts.push(`${seconds}s`);
+  }
+
+  return parts.length > 0 ? parts.join(' ') : 'less than a second';
 }
