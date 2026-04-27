@@ -177,6 +177,7 @@ export const EventPageContent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
+      {generationsSection}
       <Stack gap={5}>
         <Heading>Raw JSON</Heading>
         <CodeSnippet type="multi">
@@ -192,7 +193,6 @@ export const EventPageContent = () => {
           )}
         </CodeSnippet>
       </Stack>
-      {generationsSection}
     </Stack>
   );
 };

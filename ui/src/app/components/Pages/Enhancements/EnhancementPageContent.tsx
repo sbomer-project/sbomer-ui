@@ -183,21 +183,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <Stack gap={5}>
-        <Heading>Raw JSON</Heading>
-        <CodeSnippet type="multi">
-          {JSON.stringify(
-            request,
-            (key, value) => {
-              if (value instanceof Map) {
-                return Object.fromEntries(value.entries());
-              }
-              return value;
-            },
-            2,
-          )}
-        </CodeSnippet>
-      </Stack>
       {runsError ? (
         <Stack gap={6}>
           <ErrorSection title="Could not load execution history" message={runsError.message} />
@@ -220,6 +205,21 @@ const EnhancementPageContent: React.FunctionComponent = () => {
       ) : (
         <p>No enhancement execution history found for this enhancement.</p>
       )}
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
+            request,
+            (key, value) => {
+              if (value instanceof Map) {
+                return Object.fromEntries(value.entries());
+              }
+              return value;
+            },
+            2,
+          )}
+        </CodeSnippet>
+      </Stack>
     </Stack>
   );
 };

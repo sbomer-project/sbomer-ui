@@ -259,18 +259,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Child Enhancements Status</StructuredListCell>
-            <StructuredListCell>
-              {request.childEnhancementsStatus ? (
-                <Tag size="md" type={generationStatusToColor(request.childEnhancementsStatus)}>
-                  {request.childEnhancementsStatus}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
@@ -321,22 +309,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <Stack gap={5}>
-        <Heading>Raw JSON</Heading>
-        <CodeSnippet type="multi">
-          {JSON.stringify(
-            request,
-            (key, value) => {
-              if (value instanceof Map) {
-                return Object.fromEntries(value.entries());
-              }
-              return value;
-            },
-            2,
-          )}
-        </CodeSnippet>
-      </Stack>
-      {enhancementsSection}
       {runsError ? (
         <Stack gap={6}>
           <ErrorSection title="Could not load execution history" message={runsError.message} />
@@ -359,6 +331,22 @@ const GenerationPageContent: React.FunctionComponent = () => {
       ) : (
         <p>No generation execution history found for this generation.</p>
       )}
+      {enhancementsSection}
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
+            request,
+            (key, value) => {
+              if (value instanceof Map) {
+                return Object.fromEntries(value.entries());
+              }
+              return value;
+            },
+            2,
+          )}
+        </CodeSnippet>
+      </Stack>
     </Stack>
   );
 };
