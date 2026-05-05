@@ -114,14 +114,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Latest Run Result</StructuredListCell>
             <StructuredListCell>
               {request.latestResult ? (

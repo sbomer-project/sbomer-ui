@@ -16,7 +16,7 @@
 /// limitations under the License.
 ///
 
-import { SbomerGeneration } from '@app/types';
+import { SbomerErrorResponse, SbomerGeneration } from '@app/types';
 
 type CarbonTagType =
   | 'red'
@@ -53,10 +53,7 @@ const GenerationResults = new Map<string, { description?: string; color: CarbonT
 const EventStatuses = new Map<string, { description?: string; color: CarbonTagType }>([
   ['PENDING', { description: 'Pending', color: 'teal' }],
   ['PROCESSING', { description: 'Processing generations under this event', color: 'blue' }],
-  [
-    'FINISHED',
-    { description: 'Successfully finished all generations under this event', color: 'green' },
-  ],
+  ['COMPLETED', { description: 'Successfully completed', color: 'green' }],
   ['FAILED', { description: 'Failed generations under this event', color: 'red' }],
 ]);
 
@@ -74,7 +71,7 @@ const RunStates = new Map<string, { description?: string; color: CarbonTagType }
   ['FAILED', { description: 'Failed', color: 'red' }],
 ]);
 
-const RunReasons = new Map<string, { description?: string; color: CarbonTagType }>([
+const RunErrorResults = new Map<string, { description?: string; color: CarbonTagType }>([
   ['SUCCESS', { description: 'Success', color: 'green' }],
   ['ERR_GENERAL', { description: 'General error', color: 'red' }],
   ['ERR_CONFIG_INVALID', { description: 'Invalid configuration', color: 'red' }],
@@ -106,20 +103,16 @@ export function timestampToHumanReadable(millis: number, seconds?: false, suffix
   let hrd = '';
 
   if (d > 3) {
-    // More than 3 days: only show days
     hrd = d + (d === 1 ? ' day' : ' days');
   } else if (d >= 1) {
-    // 1-3 days: show days and hours
     const dDisplay = d + (d === 1 ? ' day' : ' days');
     const hDisplay = h > 0 ? ' ' + h + (h === 1 ? ' hour' : ' hours') : '';
     hrd = dDisplay + hDisplay;
   } else {
-    // Less than 1 day: show hours and minutes
     const hDisplay = h > 0 ? h + (h === 1 ? ' hour' : ' hours') : '';
     const mDisplay = m > 0 ? (h > 0 ? ' ' : '') + m + (m === 1 ? ' minute' : ' minutes') : '';
     hrd = hDisplay + mDisplay;
 
-    // If no hours or minutes, show "just now"
     if (!hDisplay && !mDisplay) {
       return 'just now';
     }
@@ -148,14 +141,14 @@ export function eventStatusToDescription(eventStatus: string): string {
   return resolved?.description ?? eventStatus;
 }
 
-export function resultToDescription(request: SbomerGeneration): string {
-  if (request.result === null) {
+export function resultToDescription(result?: string): string {
+  if (!result) {
     return 'N/A';
   }
 
-  const resolved = GenerationResults.get(request.result);
+  const resolved = GenerationResults.get(result);
 
-  return resolved?.description ?? request.result;
+  return resolved?.description ?? result;
 }
 
 export function generationStatusToColor(status: string): CarbonTagType {
@@ -182,15 +175,7 @@ export function resultToColor(result: string): CarbonTagType {
   return resolved?.color ?? 'warm-gray';
 }
 
-/**
- * Assigns a consistent color to a target type based on a simple hash of the string.
- * The same target type will always receive the same color, providing visual distinction
- * between different target types in the UI.
- * @param targetType The target type string
- * @returns A Carbon tag color type
- */
 export function targetTypeToColor(targetType: string): CarbonTagType {
-  // All available Carbon tag colors except red (errors), green (success), and gray (in-progress)
   const colors: CarbonTagType[] = [
     'blue',
     'cyan',
@@ -205,7 +190,6 @@ export function targetTypeToColor(targetType: string): CarbonTagType {
     return 'outline';
   }
 
-  // Simple hash: sum of character codes
   let hash = 0;
   for (let i = 0; i < targetType.length; i++) {
     hash += targetType.charCodeAt(i);
@@ -215,7 +199,7 @@ export function targetTypeToColor(targetType: string): CarbonTagType {
 }
 
 export function isInProgress(status: string): boolean {
-  if (status === 'FINISHED' || status === 'FAILED') {
+  if (status === 'COMPLETED' || status === 'FAILED') {
     return false;
   }
 
@@ -223,33 +207,51 @@ export function isInProgress(status: string): boolean {
 }
 
 export function isSuccess(status: string): boolean {
-  return status === 'FINISHED';
+  return status === 'COMPLETED';
+}
+
+function isSbomerErrorResponse(value: unknown): value is SbomerErrorResponse {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    'result' in candidate ||
+    'reason' in candidate ||
+    'status' in candidate ||
+    'category' in candidate ||
+    'correlationId' in candidate ||
+    'timestamp' in candidate
+  );
 }
 
 export function extractQueryErrorMessageDetails(error: any): { message: string; details?: string } {
-  if (typeof error?.message === 'string') {
-    const match = error.message.match(/response:\s*(['"])(\{.*\})\1/);
-    if (match) {
-      try {
-        const json = JSON.parse(match[2]);
-        return {
-          message: json.message || 'Unknown error',
-          details: Array.isArray(json.details) ? json.details.join(', ') : json.details,
-        };
-      } catch {
-        // JSON parse failed, fall through to return original message
-      }
-    }
-    return { message: error.message };
+  if (isSbomerErrorResponse(error?.message)) {
+    return {
+      message: error.message.reason || error.message.result || 'Unknown error',
+      details: error.message.category,
+    };
   }
 
-  if (typeof error?.message === 'object') {
-    return {
-      message: error.message.message || 'Unknown error',
-      details: Array.isArray(error.message.details)
-        ? error.message.details.join(', ')
-        : error.message.details,
-    };
+  if (typeof error?.message === 'string') {
+    const jsonMatch = error.message.match(/\{.*\}/);
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0]);
+        if (isSbomerErrorResponse(parsed)) {
+          const detailParts = [parsed.category, parsed.correlationId].filter(Boolean);
+          return {
+            message: parsed.reason || parsed.result || error.message,
+            details: detailParts.length > 0 ? detailParts.join(', ') : undefined,
+          };
+        }
+      } catch {
+        // Ignore parse failure and fall back to raw message.
+      }
+    }
+
+    return { message: error.message };
   }
 
   return { message: 'Unknown error' };
@@ -260,17 +262,22 @@ export function runStateToColor(state: string): CarbonTagType {
   return resolved?.color ?? 'gray';
 }
 
-export function runReasonToColor(reason: string): CarbonTagType {
-  const resolved = RunReasons.get(reason);
+export function runReasonToColor(errorResult?: string): CarbonTagType {
+  if (!errorResult) {
+    return 'warm-gray';
+  }
+
+  const resolved = RunErrorResults.get(errorResult);
   return resolved?.color ?? 'warm-gray';
 }
 
-export function runReasonToDescription(reason: string): string {
-  if (!reason) {
+export function runReasonToDescription(errorResult?: string): string {
+  if (!errorResult) {
     return 'N/A';
   }
-  const resolved = RunReasons.get(reason);
-  return resolved?.description ?? reason;
+
+  const resolved = RunErrorResults.get(errorResult);
+  return resolved?.description ?? errorResult;
 }
 
 /**
@@ -323,7 +330,6 @@ export function formatDuration(millis: number): string {
   if (minutes > 0) {
     parts.push(`${minutes}m`);
   }
-  // Only show seconds if duration is less than 1 hour
   if (seconds > 0 && days === 0 && hours === 0) {
     parts.push(`${seconds}s`);
   }

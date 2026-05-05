@@ -6,8 +6,6 @@ import {
   enhancementStatusToColor,
   generationStatusToColor,
   resultToColor,
-  runReasonToColor,
-  runReasonToDescription,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {
@@ -39,7 +37,7 @@ import { useGenerationRuns } from './useGenerationRuns';
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
-  { key: 'result', header: 'Result' },
+  { key: 'latestResult', header: 'Latest Run Result' },
   { key: 'enhancerName', header: 'Enhancer Name' },
   { key: 'enhancerVersion', header: 'Version' },
   { key: 'created', header: 'Created' },
@@ -92,7 +90,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
       return {
         id: String(e.id),
         status: e.status ?? null,
-        result: e.result ?? null,
+        latestResult: e.latestResult ?? null,
         enhancerName: e.enhancerName ?? 'N/A',
         enhancerVersion: e.enhancerVersion ?? 'N/A',
         created: parseDate(e.created),
@@ -124,7 +122,15 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   {row.status}
                 </Tag>
               </TableCell>
-              <TableCell>{row.result ? row.result : 'N/A'}</TableCell>
+              <TableCell>
+                {row.latestResult ? (
+                  <Tag size="md" type={resultToColor(row.latestResult)}>
+                    {row.latestResult}
+                  </Tag>
+                ) : (
+                  'N/A'
+                )}
+              </TableCell>
               <TableCell>{row.enhancerName}</TableCell>
               <TableCell>{row.enhancerVersion}</TableCell>
               <TableCell>
@@ -228,22 +234,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
               <Tag size="md" type={generationStatusToColor(request.status)}>
                 {request.status}
               </Tag>
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>
-              {request.reason ? (
-                <Tag size="md" type={runReasonToColor(request.reason)}>
-                  {runReasonToDescription(request.reason)}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
