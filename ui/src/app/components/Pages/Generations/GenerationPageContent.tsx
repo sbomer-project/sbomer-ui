@@ -37,7 +37,6 @@ import { useGenerationRuns } from './useGenerationRuns';
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
-  { key: 'latestResult', header: 'Latest Run Result' },
   { key: 'enhancerName', header: 'Enhancer Name' },
   { key: 'enhancerVersion', header: 'Version' },
   { key: 'created', header: 'Created' },
@@ -90,7 +89,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
       return {
         id: String(e.id),
         status: e.status ?? null,
-        latestResult: e.latestResult ?? null,
         enhancerName: e.enhancerName ?? 'N/A',
         enhancerVersion: e.enhancerVersion ?? 'N/A',
         created: parseDate(e.created),
@@ -121,15 +119,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
                 <Tag size="md" type={enhancementStatusToColor(row.status)}>
                   {row.status}
                 </Tag>
-              </TableCell>
-              <TableCell>
-                {row.latestResult ? (
-                  <Tag size="md" type={resultToColor(row.latestResult)}>
-                    {row.latestResult}
-                  </Tag>
-                ) : (
-                  'N/A'
-                )}
               </TableCell>
               <TableCell>{row.enhancerName}</TableCell>
               <TableCell>{row.enhancerVersion}</TableCell>
@@ -237,18 +226,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Latest Run Result</StructuredListCell>
-            <StructuredListCell>
-              {request.latestResult ? (
-                <Tag size="md" type={resultToColor(request.latestResult)}>
-                  {request.latestResult}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
@@ -287,6 +264,22 @@ const GenerationPageContent: React.FunctionComponent = () => {
               {request.generationSbomUrls && request.generationSbomUrls.length > 0 ? (
                 <Stack gap={2}>
                   {request.generationSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Final SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.finalSbomUrls.map((url, index) => (
                     <a key={index} href={url} target="_blank" rel="noopener noreferrer">
                       {url}
                     </a>

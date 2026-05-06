@@ -114,18 +114,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Latest Run Result</StructuredListCell>
-            <StructuredListCell>
-              {request.latestResult ? (
-                <Tag size="md" type={resultToColor(request.latestResult)}>
-                  {request.latestResult}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Enhancer Name</StructuredListCell>
             <StructuredListCell>{request.enhancerName || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -163,6 +151,22 @@ const EnhancementPageContent: React.FunctionComponent = () => {
               {request.enhancementSbomUrls && request.enhancementSbomUrls.length > 0 ? (
                 <Stack gap={2}>
                   {request.enhancementSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Final SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.finalSbomUrls.map((url, index) => (
                     <a key={index} href={url} target="_blank" rel="noopener noreferrer">
                       {url}
                     </a>
