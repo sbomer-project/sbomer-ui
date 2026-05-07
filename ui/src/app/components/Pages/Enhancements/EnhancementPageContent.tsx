@@ -2,7 +2,7 @@ import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection
 import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { enhancementStatusToColor, resultToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,
@@ -114,26 +114,6 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>{request.reason || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Latest Run Result</StructuredListCell>
-            <StructuredListCell>
-              {request.latestResult ? (
-                <Tag size="md" type={resultToColor(request.latestResult)}>
-                  {request.latestResult}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Enhancer Name</StructuredListCell>
             <StructuredListCell>{request.enhancerName || 'N/A'}</StructuredListCell>
           </StructuredListRow>
@@ -181,23 +161,24 @@ const EnhancementPageContent: React.FunctionComponent = () => {
               )}
             </StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Final SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.finalSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <Stack gap={5}>
-        <Heading>Raw JSON</Heading>
-        <CodeSnippet type="multi">
-          {JSON.stringify(
-            request,
-            (key, value) => {
-              if (value instanceof Map) {
-                return Object.fromEntries(value.entries());
-              }
-              return value;
-            },
-            2,
-          )}
-        </CodeSnippet>
-      </Stack>
       {runsError ? (
         <Stack gap={6}>
           <ErrorSection title="Could not load execution history" message={runsError.message} />
@@ -220,6 +201,21 @@ const EnhancementPageContent: React.FunctionComponent = () => {
       ) : (
         <p>No enhancement execution history found for this enhancement.</p>
       )}
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
+            request,
+            (key, value) => {
+              if (value instanceof Map) {
+                return Object.fromEntries(value.entries());
+              }
+              return value;
+            },
+            2,
+          )}
+        </CodeSnippet>
+      </Stack>
     </Stack>
   );
 };

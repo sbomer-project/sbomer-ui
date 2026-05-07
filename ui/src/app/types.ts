@@ -18,10 +18,12 @@
 
 /** @public */
 export type SbomerErrorResponse = {
-  errorId: string;
-  error: string;
-  resource: string;
-  message: string;
+  result?: string;
+  reason?: string;
+  status?: number;
+  category?: string;
+  correlationId?: string;
+  timestamp?: string;
 };
 
 declare global {
@@ -73,22 +75,18 @@ export class SbomerGeneration {
   public updated?: Date;
   public finished?: Date;
   public status: string;
-  public result: string;
-  public reason: string;
   public requestId: string;
   public targetType: string;
   public targetIdentifier: string;
   public generationSbomUrls?: string[];
+  public finalSbomUrls?: string[];
   public enhancements: SbomerEnhancement[];
   public metadata?: Map<string, string>;
   public childEnhancementsStatus?: string;
-  public latestResult?: string;
 
   constructor(payload: any) {
     this.id = payload.id;
     this.status = payload.status;
-    this.result = payload.result;
-    this.reason = payload.reason;
 
     this.created = new Date(payload.created);
     this.updated = payload.updated ? new Date(payload.updated) : undefined;
@@ -99,15 +97,14 @@ export class SbomerGeneration {
     this.generatorName = payload.generatorName;
     this.generatorVersion = payload.generatorVersion;
     this.generatorOptions = payload.generatorOptions || {};
-    this.requestId = payload.requestId;
     this.targetType = payload.targetType;
     this.targetIdentifier = payload.targetIdentifier;
     this.generationSbomUrls = payload.generationSbomUrls || [];
+    this.finalSbomUrls = payload.finalSbomUrls || [];
     this.enhancements = payload.enhancements
       ? payload.enhancements.map((enhancement: any) => new SbomerEnhancement(enhancement))
       : [];
     this.childEnhancementsStatus = payload.childEnhancementsStatus;
-    this.latestResult = payload.latestResult;
   }
 }
 
@@ -117,14 +114,12 @@ export class SbomerEnhancement {
   public created: Date;
   public updated?: Date;
   public finished?: Date;
-  public result?: string;
-  public reason?: string;
   public generationId?: string;
   public requestId?: string;
   public enhancerName?: string;
   public enhancerVersion?: string;
-  public latestResult?: string;
   public enhancementSbomUrls?: string[];
+  public finalSbomUrls?: string[];
 
   constructor(payload: any) {
     this.id = payload.id;
@@ -134,14 +129,12 @@ export class SbomerEnhancement {
     this.updated = payload.updated ? new Date(payload.updated) : undefined;
     this.finished = payload.finished ? new Date(payload.finished) : undefined;
 
-    this.result = payload.result;
-    this.reason = payload.reason;
     this.generationId = payload.generationId;
     this.requestId = payload.requestId;
     this.enhancerName = payload.enhancerName;
     this.enhancerVersion = payload.enhancerVersion;
-    this.latestResult = payload.latestResult;
     this.enhancementSbomUrls = payload.enhancementSbomUrls || [];
+    this.finalSbomUrls = payload.finalSbomUrls || [];
   }
 }
 
@@ -150,7 +143,7 @@ export class GenerationRunRecord {
   public generationId: string;
   public attemptNumber: number;
   public state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
-  public reason:
+  public errorResult?:
     | 'SUCCESS'
     | 'ERR_GENERAL'
     | 'ERR_CONFIG_INVALID'
@@ -161,7 +154,7 @@ export class GenerationRunRecord {
     | 'ERR_OOM'
     | 'ERR_SYSTEM'
     | 'ERR_MULTI';
-  public message: string;
+  public upstreamReason?: string;
   public startTime: Date;
   public completionTime?: Date;
 
@@ -170,8 +163,8 @@ export class GenerationRunRecord {
     this.generationId = payload.generationId;
     this.attemptNumber = payload.attemptNumber;
     this.state = payload.state;
-    this.reason = payload.reason;
-    this.message = payload.message || '';
+    this.errorResult = payload.errorResult;
+    this.upstreamReason = payload.upstreamReason;
     this.startTime = new Date(payload.startTime);
     this.completionTime = payload.completionTime ? new Date(payload.completionTime) : undefined;
   }
@@ -182,8 +175,8 @@ export class EnhancementRunRecord {
   public enhancementId: string;
   public attemptNumber: number;
   public state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
-  public reason: 'SUCCESS' | 'ERR_GENERAL' | 'ERR_CONFIG_INVALID' | 'ERR_ENHANCEMENT';
-  public message: string;
+  public errorResult?: 'SUCCESS' | 'ERR_GENERAL' | 'ERR_CONFIG_INVALID' | 'ERR_ENHANCEMENT';
+  public upstreamReason?: string;
   public startTime: Date;
   public completionTime?: Date;
 
@@ -192,8 +185,8 @@ export class EnhancementRunRecord {
     this.enhancementId = payload.enhancementId;
     this.attemptNumber = payload.attemptNumber;
     this.state = payload.state;
-    this.reason = payload.reason;
-    this.message = payload.message || '';
+    this.errorResult = payload.errorResult;
+    this.upstreamReason = payload.upstreamReason;
     this.startTime = new Date(payload.startTime);
     this.completionTime = payload.completionTime ? new Date(payload.completionTime) : undefined;
   }

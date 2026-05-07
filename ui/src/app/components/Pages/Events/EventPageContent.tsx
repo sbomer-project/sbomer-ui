@@ -31,7 +31,6 @@ import { SbomerGeneration } from '@app/types';
 const generationHeaders = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
-  { key: 'result', header: 'Result' },
   { key: 'creationTime', header: 'Created' },
   { key: 'updatedTime', header: 'Updated' },
   { key: 'finishedTime', header: 'Finished' },
@@ -51,7 +50,6 @@ export const EventPageContent = () => {
     );
   }
 
-  // Only show skeleton when we have no data yet
   if (loading && !request) {
     return (
       <Stack gap={6}>
@@ -68,7 +66,6 @@ export const EventPageContent = () => {
     (generationsValue?.data ?? []).map((g: SbomerGeneration) => ({
       id: String(g.id),
       status: g.status ?? 'N/A',
-      result: g.result ?? 'N/A',
       creationTime: g.created ? new Date(g.created) : undefined,
       updatedTime: g.updated ? new Date(g.updated) : undefined,
       finishedTime: g.finished ? new Date(g.finished) : undefined,
@@ -97,7 +94,6 @@ export const EventPageContent = () => {
                   {row.status || 'N/A'}
                 </Tag>
               </TableCell>
-              <TableCell>{row.result}</TableCell>
               <TableCell>
                 <RelativeTimestamp date={row.creationTime} />
               </TableCell>
@@ -177,6 +173,7 @@ export const EventPageContent = () => {
           </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
+      {generationsSection}
       <Stack gap={5}>
         <Heading>Raw JSON</Heading>
         <CodeSnippet type="multi">
@@ -192,7 +189,6 @@ export const EventPageContent = () => {
           )}
         </CodeSnippet>
       </Stack>
-      {generationsSection}
     </Stack>
   );
 };

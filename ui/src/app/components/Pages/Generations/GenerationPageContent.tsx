@@ -5,9 +5,6 @@ import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
-  resultToColor,
-  runReasonToColor,
-  runReasonToDescription,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {
@@ -39,7 +36,6 @@ import { useGenerationRuns } from './useGenerationRuns';
 const enhancementHeaders = [
   { key: 'id', header: 'ID' },
   { key: 'status', header: 'Status' },
-  { key: 'result', header: 'Result' },
   { key: 'enhancerName', header: 'Enhancer Name' },
   { key: 'enhancerVersion', header: 'Version' },
   { key: 'created', header: 'Created' },
@@ -92,7 +88,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
       return {
         id: String(e.id),
         status: e.status ?? null,
-        result: e.result ?? null,
         enhancerName: e.enhancerName ?? 'N/A',
         enhancerVersion: e.enhancerVersion ?? 'N/A',
         created: parseDate(e.created),
@@ -124,7 +119,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
                   {row.status}
                 </Tag>
               </TableCell>
-              <TableCell>{row.result ? row.result : 'N/A'}</TableCell>
               <TableCell>{row.enhancerName}</TableCell>
               <TableCell>{row.enhancerVersion}</TableCell>
               <TableCell>
@@ -231,46 +225,6 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Result</StructuredListCell>
-            <StructuredListCell>{request.result || 'N/A'}</StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Reason</StructuredListCell>
-            <StructuredListCell>
-              {request.reason ? (
-                <Tag size="md" type={runReasonToColor(request.reason)}>
-                  {runReasonToDescription(request.reason)}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Latest Run Result</StructuredListCell>
-            <StructuredListCell>
-              {request.latestResult ? (
-                <Tag size="md" type={resultToColor(request.latestResult)}>
-                  {request.latestResult}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Child Enhancements Status</StructuredListCell>
-            <StructuredListCell>
-              {request.childEnhancementsStatus ? (
-                <Tag size="md" type={generationStatusToColor(request.childEnhancementsStatus)}>
-                  {request.childEnhancementsStatus}
-                </Tag>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
             <StructuredListCell>Request ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
@@ -319,24 +273,24 @@ const GenerationPageContent: React.FunctionComponent = () => {
               )}
             </StructuredListCell>
           </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Final SBOM URLs</StructuredListCell>
+            <StructuredListCell>
+              {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
+                <Stack gap={2}>
+                  {request.finalSbomUrls.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                      {url}
+                    </a>
+                  ))}
+                </Stack>
+              ) : (
+                'N/A'
+              )}
+            </StructuredListCell>
+          </StructuredListRow>
         </StructuredListBody>
       </StructuredListWrapper>
-      <Stack gap={5}>
-        <Heading>Raw JSON</Heading>
-        <CodeSnippet type="multi">
-          {JSON.stringify(
-            request,
-            (key, value) => {
-              if (value instanceof Map) {
-                return Object.fromEntries(value.entries());
-              }
-              return value;
-            },
-            2,
-          )}
-        </CodeSnippet>
-      </Stack>
-      {enhancementsSection}
       {runsError ? (
         <Stack gap={6}>
           <ErrorSection title="Could not load execution history" message={runsError.message} />
@@ -359,6 +313,22 @@ const GenerationPageContent: React.FunctionComponent = () => {
       ) : (
         <p>No generation execution history found for this generation.</p>
       )}
+      {enhancementsSection}
+      <Stack gap={5}>
+        <Heading>Raw JSON</Heading>
+        <CodeSnippet type="multi">
+          {JSON.stringify(
+            request,
+            (key, value) => {
+              if (value instanceof Map) {
+                return Object.fromEntries(value.entries());
+              }
+              return value;
+            },
+            2,
+          )}
+        </CodeSnippet>
+      </Stack>
     </Stack>
   );
 };

@@ -50,7 +50,8 @@ interface RunsTableProps {
 const headers = [
   { key: 'attemptNumber', header: 'Attempt' },
   { key: 'state', header: 'State' },
-  { key: 'reason', header: 'Reason' },
+  { key: 'errorResult', header: 'Error Result' },
+  { key: 'upstreamReason', header: 'Upstream Reason' },
   { key: 'startTime', header: 'Start Time' },
   { key: 'completionTime', header: 'Completion Time' },
   { key: 'duration', header: 'Duration' },
@@ -67,7 +68,8 @@ export const RunsTable: React.FunctionComponent<RunsTableProps> = ({
     id: run.id,
     attemptNumber: run.attemptNumber,
     state: run.state,
-    reason: run.reason,
+    errorResult: run.errorResult,
+    upstreamReason: run.upstreamReason,
     startTime: run.startTime,
     completionTime: run.completionTime,
     duration: calculateDuration(run.startTime, run.completionTime),
@@ -103,10 +105,17 @@ export const RunsTable: React.FunctionComponent<RunsTableProps> = ({
                   </Tag>
                 </TableCell>
                 <TableCell>
-                  {row.reason ? (
-                    <Tag size="md" type={runReasonToColor(row.reason)}>
-                      {runReasonToDescription(row.reason)}
+                  {row.errorResult ? (
+                    <Tag size="md" type={runReasonToColor(row.errorResult)}>
+                      {runReasonToDescription(row.errorResult)}
                     </Tag>
+                  ) : (
+                    'N/A'
+                  )}
+                </TableCell>
+                <TableCell>
+                  {row.upstreamReason ? (
+                    <span style={{ whiteSpace: 'pre-wrap' }}>{row.upstreamReason}</span>
                   ) : (
                     'N/A'
                   )}

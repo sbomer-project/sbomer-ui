@@ -109,11 +109,11 @@ const GenerationRunPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Reason</StructuredListCell>
+            <StructuredListCell>Error Result</StructuredListCell>
             <StructuredListCell>
-              {run.reason ? (
-                <Tag size="md" type={runReasonToColor(run.reason)}>
-                  {runReasonToDescription(run.reason)}
+              {run.errorResult ? (
+                <Tag size="md" type={runReasonToColor(run.errorResult)}>
+                  {runReasonToDescription(run.errorResult)}
                 </Tag>
               ) : (
                 'N/A'
@@ -147,9 +147,13 @@ const GenerationRunPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{duration}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Message</StructuredListCell>
+            <StructuredListCell>Upstream Reason</StructuredListCell>
             <StructuredListCell>
-              {run.message ? <pre style={{ whiteSpace: 'pre-wrap' }}>{run.message}</pre> : 'N/A'}
+              {run.upstreamReason ? (
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{run.upstreamReason}</pre>
+              ) : (
+                'N/A'
+              )}
             </StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>

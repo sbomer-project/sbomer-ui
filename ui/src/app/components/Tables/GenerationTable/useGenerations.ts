@@ -20,20 +20,15 @@ import { useCallback, useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
 
-export function useGenerations(initialPage: number, intialPageSize: number) {
+export function useGenerations(initialPage: number, initialPageSize: number) {
   const sbomerApi = DefaultSbomerApi.getInstance();
   const [total, setTotal] = useState(0);
   const [pageIndex, setPageIndex] = useState(initialPage || 0);
-  const [pageSize, setPageSize] = useState(intialPageSize || 10);
+  const [pageSize, setPageSize] = useState(initialPageSize || 10);
 
   const getGenerations = useCallback(
-    async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
-      try {
-        return await sbomerApi.getGenerations({ pageSize, pageIndex });
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
+    ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) =>
+      sbomerApi.getGenerations({ pageSize, pageIndex }),
     [sbomerApi],
   );
 

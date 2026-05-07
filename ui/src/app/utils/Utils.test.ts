@@ -94,9 +94,7 @@ describe('Utils', () => {
   describe('eventStatusToDescription', () => {
     it('should return description for known event statuses', () => {
       expect(eventStatusToDescription('FAILED')).toBe('Failed generations under this event');
-      expect(eventStatusToDescription('FINISHED')).toBe(
-        'Successfully finished all generations under this event',
-      );
+      expect(eventStatusToDescription('COMPLETED')).toBe('Successfully completed');
       expect(eventStatusToDescription('PENDING')).toBe('Pending');
     });
 
@@ -107,40 +105,22 @@ describe('Utils', () => {
 
   describe('resultToDescription', () => {
     it('should return "N/A" when result is null', () => {
-      expect(resultToDescription({ result: null } as unknown as SbomerGeneration)).toBe('N/A');
+      expect(resultToDescription()).toBe('N/A');
     });
 
     it('should return description for known results', () => {
-      expect(resultToDescription({ result: 'SUCCESS' } as unknown as SbomerGeneration)).toBe(
-        'Success',
-      );
-      expect(
-        resultToDescription({ result: 'ERR_CONFIG_MISSING' } as unknown as SbomerGeneration),
-      ).toBe('Missing configuration');
-      expect(resultToDescription({ result: 'ERR_GENERAL' } as unknown as SbomerGeneration)).toBe(
-        'General error',
-      );
-      expect(
-        resultToDescription({ result: 'ERR_CONFIG_INVALID' } as unknown as SbomerGeneration),
-      ).toBe('Invalid configuration');
-      expect(
-        resultToDescription({ result: 'ERR_INDEX_INVALID' } as unknown as SbomerGeneration),
-      ).toBe('Invalid product index');
-      expect(resultToDescription({ result: 'ERR_GENERATION' } as unknown as SbomerGeneration)).toBe(
-        'Generation failure',
-      );
-      expect(resultToDescription({ result: 'ERR_SYSTEM' } as unknown as SbomerGeneration)).toBe(
-        'System error',
-      );
-      expect(resultToDescription({ result: 'ERR_MULTI' } as unknown as SbomerGeneration)).toBe(
-        'Multiple errors',
-      );
+      expect(resultToDescription('SUCCESS')).toBe('Success');
+      expect(resultToDescription('ERR_CONFIG_MISSING')).toBe('Missing configuration');
+      expect(resultToDescription('ERR_GENERAL')).toBe('General error');
+      expect(resultToDescription('ERR_CONFIG_INVALID')).toBe('Invalid configuration');
+      expect(resultToDescription('ERR_INDEX_INVALID')).toBe('Invalid product index');
+      expect(resultToDescription('ERR_GENERATION')).toBe('Generation failure');
+      expect(resultToDescription('ERR_SYSTEM')).toBe('System error');
+      expect(resultToDescription('ERR_MULTI')).toBe('Multiple errors');
     });
 
     it('should return original result for unknown results', () => {
-      expect(resultToDescription({ result: 'UNKNOWN_RESULT' } as unknown as SbomerGeneration)).toBe(
-        'UNKNOWN_RESULT',
-      );
+      expect(resultToDescription('UNKNOWN_RESULT')).toBe('UNKNOWN_RESULT');
     });
   });
 
@@ -172,7 +152,7 @@ describe('Utils', () => {
   describe('eventStatusToColor', () => {
     it('should return correct colors for known event statuses', () => {
       expect(eventStatusToColor('FAILED')).toBe('red');
-      expect(eventStatusToColor('FINISHED')).toBe('green');
+      expect(eventStatusToColor('COMPLETED')).toBe('green');
       expect(eventStatusToColor('PENDING')).toBe('teal');
       expect(eventStatusToColor('PROCESSING')).toBe('blue');
     });
@@ -203,8 +183,8 @@ describe('Utils', () => {
   });
 
   describe('isInProgress', () => {
-    it('should return false for FINISHED status', () => {
-      expect(isInProgress('FINISHED')).toBe(false);
+    it('should return false for COMPLETED status', () => {
+      expect(isInProgress('COMPLETED')).toBe(false);
     });
 
     it('should return false for FAILED status', () => {
@@ -219,8 +199,8 @@ describe('Utils', () => {
   });
 
   describe('isSuccess', () => {
-    it('should return true for FINISHED status', () => {
-      expect(isSuccess('FINISHED')).toBe(true);
+    it('should return true for COMPLETED status', () => {
+      expect(isSuccess('COMPLETED')).toBe(true);
     });
 
     it('should return false for other statuses', () => {
@@ -237,41 +217,34 @@ describe('Utils', () => {
           'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
       };
       const result = extractQueryErrorMessageDetails(error);
-      expect(result.message).toBe('Bad request');
-      expect(result.details).toBe('Field is required, Invalid format');
+      expect(result.message).toBe(
+        'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
+      );
+      expect(result.details).toBeUndefined();
     });
 
-    it('should extract message and details with double quotes', () => {
+    it('should extract new backend error format from a JSON string', () => {
       const error = {
-        message: 'Error response: "{"message":"Not found","details":"Resource does not exist"}"',
+        message:
+          'Failed fetching data: {"result":"ERR_GENERAL","reason":"Backend failure","category":"SYSTEM","correlationId":"abc-123"}',
       };
       const result = extractQueryErrorMessageDetails(error);
-      expect(result.message).toBe('Not found');
-      expect(result.details).toBe('Resource does not exist');
+      expect(result.message).toBe('Backend failure');
+      expect(result.details).toBe('SYSTEM, abc-123');
     });
 
-    it('should handle error message as object', () => {
+    it('should handle new backend error message as object', () => {
       const error = {
         message: {
-          message: 'Server error',
-          details: ['Connection timeout', 'Retry failed'],
+          result: 'ERR_CONFIG_INVALID',
+          reason: 'Invalid request payload',
+          category: 'VALIDATION',
+          correlationId: 'corr-42',
         },
       };
       const result = extractQueryErrorMessageDetails(error);
-      expect(result.message).toBe('Server error');
-      expect(result.details).toBe('Connection timeout, Retry failed');
-    });
-
-    it('should handle error message as object with string details', () => {
-      const error = {
-        message: {
-          message: 'Validation error',
-          details: 'Invalid input',
-        },
-      };
-      const result = extractQueryErrorMessageDetails(error);
-      expect(result.message).toBe('Validation error');
-      expect(result.details).toBe('Invalid input');
+      expect(result.message).toBe('Invalid request payload');
+      expect(result.details).toBe('VALIDATION');
     });
 
     it('should return original message when no JSON found', () => {
@@ -359,23 +332,18 @@ describe('Utils', () => {
     it('should calculate duration correctly for various time spans', () => {
       const startTime = new Date('2024-01-01T10:00:00Z');
 
-      // 30 seconds
       let completionTime = new Date('2024-01-01T10:00:30Z');
       expect(calculateDuration(startTime, completionTime)).toBe('30s');
 
-      // 5 minutes
       completionTime = new Date('2024-01-01T10:05:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('5m');
 
-      // 2 hours 30 minutes
       completionTime = new Date('2024-01-01T12:30:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('2h 30m');
 
-      // 1 day 3 hours
       completionTime = new Date('2024-01-02T13:00:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('1d 3h');
 
-      // 5 days 2 hours 15 minutes
       completionTime = new Date('2024-01-06T12:15:00Z');
       expect(calculateDuration(startTime, completionTime)).toBe('5d 2h 15m');
     });
