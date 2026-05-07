@@ -27,13 +27,8 @@ export function useGenerations(initialPage: number, initialPageSize: number) {
   const [pageSize, setPageSize] = useState(initialPageSize || 10);
 
   const getGenerations = useCallback(
-    async ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) => {
-      try {
-        return await sbomerApi.getGenerations({ pageSize, pageIndex });
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
+    ({ pageSize, pageIndex }: { pageSize: number; pageIndex: number }) =>
+      sbomerApi.getGenerations({ pageSize, pageIndex }),
     [sbomerApi],
   );
 

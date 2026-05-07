@@ -37,16 +37,8 @@ export function useRequestEvents() {
       pageIndex: number;
       query: string;
     }) => {
-      try {
-        const pageIndexOffsetted = pageIndex - 1;
-        const response = await sbomerApi.getEvents(
-          { pageSize, pageIndex: pageIndexOffsetted },
-          query,
-        );
-        return response;
-      } catch (e) {
-        return Promise.reject(e);
-      }
+      const pageIndexOffsetted = pageIndex - 1;
+      return await sbomerApi.getEvents({ pageSize, pageIndex: pageIndexOffsetted }, query);
     },
     [sbomerApi],
   );

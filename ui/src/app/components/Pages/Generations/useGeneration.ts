@@ -23,13 +23,7 @@ import { useAsyncRetry } from 'react-use';
 export function useGeneration(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
   const getGeneration = useCallback(
-    async (id: string) => {
-      try {
-        return await sbomerApi.getGeneration(id);
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    },
+    (id: string) => sbomerApi.getGeneration(id),
     [sbomerApi],
   );
 
@@ -37,13 +31,7 @@ export function useGeneration(id: string) {
     loading,
     value: request,
     error,
-  } = useAsyncRetry(
-    () =>
-      getGeneration(id).then((data) => {
-        return data;
-      }),
-    [getGeneration, id],
-  );
+  } = useAsyncRetry(() => getGeneration(id), [getGeneration, id]);
 
   return [
     {
