@@ -144,13 +144,6 @@ export class DefaultSbomerApi implements SbomerApi {
     this.client = axios.create({
       baseURL: options.baseUrl,
     });
-
-    this.client.interceptors.response.use(
-      (response) => response,
-      (error: AxiosError) => {
-        return Promise.reject(error);
-      },
-    );
   }
 
   async getLogPaths(generationId: string): Promise<Array<string>> {
@@ -189,13 +182,7 @@ export class DefaultSbomerApi implements SbomerApi {
 
     const data = await response.json();
 
-    const requests: SbomerGeneration[] = [];
-
-    if (data.content) {
-      data.content.forEach((request: any) => {
-        requests.push(new SbomerGeneration(request));
-      });
-    }
+    const requests = data.content?.map((request: any) => new SbomerGeneration(request)) ?? [];
 
     return { data: requests, total: data.totalHits };
   }
@@ -225,16 +212,10 @@ export class DefaultSbomerApi implements SbomerApi {
     }
 
     const data = await response.json();
-    const requests: SbomerEvent[] = [];
 
-    if (data.content) {
-      data.content.forEach((request: any) => {
-        requests.push(new SbomerEvent(request));
-      });
-      return { data: requests, total: data.totalHits };
-    }
+    const requests = data.content?.map((request: any) => new SbomerEvent(request)) ?? [];
 
-    return { data: requests, total: requests.length || 0 };
+    return { data: requests, total: data.totalHits || 0 };
   }
 
   async getEvent(id: string): Promise<SbomerEvent> {
@@ -249,7 +230,6 @@ export class DefaultSbomerApi implements SbomerApi {
   async getAllGenerationsForEvent(
     id: string,
   ): Promise<{ data: SbomerGeneration[]; total: number }> {
-    const requests: SbomerGeneration[] = [];
     const response = await fetch(`${this.baseUrl}/api/v1/requests/${id}/generations/all`);
 
     if (response.status !== 200) {
@@ -258,11 +238,7 @@ export class DefaultSbomerApi implements SbomerApi {
 
     const data = await response.json();
 
-    if (data) {
-      data.forEach((request: any) => {
-        requests.push(new SbomerGeneration(request));
-      });
-    }
+    const requests = data?.map((request: any) => new SbomerGeneration(request)) ?? [];
 
     return { data: requests, total: requests.length };
   }
@@ -271,14 +247,9 @@ export class DefaultSbomerApi implements SbomerApi {
     try {
       const response = await this.client.get(`/api/v1/generations/${generationId}/runs`);
 
-      const runs: GenerationRunRecord[] = [];
-      if (Array.isArray(response.data)) {
-        response.data.forEach((run: any) => {
-          runs.push(new GenerationRunRecord(run));
-        });
-      }
-
-      return runs;
+      return Array.isArray(response.data)
+        ? response.data.map((run: any) => new GenerationRunRecord(run))
+        : [];
     } catch (error) {
       throw parseAxiosError(
         error as AxiosError,
@@ -303,14 +274,9 @@ export class DefaultSbomerApi implements SbomerApi {
     try {
       const response = await this.client.get(`/api/v1/enhancements/${enhancementId}/runs`);
 
-      const runs: EnhancementRunRecord[] = [];
-      if (Array.isArray(response.data)) {
-        response.data.forEach((run: any) => {
-          runs.push(new EnhancementRunRecord(run));
-        });
-      }
-
-      return runs;
+      return Array.isArray(response.data)
+        ? response.data.map((run: any) => new EnhancementRunRecord(run))
+        : [];
     } catch (error) {
       throw parseAxiosError(
         error as AxiosError,
