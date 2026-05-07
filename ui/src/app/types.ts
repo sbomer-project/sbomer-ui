@@ -97,7 +97,6 @@ export class SbomerGeneration {
     this.generatorName = payload.generatorName;
     this.generatorVersion = payload.generatorVersion;
     this.generatorOptions = payload.generatorOptions || {};
-    this.requestId = payload.requestId;
     this.targetType = payload.targetType;
     this.targetIdentifier = payload.targetIdentifier;
     this.generationSbomUrls = payload.generationSbomUrls || [];
