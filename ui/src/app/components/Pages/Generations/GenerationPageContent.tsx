@@ -5,7 +5,6 @@ import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
-  resultToColor,
   targetTypeToColor,
 } from '@app/utils/Utils';
 import {

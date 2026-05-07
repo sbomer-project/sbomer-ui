@@ -2,7 +2,7 @@ import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection
 import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { enhancementStatusToColor, resultToColor } from '@app/utils/Utils';
+import { enhancementStatusToColor } from '@app/utils/Utils';
 import {
   CodeSnippet,
   DataTableSkeleton,

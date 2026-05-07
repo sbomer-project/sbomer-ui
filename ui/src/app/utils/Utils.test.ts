@@ -217,7 +217,9 @@ describe('Utils', () => {
           'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
       };
       const result = extractQueryErrorMessageDetails(error);
-      expect(result.message).toBe('Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'');
+      expect(result.message).toBe(
+        'Error response: \'{"message":"Bad request","details":["Field is required","Invalid format"]}\'',
+      );
       expect(result.details).toBeUndefined();
     });
 

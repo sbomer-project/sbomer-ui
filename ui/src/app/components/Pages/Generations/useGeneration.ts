@@ -22,10 +22,7 @@ import { useAsyncRetry } from 'react-use';
 
 export function useGeneration(id: string) {
   const sbomerApi = DefaultSbomerApi.getInstance();
-  const getGeneration = useCallback(
-    (id: string) => sbomerApi.getGeneration(id),
-    [sbomerApi],
-  );
+  const getGeneration = useCallback((id: string) => sbomerApi.getGeneration(id), [sbomerApi]);
 
   const {
     loading,
