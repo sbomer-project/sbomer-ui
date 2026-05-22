@@ -2,6 +2,7 @@ import { ErrorSection } from '@app/components/Sections/ErrorSection/ErrorSection
 import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
+import { downloadFileWithCustomName } from '@app/utils/downloadUtils';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
@@ -262,27 +263,54 @@ const GenerationPageContent: React.FunctionComponent = () => {
             <StructuredListCell>
               {request.generationSbomUrls && request.generationSbomUrls.length > 0 ? (
                 <Stack gap={2}>
-                  {request.generationSbomUrls.map((url, index) => (
-                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
-                      {url}
-                    </a>
-                  ))}
+                  {request.generationSbomUrls.map((url, index) => {
+                    const filename =
+                      new URL(url).pathname.split('/').pop()?.replace('.json', '') || 'sbom';
+                    const downloadFilename = `${filename}-${request.id}.json`;
+                    return (
+                      <a
+                        key={index}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          downloadFileWithCustomName(url, downloadFilename);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {url}
+                      </a>
+                    );
+                  })}
                 </Stack>
               ) : (
                 'N/A'
               )}
             </StructuredListCell>
           </StructuredListRow>
+
           <StructuredListRow>
             <StructuredListCell>Final SBOM URLs</StructuredListCell>
             <StructuredListCell>
               {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
                 <Stack gap={2}>
-                  {request.finalSbomUrls.map((url, index) => (
-                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
-                      {url}
-                    </a>
-                  ))}
+                  {request.finalSbomUrls.map((url, index) => {
+                    const filename =
+                      new URL(url).pathname.split('/').pop()?.replace('.json', '') || 'sbom';
+                    const downloadFilename = `final-${filename}-${request.id}.json`;
+                    return (
+                      <a
+                        key={index}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          downloadFileWithCustomName(url, downloadFilename);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {url}
+                      </a>
+                    );
+                  })}
                 </Stack>
               ) : (
                 'N/A'
