@@ -16,6 +16,106 @@
 /// limitations under the License.
 ///
 
+// ============================================================================
+// Payload Interfaces - Define the structure of data received from the API
+// ============================================================================
+
+export interface SbomerGenerationPayload {
+  id: string;
+  status: string;
+  created: string;
+  updated?: string;
+  finished?: string;
+  requestId: string;
+  metadata?: Record<string, string>;
+  generatorName: string;
+  generatorVersion: string;
+  generatorOptions?: Record<string, unknown>;
+  targetType: string;
+  targetIdentifier: string;
+  generationSbomUrls?: string[];
+  finalSbomUrls?: string[];
+  enhancements?: SbomerEnhancementPayload[];
+  childEnhancementsStatus?: string;
+}
+
+export interface SbomerEnhancementPayload {
+  id: string;
+  status: string;
+  created: string;
+  updated?: string;
+  finished?: string;
+  generationId?: string;
+  requestId?: string;
+  enhancerName?: string;
+  enhancerVersion?: string;
+  enhancementSbomUrls?: string[];
+  finalSbomUrls?: string[];
+}
+
+export interface GenerationRunRecordPayload {
+  id: string;
+  generationId: string;
+  attemptNumber: number;
+  state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+  errorResult?:
+    | 'SUCCESS'
+    | 'ERR_GENERAL'
+    | 'ERR_CONFIG_INVALID'
+    | 'ERR_CONFIG_MISSING'
+    | 'ERR_INDEX_INVALID'
+    | 'ERR_GENERATION'
+    | 'ERR_POST'
+    | 'ERR_OOM'
+    | 'ERR_SYSTEM'
+    | 'ERR_MULTI';
+  upstreamReason?: string;
+  startTime: string;
+  completionTime?: string;
+}
+
+export interface EnhancementRunRecordPayload {
+  id: string;
+  enhancementId: string;
+  attemptNumber: number;
+  state: 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+  errorResult?: 'SUCCESS' | 'ERR_GENERAL' | 'ERR_CONFIG_INVALID' | 'ERR_ENHANCEMENT';
+  upstreamReason?: string;
+  startTime: string;
+  completionTime?: string;
+}
+
+export interface SbomerManifestPayload {
+  id: string;
+  created: string;
+  metadata?: Record<string, string>;
+}
+
+export interface SbomerPublisherPayload {
+  id: string;
+  status: string;
+  created: string;
+  updated?: string;
+  finished?: string;
+  result?: string;
+  reason?: string;
+  requestId: string;
+  publisherName?: string;
+  publisherVersion?: string;
+}
+
+export interface SbomerEventPayload {
+  id: string;
+  creationDate: string;
+  status: string;
+  generationRecords?: SbomerGenerationPayload[];
+  publisherRecords?: SbomerPublisherPayload[];
+}
+
+// ============================================================================
+// Error Response Types
+// ============================================================================
+
 /** @public */
 export type SbomerErrorResponse = {
   result?: string;
@@ -84,7 +184,7 @@ export class SbomerGeneration {
   public metadata?: Map<string, string>;
   public childEnhancementsStatus?: string;
 
-  constructor(payload: any) {
+  constructor(payload: SbomerGenerationPayload) {
     this.id = payload.id;
     this.status = payload.status;
 
@@ -102,7 +202,7 @@ export class SbomerGeneration {
     this.generationSbomUrls = payload.generationSbomUrls || [];
     this.finalSbomUrls = payload.finalSbomUrls || [];
     this.enhancements = payload.enhancements
-      ? payload.enhancements.map((enhancement: any) => new SbomerEnhancement(enhancement))
+      ? payload.enhancements.map((enhancement) => new SbomerEnhancement(enhancement))
       : [];
     this.childEnhancementsStatus = payload.childEnhancementsStatus;
   }
@@ -121,7 +221,7 @@ export class SbomerEnhancement {
   public enhancementSbomUrls?: string[];
   public finalSbomUrls?: string[];
 
-  constructor(payload: any) {
+  constructor(payload: SbomerEnhancementPayload) {
     this.id = payload.id;
     this.status = payload.status;
 
@@ -158,7 +258,7 @@ export class GenerationRunRecord {
   public startTime: Date;
   public completionTime?: Date;
 
-  constructor(payload: any) {
+  constructor(payload: GenerationRunRecordPayload) {
     this.id = payload.id;
     this.generationId = payload.generationId;
     this.attemptNumber = payload.attemptNumber;
@@ -180,7 +280,7 @@ export class EnhancementRunRecord {
   public startTime: Date;
   public completionTime?: Date;
 
-  constructor(payload: any) {
+  constructor(payload: EnhancementRunRecordPayload) {
     this.id = payload.id;
     this.enhancementId = payload.enhancementId;
     this.attemptNumber = payload.attemptNumber;
@@ -197,7 +297,7 @@ export class SbomerManifest {
   public created: Date;
   public metadata?: Map<string, string>;
 
-  constructor(payload: any) {
+  constructor(payload: SbomerManifestPayload) {
     this.id = payload.id;
     this.created = new Date(payload.created);
     this.metadata = payload.metadata ? new Map(Object.entries(payload.metadata)) : undefined;
@@ -216,7 +316,7 @@ export class SbomerPublisher {
   public publisherName?: string;
   public publisherVersion?: string;
 
-  constructor(payload: any) {
+  constructor(payload: SbomerPublisherPayload) {
     this.id = payload.id;
     this.status = payload.status;
     this.created = new Date(payload.created);
@@ -237,15 +337,15 @@ export class SbomerEvent {
   public generationRecords: SbomerGeneration[];
   public publisherRecords: SbomerPublisher[];
 
-  constructor(payload: any) {
+  constructor(payload: SbomerEventPayload) {
     this.id = payload.id;
     this.created = new Date(payload.creationDate);
     this.status = payload.status;
     this.generationRecords = payload.generationRecords
-      ? payload.generationRecords.map((record: any) => new SbomerGeneration(record))
+      ? payload.generationRecords.map((record) => new SbomerGeneration(record))
       : [];
     this.publisherRecords = payload.publisherRecords
-      ? payload.publisherRecords.map((record: any) => new SbomerPublisher(record))
+      ? payload.publisherRecords.map((record) => new SbomerPublisher(record))
       : [];
   }
 }

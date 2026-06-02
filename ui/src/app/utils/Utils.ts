@@ -195,7 +195,7 @@ export function targetTypeToColor(targetType: string): CarbonTagType {
     hash += targetType.charCodeAt(i);
   }
 
-  return colors[hash % colors.length];
+  return colors[hash % colors.length] ?? 'outline';
 }
 
 export function isInProgress(status: string): boolean {
@@ -226,23 +226,33 @@ function isSbomerErrorResponse(value: unknown): value is SbomerErrorResponse {
   );
 }
 
-export function extractQueryErrorMessageDetails(error: any): { message: string; details?: string } {
-  if (isSbomerErrorResponse(error?.message)) {
+export function extractQueryErrorMessageDetails(error: unknown): {
+  message: string;
+  details?: string;
+} {
+  // Type guard to check if error has a message property
+  if (!error || typeof error !== 'object') {
+    return { message: 'Unknown error' };
+  }
+
+  const errorObj = error as { message?: unknown };
+
+  if (isSbomerErrorResponse(errorObj.message)) {
     return {
-      message: error.message.reason || error.message.result || 'Unknown error',
-      details: error.message.category,
+      message: errorObj.message.reason || errorObj.message.result || 'Unknown error',
+      details: errorObj.message.category,
     };
   }
 
-  if (typeof error?.message === 'string') {
-    const jsonMatch = error.message.match(/\{.*\}/);
+  if (typeof errorObj.message === 'string') {
+    const jsonMatch = errorObj.message.match(/\{.*\}/);
     if (jsonMatch) {
       try {
         const parsed = JSON.parse(jsonMatch[0]);
         if (isSbomerErrorResponse(parsed)) {
           const detailParts = [parsed.category, parsed.correlationId].filter(Boolean);
           return {
-            message: parsed.reason || parsed.result || error.message,
+            message: parsed.reason || parsed.result || errorObj.message,
             details: detailParts.length > 0 ? detailParts.join(', ') : undefined,
           };
         }
@@ -251,7 +261,7 @@ export function extractQueryErrorMessageDetails(error: any): { message: string; 
       }
     }
 
-    return { message: error.message };
+    return { message: errorObj.message };
   }
 
   return { message: 'Unknown error' };

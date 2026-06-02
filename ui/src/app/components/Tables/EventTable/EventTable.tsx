@@ -47,11 +47,16 @@ export const EventTable = () => {
     setFilters(query, 1, newPerPage);
   };
 
-  const isQueryValidationError = (error: any) => {
+  const isQueryValidationError = (error: unknown): boolean => {
+    if (!error || typeof error !== 'object') {
+      return false;
+    }
+
+    const errorObj = error as { message?: string; status?: number; code?: string };
     return (
-      error?.message?.includes('The provided query is not valid') ||
-      error?.status === 400 ||
-      error?.code === 'INVALID_QUERY'
+      errorObj.message?.includes('The provided query is not valid') ||
+      errorObj.status === 400 ||
+      errorObj.code === 'INVALID_QUERY'
     );
   };
 

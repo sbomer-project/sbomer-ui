@@ -1,4 +1,4 @@
-import { SbomerEnhancement } from '@app/types';
+import { SbomerEnhancementPayload } from '@app/types';
 import { LinkCell, TableColumn, TablePage, TagCell, TimestampCell } from '../TablePage/TablePage';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -74,12 +74,12 @@ export const EnhancementTable = () => {
   };
 
   const rows: EnhancementRow[] =
-    (value ?? []).map((enhancement: SbomerEnhancement) => ({
+    (value ?? []).map((enhancement: SbomerEnhancementPayload) => ({
       id: enhancement.id,
       status: enhancement.status,
-      created: enhancement.created,
-      updated: enhancement.updated,
-      finished: enhancement.finished,
+      created: enhancement.created ? new Date(enhancement.created) : undefined,
+      updated: enhancement.updated ? new Date(enhancement.updated) : undefined,
+      finished: enhancement.finished ? new Date(enhancement.finished) : undefined,
       enhancerType: enhancement.enhancerName,
       enhancerVersion: enhancement.enhancerVersion,
       generationId: enhancement.generationId,

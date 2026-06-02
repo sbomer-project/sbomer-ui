@@ -19,6 +19,8 @@
 import { useCallback, useState } from 'react';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
+import { SbomerEnhancementPayload } from '@app/types';
+import { ApiPaginatedResponse } from '@app/api/types';
 
 export function useEnhancements(initialPage: number, initialPageSize: number) {
   const sbomerApi = DefaultSbomerApi.getInstance();
@@ -44,11 +46,11 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
           );
         }
 
-        const data = await response.json();
-        const enhancements: any[] = [];
+        const data: ApiPaginatedResponse<SbomerEnhancementPayload> = await response.json();
+        const enhancements: SbomerEnhancementPayload[] = [];
 
         // Helper function to safely parse dates
-        const parseDate = (dateValue: any): Date | undefined => {
+        const parseDate = (dateValue: string | Date | null | undefined): Date | undefined => {
           if (!dateValue) return undefined;
           if (dateValue instanceof Date) return dateValue;
           try {
@@ -60,19 +62,23 @@ export function useEnhancements(initialPage: number, initialPageSize: number) {
         };
 
         if (data.content) {
-          data.content.forEach((enhancement: any) => {
+          data.content.forEach((enhancement) => {
             enhancements.push({
               ...enhancement,
-              created: parseDate(enhancement.created),
-              updated: parseDate(enhancement.updated),
-              finished: parseDate(enhancement.finished),
+              created: parseDate(enhancement.created) as unknown as string,
+              updated: enhancement.updated
+                ? (parseDate(enhancement.updated) as unknown as string)
+                : undefined,
+              finished: enhancement.finished
+                ? (parseDate(enhancement.finished) as unknown as string)
+                : undefined,
             });
           });
         }
 
         return { data: enhancements, total: data.totalHits };
-      } catch (e) {
-        return Promise.reject(e);
+      } catch (error) {
+        return Promise.reject(error);
       }
     },
     [sbomerApi],
