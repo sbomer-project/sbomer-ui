@@ -3,6 +3,7 @@ import { RunsTable } from '@app/components/Tables/RunsTable/RunsTable';
 import RelativeTimestamp from '@app/components/UtilsComponents/RelativeTimestamp';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { downloadFileWithCustomName } from '@app/utils/downloadUtils';
+import { SbomerEnhancementPayload } from '@app/types';
 import {
   enhancementStatusToColor,
   generationStatusToColor,
@@ -74,8 +75,8 @@ const GenerationPageContent: React.FunctionComponent = () => {
   }
 
   const enhancementRows =
-    (enhancementsValue?.data ?? []).map((e: any) => {
-      const parseDate = (dateValue: any): Date | undefined => {
+    (enhancementsValue?.data ?? []).map((e: SbomerEnhancementPayload) => {
+      const parseDate = (dateValue: string | Date | null | undefined): Date | undefined => {
         if (!dateValue) return undefined;
         if (dateValue instanceof Date) return dateValue;
         try {

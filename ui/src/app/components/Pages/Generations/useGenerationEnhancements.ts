@@ -1,4 +1,5 @@
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
+import { SbomerEnhancementPayload } from '@app/types';
 import { useCallback } from 'react';
 import { useAsyncRetry } from 'react-use';
 
@@ -27,7 +28,7 @@ export function useGenerationEnhancements(generationId: string) {
 
         const data = await response.json();
 
-        let enhancements: any[] = [];
+        let enhancements: SbomerEnhancementPayload[] = [];
 
         if (Array.isArray(data)) {
           enhancements = data;

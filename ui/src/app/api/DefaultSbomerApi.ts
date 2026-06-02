@@ -19,13 +19,18 @@
 import axios, { Axios, AxiosError } from 'axios';
 import {
   EnhancementRunRecord,
+  EnhancementRunRecordPayload,
   GenerationRunRecord,
+  GenerationRunRecordPayload,
   SbomerApi,
   SbomerErrorResponse,
   SbomerEvent,
+  SbomerEventPayload,
   SbomerGeneration,
+  SbomerGenerationPayload,
   SbomerStats,
 } from '../types';
+import { ApiPaginatedResponse } from './types';
 
 type Options = {
   baseUrl: string;
@@ -151,10 +156,10 @@ export class DefaultSbomerApi implements SbomerApi {
       const response = await this.client.get(`/api/v1/generations/${generationId}/logs`);
       return response.data as Array<string>;
     } catch (error) {
-      throw parseAxiosError(
-        error as AxiosError,
-        `Failed to retrieve log paths for generation ${generationId}`,
-      );
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, `Failed to retrieve log paths for generation ${generationId}`);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
@@ -180,9 +185,9 @@ export class DefaultSbomerApi implements SbomerApi {
       throw await parseFetchError(response, 'Failed fetching generations from SBOMer');
     }
 
-    const data = await response.json();
+    const data: ApiPaginatedResponse<SbomerGenerationPayload> = await response.json();
 
-    const requests = data.content?.map((request: any) => new SbomerGeneration(request)) ?? [];
+    const requests = data.content?.map((request) => new SbomerGeneration(request)) ?? [];
 
     return { data: requests, total: data.totalHits };
   }
@@ -192,7 +197,10 @@ export class DefaultSbomerApi implements SbomerApi {
       const response = await this.client.get(`/api/v1/generations/${id}`);
       return new SbomerGeneration(response.data);
     } catch (error) {
-      throw parseAxiosError(error as AxiosError, `Failed fetching generation ${id}`);
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, `Failed fetching generation ${id}`);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
@@ -211,9 +219,9 @@ export class DefaultSbomerApi implements SbomerApi {
       throw await parseFetchError(response, 'Failed fetching events from SBOMer');
     }
 
-    const data = await response.json();
+    const data: ApiPaginatedResponse<SbomerEventPayload> = await response.json();
 
-    const requests = data.content?.map((request: any) => new SbomerEvent(request)) ?? [];
+    const requests = data.content?.map((request) => new SbomerEvent(request)) ?? [];
 
     return { data: requests, total: data.totalHits || 0 };
   }
@@ -223,7 +231,10 @@ export class DefaultSbomerApi implements SbomerApi {
       const response = await this.client.get(`/api/v1/requests/${id}`);
       return new SbomerEvent(response.data);
     } catch (error) {
-      throw parseAxiosError(error as AxiosError, `Failed fetching event ${id}`);
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, `Failed fetching event ${id}`);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
@@ -236,25 +247,27 @@ export class DefaultSbomerApi implements SbomerApi {
       throw await parseFetchError(response, 'Failed fetching generations from SBOMer');
     }
 
-    const data = await response.json();
+    const data: SbomerGenerationPayload[] = await response.json();
 
-    const requests = data?.map((request: any) => new SbomerGeneration(request)) ?? [];
+    const requests = data?.map((request) => new SbomerGeneration(request)) ?? [];
 
     return { data: requests, total: requests.length };
   }
 
   async getGenerationRuns(generationId: string): Promise<GenerationRunRecord[]> {
     try {
-      const response = await this.client.get(`/api/v1/generations/${generationId}/runs`);
+      const response = await this.client.get<GenerationRunRecordPayload[]>(
+        `/api/v1/generations/${generationId}/runs`,
+      );
 
       return Array.isArray(response.data)
-        ? response.data.map((run: any) => new GenerationRunRecord(run))
+        ? response.data.map((run) => new GenerationRunRecord(run))
         : [];
     } catch (error) {
-      throw parseAxiosError(
-        error as AxiosError,
-        `Failed to retrieve runs for generation ${generationId}`,
-      );
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, `Failed to retrieve runs for generation ${generationId}`);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
@@ -263,25 +276,30 @@ export class DefaultSbomerApi implements SbomerApi {
       const response = await this.client.get(`/api/v1/generations/${generationId}/runs/${runId}`);
       return new GenerationRunRecord(response.data);
     } catch (error) {
-      throw parseAxiosError(
-        error as AxiosError,
-        `Failed to retrieve run ${runId} for generation ${generationId}`,
-      );
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(
+          error,
+          `Failed to retrieve run ${runId} for generation ${generationId}`,
+        );
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
   async getEnhancementRuns(enhancementId: string): Promise<EnhancementRunRecord[]> {
     try {
-      const response = await this.client.get(`/api/v1/enhancements/${enhancementId}/runs`);
+      const response = await this.client.get<EnhancementRunRecordPayload[]>(
+        `/api/v1/enhancements/${enhancementId}/runs`,
+      );
 
       return Array.isArray(response.data)
-        ? response.data.map((run: any) => new EnhancementRunRecord(run))
+        ? response.data.map((run) => new EnhancementRunRecord(run))
         : [];
     } catch (error) {
-      throw parseAxiosError(
-        error as AxiosError,
-        `Failed to retrieve runs for enhancement ${enhancementId}`,
-      );
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, `Failed to retrieve runs for enhancement ${enhancementId}`);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 
@@ -290,10 +308,13 @@ export class DefaultSbomerApi implements SbomerApi {
       const response = await this.client.get(`/api/v1/enhancements/${enhancementId}/runs/${runId}`);
       return new EnhancementRunRecord(response.data);
     } catch (error) {
-      throw parseAxiosError(
-        error as AxiosError,
-        `Failed to retrieve run ${runId} for enhancement ${enhancementId}`,
-      );
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(
+          error,
+          `Failed to retrieve run ${runId} for enhancement ${enhancementId}`,
+        );
+      }
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 }

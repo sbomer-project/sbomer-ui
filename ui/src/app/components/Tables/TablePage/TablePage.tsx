@@ -38,7 +38,7 @@ export interface TablePageProps<T> {
   columns: TableColumn<T>[];
   data: T[] | undefined;
   loading: boolean;
-  error: any;
+  error: unknown;
   total: number;
   pageIndex: number;
   pageSize: number;
@@ -65,7 +65,7 @@ export interface TablePageProps<T> {
   onNoResultsAction?: () => void;
 
   // Optional error handling
-  isQueryValidationError?: (error: any) => boolean;
+  isQueryValidationError?: (error: unknown) => boolean;
 
   // Row key extractor
   getRowKey: (row: T) => string;
@@ -153,34 +153,37 @@ export function TablePage<T>({
   if (error && !isValidationError) {
     return (
       <TableContainer title={title} description={description}>
-        <ErrorSection title={`Could not load ${title.toLowerCase()}`} message={error.message} />
+        <ErrorSection
+          title={`Could not load ${title.toLowerCase()}`}
+          message={error instanceof Error ? error.message : 'An unknown error occurred'}
+        />
       </TableContainer>
     );
   }
 
-  const queryErrorTile =
-    error &&
-    isValidationError &&
-    (() => {
-      const { message, details } = extractQueryErrorMessageDetails(error);
-      return (
-        <Tile>
-          <Stack gap={5}>
-            <Heading>Invalid Query</Heading>
-            <p>
-              {message ||
-                'Your search query is not valid. Please check your syntax or clear filters to try again.'}
-            </p>
-            {details && <p>{details}</p>}
-            {onSearchClear && (
-              <Button kind="primary" size="sm" onClick={onSearchClear}>
-                Clear filters
-              </Button>
-            )}
-          </Stack>
-        </Tile>
-      );
-    })();
+  const queryErrorTile: React.ReactNode =
+    error && isValidationError
+      ? (() => {
+          const { message, details } = extractQueryErrorMessageDetails(error);
+          return (
+            <Tile>
+              <Stack gap={5}>
+                <Heading>Invalid Query</Heading>
+                <p>
+                  {message ||
+                    'Your search query is not valid. Please check your syntax or clear filters to try again.'}
+                </p>
+                {details && <p>{details}</p>}
+                {onSearchClear && (
+                  <Button kind="primary" size="sm" onClick={onSearchClear}>
+                    Clear filters
+                  </Button>
+                )}
+              </Stack>
+            </Tile>
+          );
+        })()
+      : null;
 
   return (
     <TableContainer title={title} description={description}>
@@ -259,7 +262,24 @@ export const LinkCell: React.FC<{ to: string; children: React.ReactNode }> = ({ 
   </CarbonLink>
 );
 
-export const TagCell: React.FC<{ type: any; children: React.ReactNode }> = ({ type, children }) => (
+type CarbonTagType =
+  | 'red'
+  | 'green'
+  | 'blue'
+  | 'gray'
+  | 'magenta'
+  | 'purple'
+  | 'cyan'
+  | 'teal'
+  | 'cool-gray'
+  | 'warm-gray'
+  | 'high-contrast'
+  | 'outline';
+
+export const TagCell: React.FC<{ type: CarbonTagType; children: React.ReactNode }> = ({
+  type,
+  children,
+}) => (
   <Tag size="md" type={type}>
     {children}
   </Tag>

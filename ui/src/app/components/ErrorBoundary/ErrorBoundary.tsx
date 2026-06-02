@@ -23,7 +23,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env['NODE_ENV'] === 'development') {
       console.error('Error caught by boundary:', error, errorInfo);
     }
     // In production, you might want to log to an error reporting service
@@ -50,7 +50,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
               An unexpected error occurred. Please try refreshing the page or contact support if the
               problem persists.
             </p>
-            {process.env.NODE_ENV === 'development' && (
+            {process.env['NODE_ENV'] === 'development' && (
               <details style={{ whiteSpace: 'pre-wrap' }}>
                 <summary>Error details (development only)</summary>
                 <code>
