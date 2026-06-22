@@ -123,7 +123,7 @@ const EnhancementPageContent: React.FunctionComponent = () => {
             <StructuredListCell>{request.enhancerVersion || 'N/A'}</StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Request ID</StructuredListCell>
+            <StructuredListCell>Event ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
                 <Link to={`/events/${request.requestId}`}>

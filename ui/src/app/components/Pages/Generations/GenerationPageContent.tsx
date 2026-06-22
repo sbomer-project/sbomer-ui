@@ -227,7 +227,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
-            <StructuredListCell>Request ID</StructuredListCell>
+            <StructuredListCell>Event ID</StructuredListCell>
             <StructuredListCell>
               {request.requestId ? (
                 <Link to={`/events/${request.requestId}`}>

@@ -49,8 +49,8 @@ const columns: TableColumn<EnhancementRow>[] = [
   },
   {
     key: 'requestId',
-    header: 'Request ID',
-    render: (row) => <LinkCell to={`/requests/${row.requestId}`}>{row.requestId}</LinkCell>,
+    header: 'Event ID',
+    render: (row) => <LinkCell to={`/events/${row.requestId}`}>{row.requestId}</LinkCell>,
   },
 ];
 
