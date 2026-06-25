@@ -49,8 +49,7 @@ export interface SbomerEnhancementPayload {
   requestId?: string;
   enhancerName?: string;
   enhancerVersion?: string;
-  enhancementSbomUrls?: string[];
-  finalSbomUrls?: string[];
+  enhancedSbomUrls?: string[];
 }
 
 export interface GenerationRunRecordPayload {
@@ -218,8 +217,7 @@ export class SbomerEnhancement {
   public requestId?: string;
   public enhancerName?: string;
   public enhancerVersion?: string;
-  public enhancementSbomUrls?: string[];
-  public finalSbomUrls?: string[];
+  public enhancedSbomUrls?: string[];
 
   constructor(payload: SbomerEnhancementPayload) {
     this.id = payload.id;
@@ -233,8 +231,7 @@ export class SbomerEnhancement {
     this.requestId = payload.requestId;
     this.enhancerName = payload.enhancerName;
     this.enhancerVersion = payload.enhancerVersion;
-    this.enhancementSbomUrls = payload.enhancementSbomUrls || [];
-    this.finalSbomUrls = payload.finalSbomUrls || [];
+    this.enhancedSbomUrls = payload.enhancedSbomUrls || [];
   }
 }
 
