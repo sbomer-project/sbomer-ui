@@ -149,41 +149,12 @@ const EnhancementPageContent: React.FunctionComponent = () => {
           <StructuredListRow>
             <StructuredListCell>SBOM URLs</StructuredListCell>
             <StructuredListCell>
-              {request.enhancementSbomUrls && request.enhancementSbomUrls.length > 0 ? (
+              {request.enhancedSbomUrls && request.enhancedSbomUrls.length > 0 ? (
                 <Stack gap={2}>
-                  {request.enhancementSbomUrls.map((url, index) => {
+                  {request.enhancedSbomUrls.map((url, index) => {
                     const filename =
                       new URL(url).pathname.split('/').pop()?.replace('.json', '') || 'sbom';
                     const downloadFilename = `${filename}-${request.id}.json`;
-                    return (
-                      <a
-                        key={index}
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          downloadFileWithCustomName(url, downloadFilename);
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        {url}
-                      </a>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                'N/A'
-              )}
-            </StructuredListCell>
-          </StructuredListRow>
-          <StructuredListRow>
-            <StructuredListCell>Final SBOM URLs</StructuredListCell>
-            <StructuredListCell>
-              {request.finalSbomUrls && request.finalSbomUrls.length > 0 ? (
-                <Stack gap={2}>
-                  {request.finalSbomUrls.map((url, index) => {
-                    const filename =
-                      new URL(url).pathname.split('/').pop()?.replace('.json', '') || 'sbom';
-                    const downloadFilename = `final-${filename}-${request.id}.json`;
                     return (
                       <a
                         key={index}
