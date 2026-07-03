@@ -271,7 +271,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
                     return (
                       <a
                         key={index}
-                        href="#"
+                        href={url}
                         onClick={(e) => {
                           e.preventDefault();
                           downloadFileWithCustomName(url, downloadFilename);
@@ -301,7 +301,7 @@ const GenerationPageContent: React.FunctionComponent = () => {
                     return (
                       <a
                         key={index}
-                        href="#"
+                        href={url}
                         onClick={(e) => {
                           e.preventDefault();
                           downloadFileWithCustomName(url, downloadFilename);
