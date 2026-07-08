@@ -158,7 +158,7 @@ const EnhancementPageContent: React.FunctionComponent = () => {
                     return (
                       <a
                         key={index}
-                        href="#"
+                        href={url}
                         onClick={(e) => {
                           e.preventDefault();
                           downloadFileWithCustomName(url, downloadFilename);
