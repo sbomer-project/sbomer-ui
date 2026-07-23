@@ -351,6 +351,35 @@ export type GenerateParams = {
   config: string;
 };
 
+// ============================================================================
+// Submit Generation Request — request body and response types
+// ============================================================================
+
+export interface GenerationRequestTarget {
+  type: string;
+  identifier: string;
+}
+
+export interface GenerationRequestItem {
+  target: GenerationRequestTarget;
+  handlerProvidedOptions?: Record<string, unknown>;
+}
+
+export interface PublisherItem {
+  name: string;
+  version: string;
+  options?: Record<string, unknown>;
+}
+
+export interface SubmitGenerationRequestPayload {
+  generationRequests: GenerationRequestItem[];
+  publishers?: PublisherItem[];
+}
+
+export interface SubmitGenerationResponse {
+  id: string;
+}
+
 export type SbomerApi = {
   getBaseUrl(): string;
   stats(): Promise<SbomerStats>;
@@ -382,4 +411,9 @@ export type SbomerApi = {
   // Enhancement Runs
   getEnhancementRuns(_enhancementId: string): Promise<EnhancementRunRecord[]>;
   getEnhancementRun(_enhancementId: string, _runId: string): Promise<EnhancementRunRecord>;
+
+  // Submit Generation Request
+  submitGenerationRequest(
+    _payload: SubmitGenerationRequestPayload,
+  ): Promise<SubmitGenerationResponse>;
 };

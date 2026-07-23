@@ -29,6 +29,8 @@ import {
   SbomerGeneration,
   SbomerGenerationPayload,
   SbomerStats,
+  SubmitGenerationRequestPayload,
+  SubmitGenerationResponse,
 } from '../types';
 import { ApiPaginatedResponse } from './types';
 
@@ -313,6 +315,24 @@ export class DefaultSbomerApi implements SbomerApi {
           error,
           `Failed to retrieve run ${runId} for enhancement ${enhancementId}`,
         );
+      }
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  }
+
+  async submitGenerationRequest(
+    payload: SubmitGenerationRequestPayload,
+  ): Promise<SubmitGenerationResponse> {
+    try {
+      const response = await this.client.post<SubmitGenerationResponse>(
+        '/api/v1/generations',
+        payload,
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw parseAxiosError(error, 'Failed to submit generation request');
       }
       throw error instanceof Error ? error : new Error(String(error));
     }

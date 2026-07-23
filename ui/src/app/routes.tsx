@@ -5,6 +5,7 @@ import {
   Dashboard as DashboardIcon,
   DataEnrichmentAdd,
   EventChange,
+  SendAlt,
 } from '@carbon/icons-react';
 import { Dashboard } from './components/Pages/Dashboard/Dashboard';
 import { EnhancementPage } from './components/Pages/Enhancements/EnhancementPage';
@@ -16,6 +17,7 @@ import { GenerationPage } from './components/Pages/Generations/GenerationPage';
 import { GenerationRunPage } from './components/Pages/Generations/GenerationRunPage';
 import { GenerationsPage } from './components/Pages/Generations/GenerationsPage';
 import { NotFoundPage } from './components/Pages/NotFound/NotFoundPage';
+import { RequestSubmissionPage } from './components/Pages/RequestSubmission/RequestSubmissionPage';
 
 export interface IAppRoute {
   label?: string; // Excluding the label will exclude the route from the nav sidebar in AppLayout
@@ -42,6 +44,13 @@ const routes: AppRouteConfig[] = [
     label: 'Dashboard',
     path: '/',
     icon: DashboardIcon,
+    divider: true,
+  },
+  {
+    element: <RequestSubmissionPage />,
+    label: 'Request Generation',
+    path: '/submit-generation',
+    icon: SendAlt,
     divider: true,
   },
   {
