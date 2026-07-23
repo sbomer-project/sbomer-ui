@@ -21,7 +21,7 @@ import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import {
   Button,
   ButtonSet,
-  Link as CarbonLink,
+  ClickableTile,
   Form,
   FormGroup,
   FormItem,
@@ -36,7 +36,7 @@ import {
 } from '@carbon/react';
 import { Add, TrashCan } from '@carbon/icons-react';
 import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRequestSubmission } from './hooks/useRequestSubmission';
 import { TARGET_TYPE_OPTIONS, TargetType } from './types';
 
@@ -115,6 +115,8 @@ export function RequestSubmissionPage() {
     clearError,
   } = useRequestSubmission();
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     void submitRequest();
@@ -135,17 +137,16 @@ export function RequestSubmissionPage() {
             <InlineNotification
               kind="success"
               title="Request submitted successfully"
-              subtitle="Your request has been queued for processing."
+              subtitle="Your request has been queued for processing. Click below to view the event."
               onCloseButtonClick={resetForm}
               hideCloseButton={false}
             />
-            <CarbonLink
-              as={RouterLink}
-              to={`/events/${submissionResult.id}`}
-              style={{ color: 'var(--cds-link-primary)', textDecoration: 'underline', fontWeight: 600 }}
-            >
-              {submissionResult.id}
-            </CarbonLink>
+            <ClickableTile onClick={() => navigate(`/events/${submissionResult.id}`)}>
+              <Stack gap={2}>
+                <p>Event ID</p>
+                <Heading>{submissionResult.id}</Heading>
+              </Stack>
+            </ClickableTile>
           </Stack>
         )}
 
