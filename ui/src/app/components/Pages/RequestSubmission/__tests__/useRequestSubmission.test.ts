@@ -49,13 +49,14 @@ describe('useRequestSubmission', () => {
       expect(result.current.errors.targetIdentifier).toContain('Invalid container image format');
     });
 
-    it("valid RPM ('bash-5.1.8-6.el9.x86_64') → errors.targetIdentifier undefined", () => {
+    it("valid CUSTOM with any identifier → errors.targetIdentifier undefined", () => {
       const { result } = renderHook(() => useRequestSubmission());
       act(() => {
-        result.current.updateTargetType('RPM');
+        result.current.updateTargetType('CUSTOM');
+        result.current.updateCustomTargetType('MAVEN');
       });
       act(() => {
-        result.current.updateTargetIdentifier('bash-5.1.8-6.el9.x86_64');
+        result.current.updateTargetIdentifier('pkg:maven/org.apache.commons/commons-lang3@3.17.0');
       });
       act(() => {
         result.current.validateForm();
@@ -63,18 +64,18 @@ describe('useRequestSubmission', () => {
       expect(result.current.errors.targetIdentifier).toBeUndefined();
     });
 
-    it("invalid RPM ('invalid-rpm') → error contains 'Invalid RPM format'", () => {
+    it("CUSTOM with empty customTargetType → errors.customTargetType defined", () => {
       const { result } = renderHook(() => useRequestSubmission());
       act(() => {
-        result.current.updateTargetType('RPM');
+        result.current.updateTargetType('CUSTOM');
       });
       act(() => {
-        result.current.updateTargetIdentifier('invalid-rpm');
+        result.current.updateTargetIdentifier('some-identifier');
       });
       act(() => {
         result.current.validateForm();
       });
-      expect(result.current.errors.targetIdentifier).toContain('Invalid RPM format');
+      expect(result.current.errors.customTargetType).toBeDefined();
     });
 
     it("empty identifier → error contains 'required'", () => {
@@ -284,7 +285,7 @@ describe('useRequestSubmission', () => {
       expect(result.current.errors.targetIdentifier).toBeDefined();
       // Switch target type — should clear the identifier error
       act(() => {
-        result.current.updateTargetType('RPM');
+        result.current.updateTargetType('CUSTOM');
       });
       expect(result.current.errors.targetIdentifier).toBeUndefined();
     });

@@ -16,7 +16,7 @@
 /// limitations under the License.
 ///
 
-export type TargetType = 'CONTAINER_IMAGE' | 'RPM';
+export type TargetType = 'CONTAINER_IMAGE' | 'CUSTOM';
 
 export interface Target {
   type: TargetType;
@@ -41,6 +41,7 @@ export interface GenerationRequestsDTO {
 
 export interface RequestFormState {
   targetType: TargetType;
+  customTargetType: string;
   targetIdentifier: string;
   handlerOptions: Array<{ key: string; value: string }>;
   publishers: Array<{
@@ -52,6 +53,7 @@ export interface RequestFormState {
 
 export interface ValidationErrors {
   targetIdentifier?: string;
+  customTargetType?: string;
   publishers?: Record<number, { name?: string; version?: string }>;
   handlerOptions?: Record<number, string>;
 }
@@ -69,10 +71,10 @@ export const TARGET_TYPE_OPTIONS = [
     example: 'quay.io/pct-security/mequal:latest',
   },
   {
-    value: 'RPM' as TargetType,
-    label: 'RPM Package',
-    description: 'Generate SBOM for an RPM package',
-    placeholder: 'name-version-release.arch',
-    example: 'bash-5.1.8-6.el9.x86_64',
+    value: 'CUSTOM' as TargetType,
+    label: 'Custom',
+    description: 'Generate SBOM using a custom target type and identifier',
+    placeholder: 'custom-identifier',
+    example: '',
   },
 ];

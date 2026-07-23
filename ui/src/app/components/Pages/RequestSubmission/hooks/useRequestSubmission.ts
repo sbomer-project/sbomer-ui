@@ -31,7 +31,6 @@ import {
 // ============================================================================
 
 const CONTAINER_IMAGE_REGEX = /^[a-z0-9.-]+\/[a-z0-9._/-]+:[a-z0-9._-]+$/i;
-const RPM_REGEX = /^[a-zA-Z0-9._+-]+-[0-9][a-zA-Z0-9._]*-[a-zA-Z0-9._]+\.[a-zA-Z0-9_]+$/;
 const SEMVER_REGEX = /^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$/;
 
 // ============================================================================
@@ -40,6 +39,7 @@ const SEMVER_REGEX = /^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$/;
 
 const INITIAL_FORM_STATE: RequestFormState = {
   targetType: 'CONTAINER_IMAGE',
+  customTargetType: '',
   targetIdentifier: '',
   handlerOptions: [],
   publishers: [],
@@ -62,8 +62,13 @@ export function useRequestSubmission() {
   // --------------------------------------------------------------------------
 
   const updateTargetType = useCallback((type: TargetType) => {
-    setFormState((prev) => ({ ...prev, targetType: type, targetIdentifier: '' }));
-    setErrors((prev) => ({ ...prev, targetIdentifier: undefined }));
+    setFormState((prev) => ({ ...prev, targetType: type, customTargetType: '', targetIdentifier: '' }));
+    setErrors((prev) => ({ ...prev, targetIdentifier: undefined, customTargetType: undefined }));
+  }, []);
+
+  const updateCustomTargetType = useCallback((value: string) => {
+    setFormState((prev) => ({ ...prev, customTargetType: value }));
+    setErrors((prev) => ({ ...prev, customTargetType: undefined }));
   }, []);
 
   const updateTargetIdentifier = useCallback((identifier: string) => {
@@ -188,10 +193,11 @@ export function useRequestSubmission() {
         newErrors.targetIdentifier =
           'Invalid container image format. Expected: registry/namespace/image:tag';
       }
-    } else if (formState.targetType === 'RPM') {
-      if (!RPM_REGEX.test(formState.targetIdentifier)) {
-        newErrors.targetIdentifier = 'Invalid RPM format. Expected: name-version-release.arch';
-      }
+    }
+
+    // Custom target type label (only required when CUSTOM is selected)
+    if (formState.targetType === 'CUSTOM' && !formState.customTargetType.trim()) {
+      newErrors.customTargetType = 'Target type is required';
     }
 
     // Publishers
@@ -255,10 +261,18 @@ export function useRequestSubmission() {
         };
       });
 
+      const resolvedTargetType =
+        formState.targetType === 'CUSTOM'
+          ? (formState.customTargetType.trim() as TargetType)
+          : formState.targetType;
+
       const payload: GenerationRequestsDTO = {
         generationRequests: [
           {
-            target: { type: formState.targetType, identifier: formState.targetIdentifier },
+            target: {
+              type: resolvedTargetType,
+              identifier: formState.targetIdentifier,
+            },
             ...(Object.keys(handlerOptionsRecord).length > 0
               ? { handlerProvidedOptions: handlerOptionsRecord }
               : {}),
@@ -304,6 +318,7 @@ export function useRequestSubmission() {
     submissionResult,
     submissionError,
     updateTargetType,
+    updateCustomTargetType,
     updateTargetIdentifier,
     addHandlerOption,
     updateHandlerOption,

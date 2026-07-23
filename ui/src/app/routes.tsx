@@ -48,8 +48,8 @@ const routes: AppRouteConfig[] = [
   },
   {
     element: <RequestSubmissionPage />,
-    label: 'Request Generation',
-    path: '/submit-generation',
+    label: 'Trigger Generation',
+    path: '/trigger-generation',
     icon: SendAlt,
     divider: true,
   },
