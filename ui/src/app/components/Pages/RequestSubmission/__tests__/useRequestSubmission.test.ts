@@ -49,7 +49,7 @@ describe('useRequestSubmission', () => {
       expect(result.current.errors.targetIdentifier).toContain('Invalid container image format');
     });
 
-    it("valid CUSTOM with any identifier → errors.targetIdentifier undefined", () => {
+    it('valid CUSTOM with any identifier → errors.targetIdentifier undefined', () => {
       const { result } = renderHook(() => useRequestSubmission());
       act(() => {
         result.current.updateTargetType('CUSTOM');
@@ -64,7 +64,7 @@ describe('useRequestSubmission', () => {
       expect(result.current.errors.targetIdentifier).toBeUndefined();
     });
 
-    it("CUSTOM with empty customTargetType → errors.customTargetType defined", () => {
+    it('CUSTOM with empty customTargetType → errors.customTargetType defined', () => {
       const { result } = renderHook(() => useRequestSubmission());
       act(() => {
         result.current.updateTargetType('CUSTOM');
@@ -177,7 +177,9 @@ describe('useRequestSubmission', () => {
       act(() => {
         result.current.updateHandlerOption(0, 'myKey', 'myValue');
       });
-      expect(result.current.formState.handlerOptions[0]).toEqual({ key: 'myKey', value: 'myValue' });
+      expect(result.current.formState.handlerOptions[0]).toEqual(
+        expect.objectContaining({ key: 'myKey', value: 'myValue' }),
+      );
     });
 
     it('removeHandlerOption → length 0', () => {
@@ -232,10 +234,9 @@ describe('useRequestSubmission', () => {
       act(() => {
         result.current.updatePublisherOption(0, 0, 'optKey', 'optValue');
       });
-      expect(result.current.formState.publishers[0]?.options[0]).toEqual({
-        key: 'optKey',
-        value: 'optValue',
-      });
+      expect(result.current.formState.publishers[0]?.options[0]).toEqual(
+        expect.objectContaining({ key: 'optKey', value: 'optValue' }),
+      );
     });
 
     it('removePublisherOption → options length 0', () => {

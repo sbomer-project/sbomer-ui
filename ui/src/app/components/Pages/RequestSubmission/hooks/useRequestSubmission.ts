@@ -17,14 +17,9 @@
 ///
 
 import { DefaultSbomerApi } from '@app/api/DefaultSbomerApi';
+import { SubmitGenerationResponse } from '@app/types';
 import { useCallback, useState } from 'react';
-import {
-  GenerationRequestsDTO,
-  RequestFormState,
-  SubmissionResult,
-  TargetType,
-  ValidationErrors,
-} from '../types';
+import { RequestFormState, TargetType, ValidationErrors } from '../types';
 
 // ============================================================================
 // Regex constants
@@ -32,6 +27,53 @@ import {
 
 const CONTAINER_IMAGE_REGEX = /^[a-z0-9.-]+\/[a-z0-9._/-]+:[a-z0-9._-]+$/i;
 const SEMVER_REGEX = /^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$/;
+
+// ============================================================================
+// Pure validation — no React dependency, easily unit-tested
+// ============================================================================
+
+export function validate(state: RequestFormState): ValidationErrors {
+  const errors: ValidationErrors = {};
+
+  // Target identifier
+  if (!state.targetIdentifier.trim()) {
+    errors.targetIdentifier = 'Target identifier is required';
+  } else if (state.targetType === 'CONTAINER_IMAGE') {
+    if (!CONTAINER_IMAGE_REGEX.test(state.targetIdentifier)) {
+      errors.targetIdentifier =
+        'Invalid container image format. Expected: registry/namespace/image:tag';
+    }
+  }
+
+  // Custom target type label (only required when CUSTOM is selected)
+  if (state.targetType === 'CUSTOM' && !state.customTargetType.trim()) {
+    errors.customTargetType = 'Target type is required';
+  }
+
+  // Publishers
+  if (state.publishers.length > 0) {
+    const publisherErrors: Record<number, { name?: string; version?: string }> = {};
+    state.publishers.forEach((publisher, index) => {
+      const entry: { name?: string; version?: string } = {};
+      if (!publisher.name.trim()) {
+        entry.name = 'Publisher name is required';
+      }
+      if (!publisher.version.trim()) {
+        entry.version = 'Publisher version is required';
+      } else if (!SEMVER_REGEX.test(publisher.version)) {
+        entry.version = 'Invalid version format. Expected semantic version (e.g., 1.0.0)';
+      }
+      if (Object.keys(entry).length > 0) {
+        publisherErrors[index] = entry;
+      }
+    });
+    if (Object.keys(publisherErrors).length > 0) {
+      errors.publishers = publisherErrors;
+    }
+  }
+
+  return errors;
+}
 
 // ============================================================================
 // Initial state
@@ -54,7 +96,7 @@ export function useRequestSubmission() {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submissionResult, setSubmissionResult] = useState<SubmissionResult | null>(null);
+  const [submissionResult, setSubmissionResult] = useState<SubmitGenerationResponse | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   // --------------------------------------------------------------------------
@@ -62,7 +104,12 @@ export function useRequestSubmission() {
   // --------------------------------------------------------------------------
 
   const updateTargetType = useCallback((type: TargetType) => {
-    setFormState((prev) => ({ ...prev, targetType: type, customTargetType: '', targetIdentifier: '' }));
+    setFormState((prev) => ({
+      ...prev,
+      targetType: type,
+      customTargetType: '',
+      targetIdentifier: '',
+    }));
     setErrors((prev) => ({ ...prev, targetIdentifier: undefined, customTargetType: undefined }));
   }, []);
 
@@ -82,14 +129,16 @@ export function useRequestSubmission() {
   const addHandlerOption = useCallback(() => {
     setFormState((prev) => ({
       ...prev,
-      handlerOptions: [...prev.handlerOptions, { key: '', value: '' }],
+      handlerOptions: [...prev.handlerOptions, { uid: crypto.randomUUID(), key: '', value: '' }],
     }));
   }, []);
 
   const updateHandlerOption = useCallback((index: number, key: string, value: string) => {
     setFormState((prev) => {
       const handlerOptions = [...prev.handlerOptions];
-      handlerOptions[index] = { key, value };
+      const existing = handlerOptions[index];
+      if (!existing) return prev;
+      handlerOptions[index] = { uid: existing.uid, key, value };
       return { ...prev, handlerOptions };
     });
   }, []);
@@ -108,27 +157,29 @@ export function useRequestSubmission() {
   const addPublisher = useCallback(() => {
     setFormState((prev) => ({
       ...prev,
-      publishers: [...prev.publishers, { name: '', version: '', options: [] }],
+      publishers: [
+        ...prev.publishers,
+        { uid: crypto.randomUUID(), name: '', version: '', options: [] },
+      ],
     }));
   }, []);
 
-  const updatePublisher = useCallback(
-    (index: number, field: 'name' | 'version', value: string) => {
-      setFormState((prev) => {
-        const publishers = [...prev.publishers];
-        publishers[index] = { ...publishers[index]!, [field]: value };
-        return { ...prev, publishers };
-      });
-      setErrors((prev) => {
-        const publisherErrors = { ...(prev.publishers ?? {}) };
-        const entry = { ...(publisherErrors[index] ?? {}) };
-        delete entry[field];
-        publisherErrors[index] = entry;
-        return { ...prev, publishers: publisherErrors };
-      });
-    },
-    [],
-  );
+  const updatePublisher = useCallback((index: number, field: 'name' | 'version', value: string) => {
+    setFormState((prev) => {
+      const publishers = [...prev.publishers];
+      const existing = publishers[index];
+      if (!existing) return prev;
+      publishers[index] = { ...existing, [field]: value };
+      return { ...prev, publishers };
+    });
+    setErrors((prev) => {
+      const publisherErrors = { ...(prev.publishers ?? {}) };
+      const entry = { ...(publisherErrors[index] ?? {}) };
+      delete entry[field];
+      publisherErrors[index] = entry;
+      return { ...prev, publishers: publisherErrors };
+    });
+  }, []);
 
   const addPublisherOption = useCallback((publisherIndex: number) => {
     setFormState((prev) => {
@@ -137,7 +188,7 @@ export function useRequestSubmission() {
       if (!publisher) return prev;
       publishers[publisherIndex] = {
         ...publisher,
-        options: [...publisher.options, { key: '', value: '' }],
+        options: [...publisher.options, { uid: crypto.randomUUID(), key: '', value: '' }],
       };
       return { ...prev, publishers };
     });
@@ -150,7 +201,9 @@ export function useRequestSubmission() {
         const publisher = publishers[publisherIndex];
         if (!publisher) return prev;
         const options = [...publisher.options];
-        options[optionIndex] = { key, value };
+        const existing = options[optionIndex];
+        if (!existing) return prev;
+        options[optionIndex] = { uid: existing.uid, key, value };
         publishers[publisherIndex] = { ...publisher, options };
         return { ...prev, publishers };
       });
@@ -179,49 +232,11 @@ export function useRequestSubmission() {
   }, []);
 
   // --------------------------------------------------------------------------
-  // Validation
+  // Validation — delegates to the pure validate() function
   // --------------------------------------------------------------------------
 
   const validateForm = useCallback((): boolean => {
-    const newErrors: ValidationErrors = {};
-
-    // Target identifier
-    if (!formState.targetIdentifier.trim()) {
-      newErrors.targetIdentifier = 'Target identifier is required';
-    } else if (formState.targetType === 'CONTAINER_IMAGE') {
-      if (!CONTAINER_IMAGE_REGEX.test(formState.targetIdentifier)) {
-        newErrors.targetIdentifier =
-          'Invalid container image format. Expected: registry/namespace/image:tag';
-      }
-    }
-
-    // Custom target type label (only required when CUSTOM is selected)
-    if (formState.targetType === 'CUSTOM' && !formState.customTargetType.trim()) {
-      newErrors.customTargetType = 'Target type is required';
-    }
-
-    // Publishers
-    if (formState.publishers.length > 0) {
-      const publisherErrors: Record<number, { name?: string; version?: string }> = {};
-      formState.publishers.forEach((publisher, index) => {
-        const entry: { name?: string; version?: string } = {};
-        if (!publisher.name.trim()) {
-          entry.name = 'Publisher name is required';
-        }
-        if (!publisher.version.trim()) {
-          entry.version = 'Invalid version format. Expected semantic version (e.g., 1.0.0)';
-        } else if (!SEMVER_REGEX.test(publisher.version)) {
-          entry.version = 'Invalid version format. Expected semantic version (e.g., 1.0.0)';
-        }
-        if (Object.keys(entry).length > 0) {
-          publisherErrors[index] = entry;
-        }
-      });
-      if (Object.keys(publisherErrors).length > 0) {
-        newErrors.publishers = publisherErrors;
-      }
-    }
-
+    const newErrors = validate(formState);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formState]);
@@ -231,7 +246,11 @@ export function useRequestSubmission() {
   // --------------------------------------------------------------------------
 
   const submitRequest = useCallback(async () => {
-    if (!validateForm()) return;
+    // Validate against current formState directly — avoids stale-closure risk
+    // on validateForm and lets submitRequest have a stable identity.
+    const newErrors = validate(formState);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
     setIsSubmitting(true);
     setSubmissionError(null);
@@ -263,10 +282,10 @@ export function useRequestSubmission() {
 
       const resolvedTargetType =
         formState.targetType === 'CUSTOM'
-          ? (formState.customTargetType.trim() as TargetType)
+          ? formState.customTargetType.trim()
           : formState.targetType;
 
-      const payload: GenerationRequestsDTO = {
+      const response = await DefaultSbomerApi.getInstance().submitGenerationRequest({
         generationRequests: [
           {
             target: {
@@ -279,19 +298,16 @@ export function useRequestSubmission() {
           },
         ],
         ...(publishers.length > 0 ? { publishers } : {}),
-      };
+      });
 
-      const response = await DefaultSbomerApi.getInstance().submitGenerationRequest(payload);
-      setSubmissionResult({ id: response.id });
+      setSubmissionResult(response);
       setIsSuccess(true);
     } catch (error) {
-      setSubmissionError(
-        error instanceof Error ? error.message : 'An unknown error occurred',
-      );
+      setSubmissionError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
     }
-  }, [formState, validateForm]);
+  }, [formState]);
 
   // --------------------------------------------------------------------------
   // Reset / clear
@@ -300,7 +316,6 @@ export function useRequestSubmission() {
   const resetForm = useCallback(() => {
     setFormState(INITIAL_FORM_STATE);
     setErrors({});
-    setIsSubmitting(false);
     setIsSuccess(false);
     setSubmissionResult(null);
     setSubmissionError(null);
@@ -333,5 +348,5 @@ export function useRequestSubmission() {
     submitRequest,
     resetForm,
     clearError,
-  };
+  } as const;
 }

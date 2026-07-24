@@ -24,7 +24,6 @@ import {
   ClickableTile,
   Form,
   FormGroup,
-  FormItem,
   Heading,
   InlineLoading,
   InlineNotification,
@@ -32,61 +31,13 @@ import {
   RadioButtonGroup,
   Stack,
   TextInput,
-  Tile,
 } from '@carbon/react';
 import { Add, TrashCan } from '@carbon/icons-react';
-import * as React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { OptionRow } from './OptionRow';
 import { useRequestSubmission } from './hooks/useRequestSubmission';
-import { TARGET_TYPE_OPTIONS, TargetType } from './types';
-
-// ── Reusable option row (key / value + remove button) ──────────────────────
-
-interface OptionRowProps {
-  id: string;
-  optionKey: string;
-  optionValue: string;
-  onKeyChange: (v: string) => void;
-  onValueChange: (v: string) => void;
-  onRemove: () => void;
-  disabled: boolean;
-}
-
-function OptionRow({ id, optionKey, optionValue, onKeyChange, onValueChange, onRemove, disabled }: OptionRowProps) {
-  return (
-    <Stack orientation="horizontal" gap={5}>
-      <TextInput
-        id={`${id}-key`}
-        labelText="Key"
-        placeholder="option-name"
-        value={optionKey}
-        onChange={(e) => onKeyChange(e.target.value)}
-        disabled={disabled}
-      />
-      <TextInput
-        id={`${id}-value`}
-        labelText="Value"
-        placeholder="option-value"
-        value={optionValue}
-        onChange={(e) => onValueChange(e.target.value)}
-        disabled={disabled}
-      />
-      <FormItem>
-        <Button
-          kind="ghost"
-          size="sm"
-          renderIcon={TrashCan}
-          iconDescription="Remove"
-          hasIconOnly
-          onClick={onRemove}
-          disabled={disabled}
-        />
-      </FormItem>
-    </Stack>
-  );
-}
-
-// ── Page component ──────────────────────────────────────────────────────────
+import { TARGET_TYPE_OPTIONS, TARGET_TYPE_OPTIONS_BY_VALUE, TargetType } from './types';
 
 export function RequestSubmissionPage() {
   useDocumentTitle('SBOMer | Submit Request');
@@ -122,16 +73,13 @@ export function RequestSubmissionPage() {
     void submitRequest();
   };
 
-  const selectedTargetOption = TARGET_TYPE_OPTIONS.find((o) => o.value === formState.targetType)!;
+  const selectedTargetOption = TARGET_TYPE_OPTIONS_BY_VALUE[formState.targetType];
 
   return (
     <AppLayout>
       <Stack gap={7}>
-
-        {/* ── Page heading ───────────────────────────────────────── */}
         <Heading>Trigger an SBOM Generation</Heading>
 
-        {/* ── Success notification ───────────────────────────────── */}
         {isSuccess && submissionResult && (
           <Stack gap={3}>
             <InlineNotification
@@ -143,14 +91,13 @@ export function RequestSubmissionPage() {
             />
             <ClickableTile onClick={() => navigate(`/events/${submissionResult.id}`)}>
               <Stack gap={2}>
-                <p>Event ID</p>
+                <p className="cds--label">Event ID</p>
                 <Heading>{submissionResult.id}</Heading>
               </Stack>
             </ClickableTile>
           </Stack>
         )}
 
-        {/* ── Error notification ─────────────────────────────────── */}
         {submissionError && (
           <InlineNotification
             kind="error"
@@ -160,11 +107,8 @@ export function RequestSubmissionPage() {
           />
         )}
 
-        {/* ── Form ───────────────────────────────────────────────── */}
         <Form onSubmit={handleSubmit}>
           <Stack gap={7}>
-
-            {/* ── Target Configuration ───────────────────────────── */}
             <Stack gap={5}>
               <Heading>Target Configuration</Heading>
               <FormGroup legendText="Target Type">
@@ -201,7 +145,11 @@ export function RequestSubmissionPage() {
                 id="target-identifier"
                 labelText="Target Identifier"
                 placeholder={selectedTargetOption.placeholder}
-                helperText={selectedTargetOption.example ? `Example: ${selectedTargetOption.example}` : undefined}
+                helperText={
+                  selectedTargetOption.example
+                    ? `Example: ${selectedTargetOption.example}`
+                    : undefined
+                }
                 value={formState.targetIdentifier}
                 onChange={(e) => updateTargetIdentifier(e.target.value)}
                 invalid={!!errors.targetIdentifier}
@@ -211,21 +159,23 @@ export function RequestSubmissionPage() {
               />
             </Stack>
 
-            {/* ── Handler Options ────────────────────────────────── */}
             <Stack gap={5}>
               <Heading>Handler Options (Optional)</Heading>
               {formState.handlerOptions.map((handlerOption, handlerOptionIndex) => (
-                <Tile key={handlerOptionIndex}>
-                  <OptionRow
-                    id={`handler-option-${handlerOptionIndex}`}
-                    optionKey={handlerOption.key}
-                    optionValue={handlerOption.value}
-                    onKeyChange={(v) => updateHandlerOption(handlerOptionIndex, v, handlerOption.value)}
-                    onValueChange={(v) => updateHandlerOption(handlerOptionIndex, handlerOption.key, v)}
-                    onRemove={() => removeHandlerOption(handlerOptionIndex)}
-                    disabled={isSubmitting}
-                  />
-                </Tile>
+                <OptionRow
+                  key={handlerOption.uid}
+                  id={`handler-option-${handlerOptionIndex}`}
+                  optionKey={handlerOption.key}
+                  optionValue={handlerOption.value}
+                  onKeyChange={(v) =>
+                    updateHandlerOption(handlerOptionIndex, v, handlerOption.value)
+                  }
+                  onValueChange={(v) =>
+                    updateHandlerOption(handlerOptionIndex, handlerOption.key, v)
+                  }
+                  onRemove={() => removeHandlerOption(handlerOptionIndex)}
+                  disabled={isSubmitting}
+                />
               ))}
               <Button
                 kind="tertiary"
@@ -238,82 +188,77 @@ export function RequestSubmissionPage() {
               </Button>
             </Stack>
 
-            {/* ── Publishers ─────────────────────────────────────── */}
             <Stack gap={5}>
               <Heading>Publishers (Optional)</Heading>
               {formState.publishers.map((publisher, publisherIndex) => (
-                <Tile key={publisherIndex}>
-                  <Stack gap={5}>
-
-                    {/* Publisher header */}
-                    <Stack orientation="horizontal" gap={3}>
-                      <Heading>Publisher {publisherIndex + 1}</Heading>
-                      <Button
-                        kind="ghost"
-                        size="sm"
-                        renderIcon={TrashCan}
-                        iconDescription="Remove publisher"
-                        hasIconOnly
-                        onClick={() => removePublisher(publisherIndex)}
-                        disabled={isSubmitting}
-                      />
-                    </Stack>
-
-                    {/* Name + Version side by side */}
-                    <Stack orientation="horizontal" gap={5}>
-                      <TextInput
-                        id={`publisher-name-${publisherIndex}`}
-                        labelText="Name"
-                        placeholder="dependency-check-publisher"
-                        value={publisher.name}
-                        onChange={(e) => updatePublisher(publisherIndex, 'name', e.target.value)}
-                        invalid={!!errors.publishers?.[publisherIndex]?.name}
-                        invalidText={errors.publishers?.[publisherIndex]?.name}
-                        required
-                        disabled={isSubmitting}
-                      />
-                      <TextInput
-                        id={`publisher-version-${publisherIndex}`}
-                        labelText="Version"
-                        placeholder="1.0.0"
-                        value={publisher.version}
-                        onChange={(e) => updatePublisher(publisherIndex, 'version', e.target.value)}
-                        invalid={!!errors.publishers?.[publisherIndex]?.version}
-                        invalidText={errors.publishers?.[publisherIndex]?.version}
-                        required
-                        disabled={isSubmitting}
-                      />
-                    </Stack>
-
-                    {/* Publisher Options */}
-                    <Stack gap={5}>
-                      <Heading>Publisher Options</Heading>
-                      {publisher.options.map((pubOption, pubOptionIndex) => (
-                        <Tile key={pubOptionIndex}>
-                          <OptionRow
-                            id={`publisher-${publisherIndex}-option-${pubOptionIndex}`}
-                            optionKey={pubOption.key}
-                            optionValue={pubOption.value}
-                            onKeyChange={(v) => updatePublisherOption(publisherIndex, pubOptionIndex, v, pubOption.value)}
-                            onValueChange={(v) => updatePublisherOption(publisherIndex, pubOptionIndex, pubOption.key, v)}
-                            onRemove={() => removePublisherOption(publisherIndex, pubOptionIndex)}
-                            disabled={isSubmitting}
-                          />
-                        </Tile>
-                      ))}
-                      <Button
-                        kind="ghost"
-                        size="sm"
-                        renderIcon={Add}
-                        onClick={() => addPublisherOption(publisherIndex)}
-                        disabled={isSubmitting}
-                      >
-                        Add Option
-                      </Button>
-                    </Stack>
-
+                <Stack key={publisher.uid} gap={5}>
+                  <Stack orientation="horizontal" gap={3}>
+                    <Heading>Publisher {publisherIndex + 1}</Heading>
+                    <Button
+                      kind="ghost"
+                      size="sm"
+                      renderIcon={TrashCan}
+                      iconDescription="Remove publisher"
+                      hasIconOnly
+                      onClick={() => removePublisher(publisherIndex)}
+                      disabled={isSubmitting}
+                    />
                   </Stack>
-                </Tile>
+
+                  <Stack orientation="horizontal" gap={5}>
+                    <TextInput
+                      id={`publisher-name-${publisherIndex}`}
+                      labelText="Name"
+                      placeholder="dependency-check-publisher"
+                      value={publisher.name}
+                      onChange={(e) => updatePublisher(publisherIndex, 'name', e.target.value)}
+                      invalid={!!errors.publishers?.[publisherIndex]?.name}
+                      invalidText={errors.publishers?.[publisherIndex]?.name}
+                      required
+                      disabled={isSubmitting}
+                    />
+                    <TextInput
+                      id={`publisher-version-${publisherIndex}`}
+                      labelText="Version"
+                      placeholder="1.0.0"
+                      value={publisher.version}
+                      onChange={(e) => updatePublisher(publisherIndex, 'version', e.target.value)}
+                      invalid={!!errors.publishers?.[publisherIndex]?.version}
+                      invalidText={errors.publishers?.[publisherIndex]?.version}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </Stack>
+
+                  <Stack gap={5}>
+                    <Heading>Publisher Options</Heading>
+                    {publisher.options.map((pubOption, pubOptionIndex) => (
+                      <OptionRow
+                        key={pubOption.uid}
+                        id={`publisher-${publisherIndex}-option-${pubOptionIndex}`}
+                        optionKey={pubOption.key}
+                        optionValue={pubOption.value}
+                        onKeyChange={(v) =>
+                          updatePublisherOption(publisherIndex, pubOptionIndex, v, pubOption.value)
+                        }
+                        onValueChange={(v) =>
+                          updatePublisherOption(publisherIndex, pubOptionIndex, pubOption.key, v)
+                        }
+                        onRemove={() => removePublisherOption(publisherIndex, pubOptionIndex)}
+                        disabled={isSubmitting}
+                      />
+                    ))}
+                    <Button
+                      kind="ghost"
+                      size="sm"
+                      renderIcon={Add}
+                      onClick={() => addPublisherOption(publisherIndex)}
+                      disabled={isSubmitting}
+                    >
+                      Add Option
+                    </Button>
+                  </Stack>
+                </Stack>
               ))}
               <Button
                 kind="tertiary"
@@ -326,7 +271,6 @@ export function RequestSubmissionPage() {
               </Button>
             </Stack>
 
-            {/* ── Form Actions ───────────────────────────────────── */}
             <ButtonSet>
               <Button kind="secondary" size="lg" onClick={resetForm} disabled={isSubmitting}>
                 Reset Form
@@ -335,7 +279,6 @@ export function RequestSubmissionPage() {
                 {isSubmitting ? <InlineLoading description="Submitting..." /> : 'Submit Request'}
               </Button>
             </ButtonSet>
-
           </Stack>
         </Form>
       </Stack>
