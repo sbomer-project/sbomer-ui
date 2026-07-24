@@ -29,8 +29,10 @@ import {
   InlineNotification,
   RadioButton,
   RadioButtonGroup,
+  Section,
   Stack,
   TextInput,
+  Tile,
 } from '@carbon/react';
 import { Add, TrashCan } from '@carbon/icons-react';
 import React from 'react';
@@ -191,74 +193,90 @@ export function RequestSubmissionPage() {
             <Stack gap={5}>
               <Heading>Publishers (Optional)</Heading>
               {formState.publishers.map((publisher, publisherIndex) => (
-                <Stack key={publisher.uid} gap={5}>
-                  <Stack orientation="horizontal" gap={3}>
-                    <Heading>Publisher {publisherIndex + 1}</Heading>
-                    <Button
-                      kind="ghost"
-                      size="sm"
-                      renderIcon={TrashCan}
-                      iconDescription="Remove publisher"
-                      hasIconOnly
-                      onClick={() => removePublisher(publisherIndex)}
-                      disabled={isSubmitting}
-                    />
-                  </Stack>
+                <Tile key={publisher.uid}>
+                  <Section>
+                    <Stack gap={5}>
+                      <Heading>Publisher {publisherIndex + 1}</Heading>
 
-                  <Stack orientation="horizontal" gap={5}>
-                    <TextInput
-                      id={`publisher-name-${publisherIndex}`}
-                      labelText="Name"
-                      placeholder="dependency-check-publisher"
-                      value={publisher.name}
-                      onChange={(e) => updatePublisher(publisherIndex, 'name', e.target.value)}
-                      invalid={!!errors.publishers?.[publisherIndex]?.name}
-                      invalidText={errors.publishers?.[publisherIndex]?.name}
-                      required
-                      disabled={isSubmitting}
-                    />
-                    <TextInput
-                      id={`publisher-version-${publisherIndex}`}
-                      labelText="Version"
-                      placeholder="1.0.0"
-                      value={publisher.version}
-                      onChange={(e) => updatePublisher(publisherIndex, 'version', e.target.value)}
-                      invalid={!!errors.publishers?.[publisherIndex]?.version}
-                      invalidText={errors.publishers?.[publisherIndex]?.version}
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </Stack>
+                      <Stack orientation="horizontal" gap={5}>
+                        <TextInput
+                          id={`publisher-name-${publisherIndex}`}
+                          labelText="Name"
+                          placeholder="dependency-check-publisher"
+                          value={publisher.name}
+                          onChange={(e) => updatePublisher(publisherIndex, 'name', e.target.value)}
+                          invalid={!!errors.publishers?.[publisherIndex]?.name}
+                          invalidText={errors.publishers?.[publisherIndex]?.name}
+                          required
+                          disabled={isSubmitting}
+                        />
+                        <TextInput
+                          id={`publisher-version-${publisherIndex}`}
+                          labelText="Version"
+                          placeholder="1.0.0"
+                          value={publisher.version}
+                          onChange={(e) =>
+                            updatePublisher(publisherIndex, 'version', e.target.value)
+                          }
+                          invalid={!!errors.publishers?.[publisherIndex]?.version}
+                          invalidText={errors.publishers?.[publisherIndex]?.version}
+                          required
+                          disabled={isSubmitting}
+                        />
+                      </Stack>
 
-                  <Stack gap={5}>
-                    <Heading>Publisher Options</Heading>
-                    {publisher.options.map((pubOption, pubOptionIndex) => (
-                      <OptionRow
-                        key={pubOption.uid}
-                        id={`publisher-${publisherIndex}-option-${pubOptionIndex}`}
-                        optionKey={pubOption.key}
-                        optionValue={pubOption.value}
-                        onKeyChange={(v) =>
-                          updatePublisherOption(publisherIndex, pubOptionIndex, v, pubOption.value)
-                        }
-                        onValueChange={(v) =>
-                          updatePublisherOption(publisherIndex, pubOptionIndex, pubOption.key, v)
-                        }
-                        onRemove={() => removePublisherOption(publisherIndex, pubOptionIndex)}
+                      <Section>
+                        <Stack gap={5}>
+                          <Heading>Publisher Options</Heading>
+                          {publisher.options.map((pubOption, pubOptionIndex) => (
+                            <OptionRow
+                              key={pubOption.uid}
+                              id={`publisher-${publisherIndex}-option-${pubOptionIndex}`}
+                              optionKey={pubOption.key}
+                              optionValue={pubOption.value}
+                              onKeyChange={(v) =>
+                                updatePublisherOption(
+                                  publisherIndex,
+                                  pubOptionIndex,
+                                  v,
+                                  pubOption.value,
+                                )
+                              }
+                              onValueChange={(v) =>
+                                updatePublisherOption(
+                                  publisherIndex,
+                                  pubOptionIndex,
+                                  pubOption.key,
+                                  v,
+                                )
+                              }
+                              onRemove={() => removePublisherOption(publisherIndex, pubOptionIndex)}
+                              disabled={isSubmitting}
+                            />
+                          ))}
+                          <Button
+                            kind="ghost"
+                            size="sm"
+                            renderIcon={Add}
+                            onClick={() => addPublisherOption(publisherIndex)}
+                            disabled={isSubmitting}
+                          >
+                            Add Option
+                          </Button>
+                        </Stack>
+                      </Section>
+                      <Button
+                        kind="danger--ghost"
+                        size="sm"
+                        renderIcon={TrashCan}
+                        onClick={() => removePublisher(publisherIndex)}
                         disabled={isSubmitting}
-                      />
-                    ))}
-                    <Button
-                      kind="ghost"
-                      size="sm"
-                      renderIcon={Add}
-                      onClick={() => addPublisherOption(publisherIndex)}
-                      disabled={isSubmitting}
-                    >
-                      Add Option
-                    </Button>
-                  </Stack>
-                </Stack>
+                      >
+                        Remove publisher
+                      </Button>
+                    </Stack>
+                  </Section>
+                </Tile>
               ))}
               <Button
                 kind="tertiary"
