@@ -98,7 +98,7 @@ jobs:
                   version: "latest"
 
             - name: Install Cosign
-              uses: sigstore/cosign-installer@v3.8.2
+              uses: sigstore/cosign-installer@v3.10.1
 
             - name: Get short SHA
               id: sha
